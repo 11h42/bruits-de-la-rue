@@ -1,0 +1,30 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Bruits de la rue{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Akema">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico"/>
+    <link rel="apple-itouch-icon" href="{{ STATIC_URL }}img/favicon.png"/>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+{% block header %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+
+{% block footer %}{% endblock %}
+
+{% block javascript %}{% endblock %}
+
+</body>
+</html>

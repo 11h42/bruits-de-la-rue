@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}Connexion{% endblock %}
+{% block head %}
+    {{ super }}
+    <style type="text/css">
+        #login {
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 480px
+        }
+
+        #form-signin {
+            margin-top: 40px
+        }
+    </style>
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+    <div id="login">
+        <form id="form-signin" method="POST" action="{% url 'core:login' %}">
+            {% csrf_token %}
+            <legend>Connectez-vous</legend>
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username"
+                       name="username" placeholder="{% trans "Entrez votre nom d'utilisateur" %}" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" class="form-control" id="password"
+                       name="password" placeholder="Entrez votre mot de passe">
+            </div>
+            {% if has_error %}
+                <div class="alert alert-danger">
+                    Votre nom d'utilisateur ou votre mot de passe ne correspondent pas ! Veuillez reessayer.
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-success">Connexion</button>
+        </form>
+    </div>
+{% endblock %}
+{% block footer %}{% endblock %}
