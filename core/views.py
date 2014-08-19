@@ -47,7 +47,7 @@ class BidCreate(CreateView):
               'recurrence', 'description', 'bidCategory']
 
     def form_valid(self, form):
-        form.instance.caller_fk_user = User.objects.get(user=self.request.user)
+        form.instance.caller_fk_user = self.request.user
         return super(BidCreate, self).form_valid(form)
 
 

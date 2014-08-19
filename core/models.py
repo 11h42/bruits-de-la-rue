@@ -131,4 +131,4 @@ class Bid(models.Model):
     bidCategory = models.CharField(max_length=255)
 
     def get_absolute_url(self):
-        return reverse('bid-details', kwargs={'pk': self.pk})
+        return reverse('core:bid-details', args=(self.pk, ))
