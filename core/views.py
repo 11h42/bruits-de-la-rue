@@ -52,7 +52,7 @@ def return_email_if_username(username_or_email):
 
 
 class BidCreate(CreateView):
-    template_name = "bids/bid_template.html"
+    template_name = "bids/bid_form_template.html"
     form_class = BidForm
 
     def get_initial(self):
@@ -61,6 +61,7 @@ class BidCreate(CreateView):
         initial['real_author'] = self.request.user.username
         initial['end'] = ""
         initial['begin'] = ""
+        initial['country'] = "France"
         return initial
 
     def form_valid(self, form):
@@ -69,7 +70,7 @@ class BidCreate(CreateView):
 
 
 class BidUpdate(UpdateView):
-    template_name = "bids/bid_template.html"
+    template_name = "bids/bid_form_template.html"
     form_class = BidForm
     model = Bid
 

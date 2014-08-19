@@ -117,20 +117,30 @@ class Message(models.Model):
 class Bid(models.Model):
     caller_fk_user = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor_fk_user = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
-    type = models.CharField(max_length=10)
+
     begin = models.DateField(null=True, blank=True)
     end = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=255)
+
     quantity = models.DecimalField(max_digits=200, decimal_places=20, null=True, blank=True)
-    localization = models.CharField(max_length=255)
+    adress1 = models.CharField(max_length=255, null=True, blank=True)
+    adress2 = models.CharField(max_length=255, null=True, blank=True)
+    zipcode = models.IntegerField(max_length=8, null=True, blank=True)
+    town = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=255, null=True, blank=True)
+
     real_author = models.CharField(max_length=255)
-    emergency_level = models.CharField(max_length=255)
+
     recurrence = models.BooleanField(default=False)
     description = models.TextField()
     name = models.CharField(max_length=255)
+
+
     bidCategory = models.CharField(max_length=255)
     photo = models.FileField(upload_to='uploads/photos', blank=True, null=True)
-    type_quantite = models.CharField(max_length=255)
+    quantity_type = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    type = models.CharField(max_length=10)
+    emergency_level = models.CharField(max_length=255)
 
     def get_absolute_url(self):
         return reverse('core:bid-details', args=(self.pk, ))

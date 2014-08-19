@@ -56,12 +56,32 @@
             {{ form.quantity.errors }}
             <label class="col-sm-2 control-label" for="id_quantity">Quantité :</label>
             {{ form.quantity }}
-            {{ form.type_quantite }}
+            {{ form.quantity_type }}
         </div>
         <div class="fieldWrapper form-group">
-            {{ form.localization.errors }}
-            <label class="col-sm-2 control-label" for="id_localization">Localisation :</label>
-            {{ form.localization }}
+            {{ form.adress1.errors }}
+            <label class="col-sm-2 control-label" for="id_adress1">Adresse 1 :</label>
+            {{ form.adress1 }}
+        </div>
+        <div class="fieldWrapper form-group">
+            {{ form.adress2.errors }}
+            <label class="col-sm-2 control-label" for="id_adress2">Adresse 2 :</label>
+            {{ form.adress2 }}
+        </div>
+        <div class="fieldWrapper form-group">
+            {{ form.zipcode.errors }}
+            <label class="col-sm-2 control-label" for="id_zipcode">Code postal :</label>
+            {{ form.zipcode }}
+        </div>
+        <div class="fieldWrapper form-group">
+            {{ form.town.errors }}
+            <label class="col-sm-2 control-label" for="id_town">Ville :</label>
+            {{ form.town }}
+        </div>
+        <div class="fieldWrapper form-group">
+            {{ form.coutry.errors }}
+            <label class="col-sm-2 control-label" for="id_coutry">Pays :</label>
+            {{ form.country }}
         </div>
         <div class="fieldWrapper form-group">
             {{ form.real_author.errors }}
@@ -92,5 +112,4 @@
         {% csrf_token %}
         <input type="submit" value="Submit"/>
     </form>
-
 {% endblock %}
