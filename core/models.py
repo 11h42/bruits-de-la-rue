@@ -67,7 +67,7 @@ class User(AbstractBaseUser, DatedModel):
     email = models.EmailField(verbose_name='Email', max_length=255, unique=True, db_index=True)
     first_name = models.CharField(verbose_name='Prénom', max_length=30, blank=True)
     last_name = models.CharField(verbose_name='Nom', max_length=30, blank=True)
-
+    username = models.CharField(verbose_name='Nom d\'utilisateur', max_length=30, unique=True)
     association_fk_association = models.ForeignKey('Association', null=True)
     is_donor = models.BooleanField(default=False)
 

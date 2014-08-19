@@ -11,6 +11,7 @@ class UserFactory(factory.DjangoModelFactory):
                                                 'password')
     first_name = "factory"
     last_name = "user"
+    username = "userFactory"
 
     is_donor = False
     is_admin = False
