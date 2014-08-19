@@ -68,7 +68,7 @@ class User(AbstractBaseUser, DatedModel):
     first_name = models.CharField(verbose_name='Prénom', max_length=30, blank=True)
     last_name = models.CharField(verbose_name='Nom', max_length=30, blank=True)
     username = models.CharField(verbose_name='Nom d\'utilisateur', max_length=30, unique=True)
-    association_fk_association = models.ForeignKey('Association', null=True)
+    association_fk_association = models.ManyToManyField('Association', null=True)
     is_donor = models.BooleanField(default=False)
 
     is_admin = models.BooleanField(default=False)
@@ -118,10 +118,10 @@ class Bid(models.Model):
     caller_fk_user = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor_fk_user = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
     type = models.CharField(max_length=10)
-    begin = models.DateField()
-    end = models.DateField()
+    begin = models.DateField(null=True, blank=True)
+    end = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=255)
-    quantity = models.DecimalField(max_digits=200, decimal_places=20)
+    quantity = models.DecimalField(max_digits=200, decimal_places=20, null=True, blank=True)
     localization = models.CharField(max_length=255)
     real_author = models.CharField(max_length=255)
     emergency_level = models.CharField(max_length=255)
@@ -129,6 +129,8 @@ class Bid(models.Model):
     description = models.TextField()
     name = models.CharField(max_length=255)
     bidCategory = models.CharField(max_length=255)
+    photo = models.FileField(upload_to='uploads/photos', blank=True, null=True)
+    type_quantite = models.CharField(max_length=255)
 
     def get_absolute_url(self):
         return reverse('core:bid-details', args=(self.pk, ))
