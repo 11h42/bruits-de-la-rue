@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.gis.geometry import regex
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -10,7 +10,8 @@ from django.template.loader import get_template
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
-import re
+
+from core.Forms.forms import BidForm
 
 from core.models import Bid, User
 
@@ -39,7 +40,7 @@ def handle_login(request):
 
 
 def return_email_if_username(username_or_email):
-    # Si le paramètre username_or_email n'est pas de la forme d'un email, on recherche son username
+    # Si le paramètre username_or_email n'est pas de la forme d'un email, on recherche si cela correspond à un username
     if not re.match(r"[^@]+@[^@]+\.[^@]+", username_or_email):
         try:
             return User.objects.get(username=username_or_email).email
@@ -51,10 +52,16 @@ def return_email_if_username(username_or_email):
 
 
 class BidCreate(CreateView):
-    model = Bid
-    template_name = "offers/create_offer.html"
-    fields = ['name', 'type', 'begin', 'end', 'status', 'quantity', 'localization', 'real_author', 'emergency_level',
-              'recurrence', 'description', 'bidCategory']
+    template_name = "bids/bid_template.html"
+    form_class = BidForm
+
+    def get_initial(self):
+        initial = super(BidCreate, self).get_initial()
+        initial = initial.copy()
+        initial['real_author'] = self.request.user.username
+        initial['end'] = ""
+        initial['begin'] = ""
+        return initial
 
     def form_valid(self, form):
         form.instance.caller_fk_user = self.request.user
@@ -62,8 +69,12 @@ class BidCreate(CreateView):
 
 
 class BidUpdate(UpdateView):
+    template_name = "bids/bid_template.html"
+    form_class = BidForm
     model = Bid
-    fields = ['name']
+
+    def form_valid(self, form):
+        return super(BidUpdate, self).form_valid(form)
 
 
 class BidDelete(DeleteView):
@@ -72,8 +83,8 @@ class BidDelete(DeleteView):
 
 
 class BidDetails(TemplateView):
-    template_name = 'offers/detail_bid.html'
+    template_name = 'bids/detail_bid.html'
 
 
 class BidList(TemplateView):
-    template_name = 'offers/detail_bid.html'
+    template_name = 'bids/detail_bid.html'
