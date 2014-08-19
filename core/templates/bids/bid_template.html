@@ -9,16 +9,16 @@
 {% block javascript %}
     <script>
         $(function () {
-            $(".datepicker").datepicker();
+            $(".datepicker").datepicker({ dateFormat: "mm/dd/yy" });
         });
     </script>
 {% endblock %}
 
-{% block header %}<h1> Nouvelle Offre</h1>{% endblock %}
+{% block header %}<h1>{% if object.id %}Modification d'une {% else %}Nouvelle {% endif %}Annonce</h1>{% endblock %}
 
 {% block content %}
-
-    <form role="form" action="/offre/creer/" method="post">
+    <form role="form" action="{% if object.id %}annonce/{{ object.id }}/update/{% else %}annonce/creer/{% endif %}"
+          method="post">
         {{ form.non_field_errors }}
         <div class="fieldWrapper form-group">
             {{ form.name.errors }}
@@ -56,6 +56,7 @@
             {{ form.quantity.errors }}
             <label class="col-sm-2 control-label" for="id_quantity">Quantité :</label>
             {{ form.quantity }}
+            {{ form.type_quantite }}
         </div>
         <div class="fieldWrapper form-group">
             {{ form.localization.errors }}
