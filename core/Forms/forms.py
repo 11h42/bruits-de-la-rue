@@ -1,34 +1,17 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from core.models import Bid
 
 
-class OffersForm(forms.Form):
-    bid_name = forms.CharField(label='Titre de l\'annonce', max_length=255)
-    bid_quantity = forms.DecimalField(label='Quantité' )
-    bid_category = forms.ChoiceField()
-    bid_comment = forms.CharField(widget=forms.widgets.Textarea())
-    bid_dlc = forms.DateField()
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['name', 'type', 'begin', 'end', 'status', 'quantity', 'localization', 'real_author',
+                  'emergency_level',
+                  'recurrence', 'description', 'bidCategory', 'photo', 'type_quantite']
 
-    def validate_bid_name(self):
-        data = self.cleaned_data['bid_name']
-        return data
+    TYPES = (('Offre', 'Offre', ), ('Demande', 'Demande', ))
+    type = forms.ChoiceField(widget=forms.Select, choices=TYPES)
 
-    def validate_bid_quantity(self):
-        data = self.cleaned_data['bid_quantity']
-        return data
-
-    def validate_bid_category(self):
-        data = self.cleaned_data['bid_category']
-        return data
-
-    def validate_bid_comment(self):
-        data = self.cleaned_data['bid_comment']
-        return data
-
-    def validate_bid_dlc(self):
-        data = self.cleaned_data['bid_dlc']
-        return data
-
-
-    def create_offer(request):
-        pass
+    TYPES_QUANTITES = (('KG', 'KG', ), ('Unitaire', 'Unitaire', ), ('Litres', 'Litres'), ('Autre', 'Autre', ))
+    type_quantite = forms.ChoiceField(widget=forms.Select, choices=TYPES_QUANTITES)
