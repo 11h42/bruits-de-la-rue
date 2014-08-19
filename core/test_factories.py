@@ -4,10 +4,11 @@ from models import User
 
 
 class TestFactories(TestCase):
-    def test_UserFactory(self):
+    def test_user_factory(self):
         user = factories.UserFactory()
         self.assertTrue(isinstance(user, User))
-    def test_UserFactoryLogin(self):
+
+    def test_user_factory_login(self):
         user = factories.UserFactory()
         login = self.client.login(username=user.email, password="password")
         self.assertTrue(login)
