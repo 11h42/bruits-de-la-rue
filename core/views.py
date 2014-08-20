@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.views.generic.base import TemplateView
@@ -12,7 +13,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 
 from core.Forms.forms import BidForm
-
 from core.models import Bid, User
 
 
@@ -83,8 +83,16 @@ class BidDelete(DeleteView):
     success_url = reverse_lazy('bid-list')
 
 
-class BidDetails(TemplateView):
-    template_name = 'bids/detail_bid.html'
+def bid_handler(request, pk):
+    if request.method == "GET":
+        return get_bid_details_page(request, pk)
+
+
+def get_bid_details_page(request, pk):
+    t = get_template('bids/detail_bid.html')
+    c = RequestContext(request,
+                       {"bid": get_object_or_404(Bid, pk=pk)})
+    return HttpResponse(t.render(c))
 
 
 class BidList(TemplateView):
