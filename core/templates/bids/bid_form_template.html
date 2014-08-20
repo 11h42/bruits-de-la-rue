@@ -17,7 +17,7 @@
 {% block header %}<h1>{% if object.id %}Modification d'une {% else %}Nouvelle {% endif %}Annonce</h1>{% endblock %}
 
 {% block content %}
-    <form role="form" action="{% if object.id %}annonce/{{ object.id }}/update/{% else %}annonce/creer/{% endif %}"
+    <form enctype="multipart/form-data" role="form" action="/{% if object.id %}annonce/{{ object.id }}/update/{% else %}annonce/creer/{% endif %}"
           method="post">
         {{ form.non_field_errors }}
         <div class="form-group">
