@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -119,6 +120,10 @@ class BidCategories(models.Model):
     bid_category_description = models.TextField(blank=True, null=True)
 
 
+def upload_to(instance, filename):
+    return 'images/%s/%s' % (instance.caller_fk_user.username, filename)
+
+
 class Bid(models.Model):
     caller_fk_user = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor_fk_user = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
@@ -126,7 +131,7 @@ class Bid(models.Model):
     begin = models.DateField(null=True, blank=True)
     end = models.DateField(null=True, blank=True)
 
-    quantity = models.DecimalField(max_digits=200, decimal_places=20, null=True, blank=True)
+    quantity = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
     adress1 = models.CharField(max_length=255, null=True, blank=True)
     adress2 = models.CharField(max_length=255, null=True, blank=True)
     zipcode = models.IntegerField(max_length=8, null=True, blank=True)
@@ -140,11 +145,16 @@ class Bid(models.Model):
     name = models.CharField(max_length=255)
 
     bidCategory = models.ForeignKey(BidCategories)
-    photo = models.FileField(upload_to='uploads/photos', blank=True, null=True)
+
+    photo = models.FileField(upload_to=upload_to)
     quantity_type = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     type = models.CharField(max_length=10)
     emergency_level = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 
     def get_absolute_url(self):
         return reverse('core:bid-details', args=(self.pk, ))
