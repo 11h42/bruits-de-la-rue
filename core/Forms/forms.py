@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from core.models import Bid
+from core.models import Bid, BidCategories
 
 
 class BidForm(forms.ModelForm):
@@ -10,6 +10,10 @@ class BidForm(forms.ModelForm):
                   'emergency_level',
                   'recurrence', 'description', 'bidCategory', 'photo', 'quantity_type', 'adress1', 'adress2', 'zipcode',
                   'town', 'country']
+
+    def __init__(self, *args, **kwargs):
+        super(BidForm, self).__init__(*args, **kwargs)
+        self.fields['bidCategory'].choices = [(Category.id, Category.bid_category_name) for Category in BidCategories.objects.all()]
 
     TYPES = (('Offre', 'Offre', ), ('Demande', 'Demande', ))
     type = forms.ChoiceField(widget=forms.Select, choices=TYPES)

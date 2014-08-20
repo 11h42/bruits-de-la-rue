@@ -114,6 +114,11 @@ class Message(models.Model):
         return reverse('message-details', kwargs={'pk': self.pk})
 
 
+class BidCategories(models.Model):
+    bid_category_name = models.CharField(blank=False, null=False, unique=True, max_length=255)
+    bid_category_description = models.TextField(blank=True, null=True)
+
+
 class Bid(models.Model):
     caller_fk_user = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor_fk_user = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
@@ -134,8 +139,7 @@ class Bid(models.Model):
     description = models.TextField()
     name = models.CharField(max_length=255)
 
-
-    bidCategory = models.CharField(max_length=255)
+    bidCategory = models.ForeignKey(BidCategories)
     photo = models.FileField(upload_to='uploads/photos', blank=True, null=True)
     quantity_type = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
