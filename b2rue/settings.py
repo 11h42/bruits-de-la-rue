@@ -8,11 +8,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+# CONSTANTS
+DEFAULT_BID_PHOTO = 'images/default.png'
+
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from tools.config import Config
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
+MEDIA_URL = '/media/'
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIG_PATH = os.path.realpath(os.path.join(PROJECT_DIR, '..', 'config'))
