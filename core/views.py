@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
+from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -8,9 +9,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.template.loader import get_template
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic.list import ListView
 
 from core.Forms.forms import BidForm
 from core.models import Bid, User
@@ -65,6 +66,8 @@ class BidCreate(CreateView):
         return initial
 
     def form_valid(self, form):
+        if bool(form.instance.photo) is False:
+            form.instance.photo = settings.DEFAULT_BID_PHOTO
         form.instance.caller_fk_user = self.request.user
         return super(BidCreate, self).form_valid(form)
 
@@ -95,5 +98,7 @@ def get_bid_details_page(request, pk):
     return HttpResponse(t.render(c))
 
 
-class BidList(TemplateView):
-    template_name = 'bids/detail_bid.html'
+class BidList(ListView):
+    template_name = 'bids/list_bids.html'
+    model = Bid
+    context_object_name = 'bids'
