@@ -15,7 +15,9 @@ DEFAULT_BID_PHOTO = 'images/default.png'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 from tools.config import Config
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
