@@ -16,3 +16,9 @@ class BidForm(forms.ModelForm):
 
     TYPES_QUANTITES = (('KG', 'KG', ), ('Unitaire', 'Unitaire', ), ('Litres', 'Litres'), ('Autre', 'Autre', ))
     quantity_type = forms.ChoiceField(widget=forms.Select, choices=TYPES_QUANTITES)
+
+    TYPES_STATUS = (('En cours', 'En cours', ), ('Accepté', 'Accepté', ), ('Fermé', 'Fermé', ), ('Expiré', 'Expiré', ))
+    status = forms.ChoiceField(widget=forms.Select, choices=TYPES_STATUS)
+
+    TYPES_EMERGENCIES = (('URGENT', 'URGENT', ), ('Normal', 'Normal', ), ('Faible', 'Faible', ))
+    emergency_level = forms.ChoiceField(widget=forms.Select, choices=TYPES_EMERGENCIES)

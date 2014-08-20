@@ -20,91 +20,91 @@
     <form role="form" action="{% if object.id %}annonce/{{ object.id }}/update/{% else %}annonce/creer/{% endif %}"
           method="post">
         {{ form.non_field_errors }}
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.name.errors }}
             <label class="col-sm-2 control-label" for="id_name">Titre de l'annonce :</label>
             {{ form.name }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.type.errors }}
             <label class="col-sm-2 control-label" for="id_type">Type d'annonce :</label>
             {{ form.type }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.begin.errors }}
             <label class="col-sm-2 control-label" for="id_begin">Début :</label>
             <input type="text" name="{{ form.begin.name }}" value="{{ form.begin.value }}" class="datepicker"
                    id="id_begin">
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.end.errors }}
             <label class="col-sm-2 control-label" for="id_end">Fin :</label>
             <input type="text" name="{{ form.end.name }}" value="{{ form.end.value }}" class="datepicker"
                    id="id_end">
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.status.errors }}
             <label class="col-sm-2 control-label" for="id_status">Status :</label>
             {{ form.status }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.photo.errors }}
             <label class="col-sm-2 control-label" for="id_image">Photo :</label>
             {{ form.photo }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.quantity.errors }}
             <label class="col-sm-2 control-label" for="id_quantity">Quantité :</label>
             {{ form.quantity }}
             {{ form.quantity_type }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.adress1.errors }}
             <label class="col-sm-2 control-label" for="id_adress1">Adresse 1 :</label>
             {{ form.adress1 }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.adress2.errors }}
             <label class="col-sm-2 control-label" for="id_adress2">Adresse 2 :</label>
             {{ form.adress2 }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.zipcode.errors }}
             <label class="col-sm-2 control-label" for="id_zipcode">Code postal :</label>
             {{ form.zipcode }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.town.errors }}
             <label class="col-sm-2 control-label" for="id_town">Ville :</label>
             {{ form.town }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.coutry.errors }}
             <label class="col-sm-2 control-label" for="id_coutry">Pays :</label>
             {{ form.country }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.real_author.errors }}
             <label class="col-sm-2 control-label" for="id_real_author">Auteur :</label>
             <input id="id_real_author" value="{{ form.real_author.value }}"
                    maxlength="{{ form.real_author.field.max_length }}" name="{{ form.real_author.name }}" type="text">
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.emergency_level.errors }}
             <label class="col-sm-2 control-label" for="id_emergency_level">Niveau d'urgence :</label>
             {{ form.emergency_level }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.recurrence.errors }}
             <label class="col-sm-2 control-label" for="id_recurrence">Offre réccurente ? :</label>
             {{ form.recurrence }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.description.errors }}
             <label class="col-sm-2 control-label" for="id_description">Description :</label>
             {{ form.description }}
         </div>
-        <div class="fieldWrapper form-group">
+        <div class="form-group">
             {{ form.bidCategory.errors }}
             <label class="col-sm-2 control-label" for="id_bidCategory">Catégorie :</label>
             {{ form.bidCategory }}
