@@ -55,7 +55,7 @@ except:
     f.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.getboolean('DEBUG', 'DEBUG', False)
+DEBUG = config.getboolean('DEBUG', 'DEBUG', True)
 TEMPLATE_DEBUG = config.getboolean('DEBUG', 'TEMPLATE_DEBUG', DEBUG)
 
 ALLOWED_HOSTS = []
@@ -98,7 +98,7 @@ DATABASES = {
     'default': {
         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-        'USER': config.get('DATABASE', 'USER', 'b2rue'),
+        'USER': config.get('DATABASE', 'USER', 'abriand'),
         'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
         'HOST': config.get('DATABASE', 'HOST', '127.0.0.1'),
         'PORT': config.get('DATABASE', 'PORT', ''),

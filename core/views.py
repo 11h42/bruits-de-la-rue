@@ -2,6 +2,7 @@
 import re
 
 from django.conf import settings
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -14,6 +15,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 
 from core.Forms.forms import BidForm
+
 from core.models import Bid, User
 
 
@@ -54,6 +56,7 @@ def return_email_if_username(username_or_email):
 
 class BidCreate(CreateView):
     template_name = "bids/bid_form_template.html"
+
     form_class = BidForm
 
     def get_initial(self):

@@ -68,7 +68,7 @@ class User(AbstractBaseUser, DatedModel):
     first_name = models.CharField(verbose_name='Prénom', max_length=30, blank=True)
     last_name = models.CharField(verbose_name='Nom', max_length=30, blank=True)
     username = models.CharField(verbose_name='Nom d\'utilisateur', max_length=30, unique=True)
-    association_fk_association = models.ManyToManyField('Association', null=True)
+    associations = models.ManyToManyField('Association', null=True)
     is_donor = models.BooleanField(default=False)
 
     is_admin = models.BooleanField(default=False)
@@ -104,11 +104,15 @@ class User(AbstractBaseUser, DatedModel):
     def get_absolute_url(self):
         return reverse('utilisateur-details', kwargs={'pk': self.pk})
 
+    def get_user_associations(self):
+        return Association.objects.filter()
+
 
 class Message(models.Model):
-    from_user_fk_user = models.ForeignKey(User, related_name='from_user_fk_user')
-    to_user_fk_user = models.ForeignKey(User, related_name='to_user_fk_user')
+    from_user = models.ForeignKey(User, related_name='from_user_fk_user')
+    to_user = models.ForeignKey(User, related_name='to_user_fk_user')
     read = models.BooleanField(default=False)
+    message = models.TextField()
 
     def get_absolute_url(self):
         return reverse('message-details', kwargs={'pk': self.pk})
@@ -121,6 +125,11 @@ class BidCategories(models.Model):
 
 def upload_to(instance, filename):
     return 'images/%s/%s' % (instance.caller_fk_user.username, filename)
+
+
+class EmergencyLevels(models.Model):
+    name = models.CharField(max_length=255, unique=True, db_index=True)
+    level = models.IntegerField()
 
 
 class Bid(models.Model):
@@ -145,15 +154,16 @@ class Bid(models.Model):
 
     bidCategory = models.ForeignKey(BidCategories)
 
-    photo = models.FileField(upload_to=upload_to)
+    photo = models.FileField(upload_to=upload_to, blank=True, null=True)
     quantity_type = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     type = models.CharField(max_length=10)
-    emergency_level = models.CharField(max_length=255)
+    emergency_level = models.ForeignKey(EmergencyLevels)
+
+    #association = models.ForeignKey(Association)
 
     def __unicode__(self):
         return u'%s' % (self.name)
-
 
     def get_absolute_url(self):
         return reverse('core:bid-details', args=(self.pk, ))
