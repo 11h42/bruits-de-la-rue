@@ -98,12 +98,23 @@ DATABASES = {
     'default': {
         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-        'USER': config.get('DATABASE', 'USER', 'abriand'),
-        'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
-        'HOST': config.get('DATABASE', 'HOST', '127.0.0.1'),
-        'PORT': config.get('DATABASE', 'PORT', ''),
+        'USER': config.get('DATABASE', 'USER', 'antoinebriand'),
+        'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
+        'HOST': config.get('DATABASE', 'HOST', 'localhost'),
+        'PORT': config.get('DATABASE', 'PORT', '5432'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
+#         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
+#         'USER': config.get('DATABASE', 'USER', 'abriand'),
+#         'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
+#         'HOST': config.get('DATABASE', 'HOST', 'localhost'),
+#         'PORT': config.get('DATABASE', 'PORT', '5432'),
+#     }
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
