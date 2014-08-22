@@ -8,7 +8,7 @@ from django.test import TestCase
 from api.tests import factories
 
 from api.tests.factories import BidFactory, UserFactory
-from core.models.models import Bid
+from core.models import Bid
 
 
 class TestBids(TestCase):

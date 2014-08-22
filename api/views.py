@@ -4,7 +4,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseBadRequest
 
-from core.models.models import Bid
+from core.models import Bid
 
 
 def handle_bids(request, bid_id):
@@ -22,10 +22,17 @@ def handle_bid(request):
     else:
         return HttpResponseBadRequest()
 
+
 @login_required()
 def post_bid(request):
     bid = json.loads(request.body)
+    try:
+        new_bid = Bid(**bid)
+        new_bid.save()
+    except Exception:
+        print("Tu m'étonne")
     return HttpResponse()
+# TODO : Ce truc. En gros comment check que tous les éléments sont présents et biens formattés, avec le moins de code possible .. sans se répéter. Pour le moment aucune idée.
 
 
 def get_bid(request, bid_id):

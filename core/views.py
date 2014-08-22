@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 
 from core.Forms.forms import BidForm
-from core.models.models import Bid, User
+from core.models import Bid, User
 
 
 @login_required

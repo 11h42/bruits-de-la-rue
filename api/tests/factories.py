@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 import factory
 
-from core.models.models import Bid, User, BidCategories, EmergencyLevels
+from core.models import Bid, User, BidCategories, EmergencyLevels
 
 
 class UserFactory(factory.DjangoModelFactory):
