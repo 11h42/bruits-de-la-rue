@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from api.tests import factories
-from models import User
+from core.models.models import User
 
 
 class TestFactories(TestCase):

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
+
+from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseBadRequest
-import unicodedata
-from core.models import Bid
+
+from core.models.models import Bid
 
 
-def handle_bid(request, bid_id):
+def handle_bids(request, bid_id):
     if request.method == "GET":
         return get_bid(request, bid_id)
     else:
@@ -13,6 +15,19 @@ def handle_bid(request, bid_id):
 
 
 # TODO : Tester si bid_id est un entier ! (unicodedata.numeric ou is int ne semble pas être adaptés)
+
+def handle_bid(request):
+    if request.method == "POST":
+        return post_bid(request)
+    else:
+        return HttpResponseBadRequest()
+
+@login_required()
+def post_bid(request):
+    bid = json.loads(request.body)
+    return HttpResponse()
+
+
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)[:1]
 

@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from PIL import Image
 
-from core.models import Bid, BidCategories, EmergencyLevels, User
+from core.models.models import Bid, BidCategories, EmergencyLevels
 
 
 class BidForm(forms.ModelForm):
