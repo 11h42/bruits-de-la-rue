@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from datetime import time
 
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseBadRequest
@@ -26,12 +27,37 @@ def handle_bid(request):
 @login_required()
 def post_bid(request):
     bid = json.loads(request.body)
+        data = {
+            u'caller': Bid.objects.get(bid.user.id),
+            u'name': bid.name,
+            u'acceptor': bid.acceptor,
+            u'begin': time.strptime(bid.begin,"%d%b%Y"),
+            u'end': time.strptime(bid.begin,"%d%b%Y")str(bid.end),
+            u'quantity': str(bid.quantity),
+            u'adress1': bid.adress1,
+            u'adress2': bid.adress2,
+            u'zipcode': bid.zipcode,
+            u'town': bid.town,
+            u'country': bid.country,
+            u'real_author': bid.real_author,
+            u'description': bid.description,
+            u'bidCategory': bid.bidCategory.bid_category_name,
+            u'photo': bid.photo.url,
+            u'quantity_type': bid.quantity_type,
+            u'status': bid.status,
+            u'type': bid.type,
+            u'emergency_level_name': bid.emergency_level.name,
+            u'emergency_level_level': bid.emergency_level.level
+        }
+    new_bid = Bid(**bid)
+    new_bid.save()
     try:
-        new_bid = Bid(**bid)
-        new_bid.save()
+        print("toto")
     except Exception:
         print("Tu m'étonne")
     return HttpResponse()
+
+
 # TODO : Ce truc. En gros comment check que tous les éléments sont présents et biens formattés, avec le moins de code possible .. sans se répéter. Pour le moment aucune idée.
 
 
@@ -44,26 +70,28 @@ def get_bid(request, bid_id):
         if bid.acceptor is not None:
             acceptor = bid.acceptor.username
 
-        data = {u'caller': bid.caller.username,
-                u'name': bid.name,
-                u'acceptor': acceptor,
-                u'begin': str(bid.begin),
-                u'end': str(bid.end),
-                u'quantity': str(bid.quantity),
-                u'adress1': bid.adress1,
-                u'adress2': bid.adress2,
-                u'zipcode': bid.zipcode,
-                u'town': bid.town,
-                u'country': bid.country,
-                u'real_author': bid.real_author,
-                u'description': bid.description,
-                u'bidCategory': bid.bidCategory.bid_category_name,
-                u'photo': bid.photo.url,
-                u'quantity_type': bid.quantity_type,
-                u'status': bid.status,
-                u'type': bid.type,
-                u'emergency_level_name': bid.emergency_level.name,
-                u'emergency_level_level': bid.emergency_level.level}
+        data = {
+            u'caller': bid.caller.username,
+            u'name': bid.name,
+            u'acceptor': acceptor,
+            u'begin': str(bid.begin),
+            u'end': str(bid.end),
+            u'quantity': str(bid.quantity),
+            u'adress1': bid.adress1,
+            u'adress2': bid.adress2,
+            u'zipcode': bid.zipcode,
+            u'town': bid.town,
+            u'country': bid.country,
+            u'real_author': bid.real_author,
+            u'description': bid.description,
+            u'bidCategory': bid.bidCategory.bid_category_name,
+            u'photo': bid.photo.url,
+            u'quantity_type': bid.quantity_type,
+            u'status': bid.status,
+            u'type': bid.type,
+            u'emergency_level_name': bid.emergency_level.name,
+            u'emergency_level_level': bid.emergency_level.level
+        }
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return HttpResponseBadRequest()

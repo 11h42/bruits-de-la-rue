@@ -49,7 +49,6 @@ class TestBids(TestCase):
                                         'quantity_type': 'KG',
                                         'status': 'Ouvert',
                                         'type': 'Offre',
-                                        'emergency_level_name': emergency.name,
                                         'emergency_level_level': emergency.level
                                     }),
                                     content_type='application/json')
