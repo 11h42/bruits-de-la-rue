@@ -11,7 +11,7 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ['name', 'type', 'begin', 'end', 'status', 'quantity', 'real_author',
                   'emergency_level',
-                  'recurrence', 'description', 'bidCategory', 'photo', 'quantity_type', 'adress1', 'adress2', 'zipcode',
+                  'description', 'bidCategory', 'photo', 'quantity_type', 'adress1', 'adress2', 'zipcode',
                   'town', 'country', 'photo']
 
     def __init__(self, *args, **kwargs):

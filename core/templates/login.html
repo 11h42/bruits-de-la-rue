@@ -24,7 +24,7 @@
 {% block header %}{% endblock %}
 {% block content %}
     <div id="login">
-        <form id="form-signin" method="POST" action="{% url 'core:login' %}">
+        <form id="form-signin" method="POST" action="{% url 'api:login' %}">
             {% csrf_token %}
             <legend>Connectez-vous</legend>
             <div class="form-group">

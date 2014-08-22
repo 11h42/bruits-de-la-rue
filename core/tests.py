@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from core import factories, views
+from api.tests import factories
+from core import views
 
 
 class BidTest(TestCase):

@@ -71,7 +71,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'south'
+    'south',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -94,27 +95,27 @@ WSGI_APPLICATION = 'b2rue.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
-        'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-        'USER': config.get('DATABASE', 'USER', 'antoinebriand'),
-        'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
-        'HOST': config.get('DATABASE', 'HOST', 'localhost'),
-        'PORT': config.get('DATABASE', 'PORT', '5432'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
 #         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-#         'USER': config.get('DATABASE', 'USER', 'abriand'),
-#         'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
+#         'USER': config.get('DATABASE', 'USER', 'antoinebriand'),
+#         'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
 #         'HOST': config.get('DATABASE', 'HOST', 'localhost'),
 #         'PORT': config.get('DATABASE', 'PORT', '5432'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
+        'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
+        'USER': config.get('DATABASE', 'USER', 'abriand'),
+        'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
+        'HOST': config.get('DATABASE', 'HOST', 'localhost'),
+        'PORT': config.get('DATABASE', 'PORT', '5432'),
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

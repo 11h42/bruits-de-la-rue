@@ -133,8 +133,8 @@ class EmergencyLevels(models.Model):
 
 
 class Bid(models.Model):
-    caller_fk_user = models.ForeignKey(User, related_name='caller_fk_user')
-    acceptor_fk_user = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
+    caller = models.ForeignKey(User, related_name='caller_fk_user')
+    acceptor = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
 
     begin = models.DateField(null=True, blank=True)
     end = models.DateField(null=True, blank=True)
@@ -147,8 +147,6 @@ class Bid(models.Model):
     country = models.CharField(max_length=255, null=True, blank=True)
 
     real_author = models.CharField(max_length=255)
-
-    recurrence = models.BooleanField(default=False)
     description = models.TextField()
     name = models.CharField(max_length=255)
 
@@ -166,4 +164,4 @@ class Bid(models.Model):
         return u'%s' % (self.name)
 
     def get_absolute_url(self):
-        return reverse('core:bid-details', args=(self.pk, ))
+        return reverse('api:get-bid', args=(self.pk, ))
