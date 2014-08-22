@@ -36,7 +36,7 @@ def handle_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('core:index'))
+                return HttpResponseRedirect(reverse('api:index'))
     t = get_template('login.html')
     c = RequestContext(request, {'has_error': has_error})
     return HttpResponse(t.render(c))
@@ -71,7 +71,7 @@ class BidCreate(CreateView):
     def form_valid(self, form):
         if bool(form.instance.photo) is False:
             form.instance.photo = settings.DEFAULT_BID_PHOTO
-        form.instance.caller_fk_user = self.request.user
+        form.instance.caller = self.request.user
         return super(BidCreate, self).form_valid(form)
 
 
