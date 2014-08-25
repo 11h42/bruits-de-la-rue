@@ -14,11 +14,7 @@ urlpatterns = patterns(
     '',
     url(r'^login/$', coreview.handle_login, name='login'),
     url(r'^$', coreview.index, name='index'),
-    url(r'^annonce/(?P<bid_id>\d+)/$', views.handle_bids, name="get-bid"),
-    url(r'^annonce/liste/$', coreview.BidList.as_view(), name="get-list-bid"),
-    url(r'^annonce/$', views.handle_bid, name='post-bid'),
-    url(r'^annonce/(?P<pk>[0-9]+)/update/$', coreview.BidUpdate.as_view(), name='update-bid'),
-    url(r'^annonce/(?P<pk>[0-9]+)/delete/$', coreview.BidDelete.as_view(), name='delete-bid'),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# TODO: + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) Cette ligne sert en gros uniquement au DEBUG, inutilisable en prod, il faut la remplacer en utilisant le système de gestion de fichiers statiques ?
+    url(r'^bids/$', views.handle_bids, name="get-bids"),
+    url(r'^bids/(?P<bid_id>\d+)/$', views.handle_bid, name="get-bid"),
+)
