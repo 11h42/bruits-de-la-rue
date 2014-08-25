@@ -20,8 +20,8 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     $scope.getBids();
 });
 
-bidsModule.controller('bidController', function ($scope, $http){
-   $scope.getBid = function () {
+bidsModule.controller('bidController', function ($scope, $http) {
+    $scope.getBid = function () {
         $http.get('/api/bid/' + $scope.idBid).
             success(function (data, status, headers, config) {
 
