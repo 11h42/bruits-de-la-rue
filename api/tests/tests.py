@@ -12,12 +12,13 @@ class TestBids(TestCase):
         pass
 
     def test_get_bids(self):
-        bid = BidFactory()
+        bid = BidFactory(name='test name')
         response = self.client.get('/api/bids/')
         self.assertEquals(200, response.status_code)
         bids = json.loads(response.content)['bids']
-        self.assertEquals(bids[0].name, bids.get('name'))
-        self.assertEquals(bids.length, 1)
+        self.assertEquals(bids[0]['id'], bid.id)
+        self.assertEquals(bids[0]['name'], 'test name')
+        self.assertEquals(len(bids), 1)
 
         # def test_get_non_existing_bid(self):
         # response = self.client.get(reverse('api:get-bid', kwargs={'bid_id': 4}))

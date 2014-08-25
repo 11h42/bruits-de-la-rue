@@ -158,10 +158,30 @@ class Bid(models.Model):
     type = models.CharField(max_length=10)
     emergency_level = models.ForeignKey(EmergencyLevels)
 
-    #association = models.ForeignKey(Association)
+    def serialize(self):
+        """Serialize Recipient object"""
+        caller = self.caller.username if self.caller else None
+        acceptor = self.acceptor.username if self.acceptor else None
+        begin = self.begin.isoformat() if self.begin else None
+        end = self.end.isoformat() if self.end else None
+        #todo add base64 photo
+        # data = {'id': self.id, 'status': self.status, 'caller': caller, 'acceptor': acceptor,
+        #         'begin': begin, 'end': end, 'quantity': self.quantity, 'adress1': self.adress1,
+        #         'adress2': self.adress2,
+        #         'zipcode': self.zipcode, 'town': self.town, 'country': self.country,
+        #         'real_author': self.real_author,
+        #         'description': self.description,
+        #         'name': self.name, 'bidCategory': self.bidCategory.id,
+        #         'quantity_type': self.quantity_type, 'type': self.type, 'emergency_level': self.emergency_level.id}
+        data = {'id': self.id, 'name': self.name}
+        return data
 
-    def __unicode__(self):
-        return u'%s' % (self.name)
 
-    def get_absolute_url(self):
-        return reverse('api:get-bid', args=(self.pk, ))
+
+
+def __unicode__(self):
+    return u'%s' % (self.name)
+
+
+def get_absolute_url(self):
+    return reverse('api:get-bid', args=(self.pk, ))

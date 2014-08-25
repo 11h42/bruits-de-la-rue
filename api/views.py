@@ -1,12 +1,27 @@
 # coding=utf-8
+import json
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.http.response import HttpResponse, HttpResponseNotFound
 
 from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed
+from core.models import Bid
 
 
 def get_bids(request):
-    return {}
+    try:
+        bids = Bid.objects.all()
+        if bids:
+            return_bids = []
+            for bid in bids:
+                return_bids.append(bid.serialize())
+            return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
+    except Exception as e:
+        print (e)
+
+
+    return HttpResponseNotFound()
 
 
 # @login_required
@@ -40,8 +55,8 @@ def handle_bid(request, bid_id):
     # # TODO : Tester si bid_id est un entier ! (unicodedata.numeric ou is int ne semble pas être adaptés)
     #
     # def handle_bid(request):
-    #     if request.method == "POST":
-    #         return post_bid(request)
+    # if request.method == "POST":
+    # return post_bid(request)
     #     else:
     #         return HttpResponseBadRequest()
     #
