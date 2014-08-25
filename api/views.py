@@ -1,5 +1,6 @@
 # coding=utf-8
 import json
+from django.contrib.auth.decorators import login_required
 
 from django.http.response import HttpResponse, HttpResponseNotFound
 
@@ -7,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed
 from core.models import Bid
 
-
+@login_required()
 def get_bids(request):
     bids = Bid.objects.all()
     if bids:
@@ -28,7 +29,7 @@ def handle_bids(request):
     return HttpMethodNotAllowed()
 
 
-# @login_required
+@login_required
 @catch_any_unexpected_exception
 def handle_bid(request, bid_id):
     # if request.method == 'GET':

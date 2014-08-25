@@ -2,31 +2,51 @@
 import json
 
 from django.test import TestCase
+from api.tests import factories
 
 from api.tests.factories import BidFactory
 
 
 class TestBids(TestCase):
     def setUp(self):
-        # todo autenticate user
-        pass
+        self.user = factories.UserFactory.create(email="toto@titi.com", password="1234")
+        self.bid = BidFactory(name='test name', caller=self.user)
 
-    def test_get_bids(self):
-        bid = BidFactory(name='test name')
+    def test_get_bids_non_logged(self):
+        response = self.client.get('/api/bids/')
+        self.assertEquals(302, response.status_code)
+
+    def test_get_bids_logged(self):
+        login = self.client.login(username=self.user.email, password="1234")
+        self.assertTrue(login)
+
         response = self.client.get('/api/bids/')
         self.assertEquals(200, response.status_code)
         bids = json.loads(response.content)['bids']
-        self.assertEquals(bids[0]['id'], bid.id)
+        self.assertEquals(bids[0]['id'], self.bid.id)
         self.assertEquals(bids[0]['name'], 'test name')
         self.assertEquals(len(bids), 1)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         # def test_get_non_existing_bid(self):
         # response = self.client.get(reverse('api:get-bid', kwargs={'bid_id': 4}))
-        #     self.assertEquals(400, response.status_code)
+        # self.assertEquals(400, response.status_code)
         #
         # def test_post_bid(self):
-        #     user = UserFactory(email="abriand@toto.com", password="toto")
-        #     bid_category = factories.BidCategoryFactory()
+        # user = UserFactory(email="abriand@toto.com", password="toto")
+        # bid_category = factories.BidCategoryFactory()
         #     emergency = factories.EmergencyLevelFactory()
         #     login = self.client.login(username=user.email, password="toto")
         #
