@@ -54,3 +54,6 @@ config/*.ini
 *.db
 www/*
 media
+
+frontend/web/node_modules/
+frontend/web/bower_components/

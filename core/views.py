@@ -100,6 +100,6 @@ def get_bid_details_page(request, pk):
 
 
 class BidList(ListView):
-    template_name = 'bids/list_bids.html'
+    template_name = 'bids/bids.html'
     model = Bid
     context_object_name = 'bids'

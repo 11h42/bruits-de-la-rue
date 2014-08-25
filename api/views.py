@@ -3,6 +3,8 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http.response import HttpResponse, HttpResponseNotFound
+from django.template import RequestContext
+from django.template.loader import get_template
 
 from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed
@@ -133,3 +135,9 @@ def handle_bid(request, bid_id):
     #     else:
     #         return HttpResponseBadRequest()
     #         # TODO : Cette fonction ne devrais pas renvoyer de réponse HTTP, mais un objet bid
+
+
+def display_bids(request):
+    t = get_template('bids/bids.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))

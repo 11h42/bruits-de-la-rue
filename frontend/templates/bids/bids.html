@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div data-ng-app="bidsModule" >
+<div data-ng-controller="bidsController">
+    <input type="text" data-ng-model="search"/>
+    <ul>
+        <li data-ng-repeat="list in lists | filter:search">
+            {$ list.name $}
+        </li>
+
+        <div data-ng-show="hasError">
+            {$ errorMessage $}
+        </div>
+    </ul>
+
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js" ></script>
+
+
+{% endblock %}

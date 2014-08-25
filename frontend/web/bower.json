@@ -1,0 +1,9 @@
+{
+  "name": "b2rue",
+  "dependencies": {
+    "angular": "~1.2.23"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.23"
+  }
+}
