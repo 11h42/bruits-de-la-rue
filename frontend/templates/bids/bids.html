@@ -4,9 +4,10 @@
 <div data-ng-app="bidsModule" >
 <div data-ng-controller="bidsController">
     <input type="text" data-ng-model="search"/>
+    {$ search $}
     <ul>
-        <li data-ng-repeat="list in lists | filter:search">
-            {$ list.name $}
+        <li data-ng-repeat="bid in bids | filter:search">
+            {$ bid.name $}
         </li>
 
         <div data-ng-show="hasError">
@@ -21,7 +22,6 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js" ></script>
-
-
+    <script type="text/javascript" src="/static/bower_components/angular/angular.min.js" ></script>
+    <script type="text/javascript" src="/static/js/bidModule.js" ></script>
 {% endblock %}

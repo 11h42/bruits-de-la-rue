@@ -55,5 +55,5 @@ config/*.ini
 www/*
 media
 
-frontend/web/node_modules/
-frontend/web/bower_components/
+frontend/static/node_modules/
+frontend/static/bower_components/

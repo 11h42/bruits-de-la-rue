@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # CONSTANTS
+import sys
+
 DEFAULT_BID_PHOTO = 'images/default.png'
 
 
@@ -18,28 +20,21 @@ import os
 
 from tools.config import Config
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
-MEDIA_URL = '/media/'
-
-PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
-CONFIG_PATH = os.path.realpath(os.path.join(PROJECT_DIR, '..', 'config'))
-LOGGING_PATH = os.path.realpath(os.path.join(PROJECT_DIR, '..', 'log'))
-if not os.path.exists(CONFIG_PATH):
-    os.makedirs(CONFIG_PATH)
+LOGGING_PATH = os.path.join(BASE_DIR, 'log')
 if not os.path.exists(LOGGING_PATH):
     os.makedirs(LOGGING_PATH)
+
+CONFIG_PATH = os.path.join(BASE_DIR, 'config')
+if not os.path.exists(CONFIG_PATH):
+    os.makedirs(CONFIG_PATH)
+
 CONFIG_FILE = os.path.join(CONFIG_PATH, 'config.ini')
 
 config = Config()
 config.read(CONFIG_FILE)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# Make this unique, and don't share it with anybody.
 try:
     SECRET_KEY = config.get('DJANGO', 'SECRET_KEY')
 except:
@@ -55,11 +50,10 @@ except:
     f.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.getboolean('DEBUG', 'DEBUG', True)
+DEBUG = config.getboolean('DEBUG', 'DEBUG', False)
 TEMPLATE_DEBUG = config.getboolean('DEBUG', 'TEMPLATE_DEBUG', DEBUG)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = config.get('DJANGO', 'ALLOWED_HOSTS', '').split(';')
 
 # Application definition
 
@@ -90,28 +84,12 @@ ROOT_URLCONF = 'b2rue.urls'
 
 WSGI_APPLICATION = 'b2rue.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
-#         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-#         'USER': config.get('DATABASE', 'USER', 'antoinebriand'),
-#         'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
-#         'HOST': config.get('DATABASE', 'HOST', 'localhost'),
-#         'PORT': config.get('DATABASE', 'PORT', '5432'),
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-        'USER': config.get('DATABASE', 'USER', 'abriand'),
-        'PASSWORD': config.get('DATABASE', 'PASSWORD', 'password'),
+        'USER': config.get('DATABASE', 'USER', 'b2rue'),
+        'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
         'HOST': config.get('DATABASE', 'HOST', 'localhost'),
         'PORT': config.get('DATABASE', 'PORT', '5432'),
     }
@@ -130,16 +108,44 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+WWW_PATH = os.path.join(BASE_DIR, 'www')
+if not os.path.exists(WWW_PATH):
+    os.makedirs(WWW_PATH)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
+if not os.path.exists(MEDIA_ROOT):
+    os.makedirs(MEDIA_ROOT)
+
+MEDIA_DIR = '/media/'
+MEDIA_URL = MEDIA_DIR
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+
+# URL prefix for static files.
+# Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'frontend', 'static'),
+)
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'core/../frontend/templates'),
 )
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
+TESTS_IN_PROGRESS = False
+if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    SOUTH_TESTS_MIGRATE = False
+    SKIP_SOUTH_TESTS = True
+    TESTS_IN_PROGRESS = True
