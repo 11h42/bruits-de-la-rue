@@ -1,7 +1,8 @@
 {
   "name": "b2rue",
   "dependencies": {
-    "angular": "~1.2.23"
+    "angular": "~1.2.23",
+    "bootstrap": "~3.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.23"

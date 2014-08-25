@@ -9,7 +9,6 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     $scope.hasError = false;
     $scope.bids = [];
     $scope.getBids = function () {
-
         $http.get('/api/bids/').
             success(function (data, status, headers, config) {
                 $scope.bids = data.bids;
@@ -18,7 +17,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
                 console.log('error')
             });
     };
-    $scope.getBids()
+    $scope.getBids();
 });
 
 bidsModule.controller('bidController', function ($scope, $http){
