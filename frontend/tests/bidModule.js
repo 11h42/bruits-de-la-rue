@@ -1,20 +1,19 @@
 var assert = chai.assert;
 
-describe('Bid Application', function () {
+describe('Bids Application', function () {
     beforeEach(module('bidsModule'));
 
-    describe('Bid controller', function () {
+    describe('Bids controller', function () {
 
-        var scope, httpBackend, controller;
+        var scope, controller;
         beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
             scope = $rootScope.$new();
-            httpBackend = $httpBackend;
             controller = $controller('bidsController', {$scope: scope});
         }));
 
-        it('should have no error', function () {
+        it('should be instanciate with default values', function () {
             assert.isFalse(scope.hasError);
-        });
-
+            assert.deepEqual(scope.bids, [])
+        })
     });
 });

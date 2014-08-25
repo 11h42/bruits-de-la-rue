@@ -2,7 +2,6 @@
 from django.conf.urls import patterns, url
 from django.contrib import admin
 
-from core import views as coreview
 from frontend import views
 from frontend.views import index
 

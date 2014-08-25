@@ -26,10 +26,16 @@ class TestBids(TestCase):
         self.assertEquals(bids[0]['id'], self.bid.id)
         self.assertEquals(bids[0]['name'], 'test name')
         self.assertEquals(len(bids), 1)
+        self.client.logout()
 
-
-
-
+    def test_get_a_bid(self):
+        login = self.client.login(username=self.user.email, password="1234")
+        self.assertTrue(login)
+        response = self.client.get('/api/bids/' + str(self.bid.id) + '/')
+        self.assertEquals(200, response.status_code)
+        bid = json.loads(response.content)
+        self.assertTrue(len(bid['bid']) > 1)
+        self.client.logout()
 
 
 
@@ -47,8 +53,8 @@ class TestBids(TestCase):
         # def test_post_bid(self):
         # user = UserFactory(email="abriand@toto.com", password="toto")
         # bid_category = factories.BidCategoryFactory()
-        #     emergency = factories.EmergencyLevelFactory()
-        #     login = self.client.login(username=user.email, password="toto")
+        # emergency = factories.EmergencyLevelFactory()
+        # login = self.client.login(username=user.email, password="toto")
         #
         #     response = self.client.post(reverse('api:post-bid'),
         #                                 json.dumps({
