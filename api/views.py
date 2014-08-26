@@ -54,8 +54,11 @@ def create_bid(request):
         if bid:
             if bid_json_valid(bid) is True:
                 return HttpResponse()
-    except:
-        pass
+    except Exception, e:
+        print "############### DEBUT EXCEPTION ##################"
+        print "L'erreur 'ascii' codec can't encode character u'\xe9' in position 11: ordinal not in range(128) est due au test_bid_json_valid() des tests API qui casse volontairement (jusqu'a ce que la méthode sois testée correctement)"
+        print e
+        print "############### FIN EXCEPTION ##################"
     return HttpResponse()
 
 
