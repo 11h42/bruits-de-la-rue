@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from time import strptime
+from datetime import date
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -132,14 +134,29 @@ class EmergencyLevels(models.Model):
     level = models.IntegerField()
 
 
+def clean_serialize(data):
+    if data['end'] and data['begin']:
+        data['time_left'] = data['end'] - data['begin']
+
+    if data['time_left']:
+        data['time_left'] = str(data['time_left'])
+
+    if data['end']:
+        data['end'] = data['end'].isoformat()
+    if data['begin']:
+        data['begin'] = data['begin'].isoformat()
+
+    return data
+
+
 class Bid(models.Model):
     caller = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
 
     begin = models.DateField(null=True, blank=True)
     end = models.DateField(null=True, blank=True)
-
-    quantity = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
+    # todo decimal
+    quantity = models.IntegerField(null=True, blank=True)
     adress1 = models.CharField(max_length=255, null=True, blank=True)
     adress2 = models.CharField(max_length=255, null=True, blank=True)
     zipcode = models.IntegerField(max_length=8, null=True, blank=True)
@@ -158,30 +175,23 @@ class Bid(models.Model):
     type = models.CharField(max_length=10)
     emergency_level = models.ForeignKey(EmergencyLevels)
 
+
     def serialize(self):
         """Serialize Recipient object"""
         caller = self.caller.username if self.caller else None
         acceptor = self.acceptor.username if self.acceptor else None
-        begin = self.begin.isoformat() if self.begin else None
         end = self.end.isoformat() if self.end else None
-        #todo add base64 photo
-        # data = {'id': self.id, 'status': self.status, 'caller': caller, 'acceptor': acceptor,
-        #         'begin': begin, 'end': end, 'quantity': self.quantity, 'adress1': self.adress1,
-        #         'adress2': self.adress2,
-        #         'zipcode': self.zipcode, 'town': self.town, 'country': self.country,
-        #         'real_author': self.real_author,
-        #         'description': self.description,
-        #         'name': self.name, 'bidCategory': self.bidCategory.id,
-        #         'quantity_type': self.quantity_type, 'type': self.type, 'emergency_level': self.emergency_level.id}
-        data = {'id': self.id, 'name': self.name}
-        return data
+        begin = self.begin.isoformat() if self.begin else None
+        # todo add base64 photo
+
+        data = {'id': self.id, 'name': self.name, 'begin': self.begin, 'end': self.end, 'quantity': self.quantity,
+                'quantity_type': self.quantity_type, 'emergency_level': self.emergency_level.id}
+
+        return clean_serialize(data)
 
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
-
-def __unicode__(self):
-    return u'%s' % (self.name)
-
-
-def get_absolute_url(self):
-    return reverse('api:get-bid', args=(self.pk, ))
+    def get_absolute_url(self):
+        return reverse('api:get-bid', args=(self.pk, ))

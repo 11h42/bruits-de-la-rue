@@ -1,16 +1,22 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
+from datetime import timedelta
 
 from django.test import TestCase
-from api.tests import factories
 
+from api.tests import factories
 from api.tests.factories import BidFactory
 
 
-class TestBids(TestCase):
+class TestBidsApi(TestCase):
     def setUp(self):
+        self.begin = datetime.date.today()
+        self.end = self.begin + timedelta(days=2)
+        self.emergency_level = factories.EmergencyLevelFactory(name="Urgent", level=10)
         self.user = factories.UserFactory.create(email="toto@titi.com", password="1234")
-        self.bid = BidFactory(name='test name', caller=self.user)
+        self.bid = BidFactory(quantity_type='KG', name='test name', caller=self.user, begin=self.begin,
+                              end=self.end, quantity="20", emergency_level=self.emergency_level)
 
     def test_get_bids_non_logged(self):
         response = self.client.get('/api/bids/')
@@ -25,6 +31,12 @@ class TestBids(TestCase):
         bids = json.loads(response.content)['bids']
         self.assertEquals(bids[0]['id'], self.bid.id)
         self.assertEquals(bids[0]['name'], 'test name')
+        self.assertEquals(bids[0]['begin'], self.begin.isoformat())
+        self.assertEquals(bids[0]['end'], self.end.isoformat())
+        self.assertEquals(bids[0]['quantity'], 20)
+        self.assertEquals(bids[0]['quantity_type'], 'KG')
+        self.assertEquals(bids[0]['emergency_level'], self.emergency_level.id)
+        self.assertEquals(bids[0]['time_left'], str(self.bid.end - self.bid.begin))
         self.assertEquals(len(bids), 1)
         self.client.logout()
 
@@ -44,8 +56,6 @@ class TestBids(TestCase):
 
 
 
-
-
         # def test_get_non_existing_bid(self):
         # response = self.client.get(reverse('api:get-bid', kwargs={'bid_id': 4}))
         # self.assertEquals(400, response.status_code)
@@ -56,9 +66,9 @@ class TestBids(TestCase):
         # emergency = factories.EmergencyLevelFactory()
         # login = self.client.login(username=user.email, password="toto")
         #
-        #     response = self.client.post(reverse('api:post-bid'),
-        #                                 json.dumps({
-        #                                     'caller': user.id,
+        # response = self.client.post(reverse('api:post-bid'),
+        # json.dumps({
+        # 'caller': user.id,
         #                                     'name': "Fruits et légumes",
         #                                     'acceptor': "",
         #                                     'begin': str(datetime.today()),

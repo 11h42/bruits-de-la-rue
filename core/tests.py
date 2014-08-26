@@ -1,33 +1,21 @@
+from datetime import datetime
+from datetime import timedelta
 from django.test import TestCase
 
 from api.tests import factories
 from core import views
+from core.models import clean_serialize
 
 
-class BidTest(TestCase):
-    def setUp(self):
-        self.user = factories.UserFactory(email="abriand@akema.fr", password="1234")
-        login = self.client.login(username=self.user.email, password="1234")
-        self.assertTrue(login)
-
-
-"""
-    def test_create_new_bid(self):
-        self.client.post(reverse('core:offer_add'),
-                         {'name': 'Tomates',
-                          'type': 'toto',
-                          'begin': '2014/12/12',
-                          'end': '2015/12/12',
-                          'status': 'TheStatus',
-                          'quantity': 12,
-                          'localization': 'Toronto',
-                          'real_author': 'Antoine',
-                          'emergency_level': 'Faible',
-                          'recurrence': False,
-                          'description': "This is a description",
-                          'bidCategory': "This is a bid category"})
-
-        self.assertEquals('Tomates', Bid.objects.get(name="Tomates")) """
+class TestBids(TestCase):
+    def test_clean_serialize(self):
+        begin = datetime.today()
+        end = begin + timedelta(days=2)
+        data = {'end': end, 'begin': begin}
+        cleaned_serialize = clean_serialize(data)
+        self.assertEquals(cleaned_serialize['end'], data['end'])
+        self.assertEquals(cleaned_serialize['begin'], data['begin'])
+        self.assertEquals(cleaned_serialize['time_left'], str(end - begin))
 
 
 class UserTest(TestCase):
