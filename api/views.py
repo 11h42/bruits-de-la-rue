@@ -83,7 +83,7 @@ def get_bid(request, bid_id):
         # data = {
         # u'caller': Bid.objects.get(bid.user.id),
         # u'name': bid.name,
-        #             u'acceptor': bid.acceptor,
+        # u'acceptor': bid.acceptor,
         #             u'begin': time.strptime(bid.begin,"%d%b%Y"),
         #             u'end': time.strptime(bid.begin,"%d%b%Y")str(bid.end),
         #             u'quantity': str(bid.quantity),

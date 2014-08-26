@@ -16,7 +16,7 @@ class TestBidsApi(TestCase):
         self.emergency_level = factories.EmergencyLevelFactory(name="Urgent", level=10)
         self.user = factories.UserFactory.create(email="toto@titi.com", password="1234")
         self.bid = BidFactory(quantity_type='KG', name='test name', caller=self.user, begin=self.begin,
-                              end=self.end, quantity="20", emergency_level=self.emergency_level)
+                              end=self.end, quantity="20", emergency_level=self.emergency_level, status='Ouvert')
 
     def test_get_bids_non_logged(self):
         response = self.client.get('/api/bids/')
@@ -37,6 +37,7 @@ class TestBidsApi(TestCase):
         self.assertEquals(bids[0]['quantity_type'], 'KG')
         self.assertEquals(bids[0]['emergency_level'], self.emergency_level.id)
         self.assertEquals(bids[0]['time_left'], str(self.bid.end - self.bid.begin))
+        self.assertEquals(bids[0]['status'], 'Ouvert')
         self.assertEquals(len(bids), 1)
         self.client.logout()
 
@@ -69,7 +70,7 @@ class TestBidsApi(TestCase):
         # response = self.client.post(reverse('api:post-bid'),
         # json.dumps({
         # 'caller': user.id,
-        #                                     'name': "Fruits et légumes",
+        # 'name': "Fruits et légumes",
         #                                     'acceptor': "",
         #                                     'begin': str(datetime.today()),
         #                                     'end': str(datetime.today() + timedelta(days=2)),

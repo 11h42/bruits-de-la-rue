@@ -1,19 +1,33 @@
 {% extends "base.html" %}
+{% block header %}
+
+{% endblock %}
 {% block content %}
     <div class="container">
         <div data-ng-app="bidsModule">
             <div data-ng-controller="bidsController">
+                <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <h1>Bids</h1>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th>id</th>
-                        <th>name</th>
+                        <th hidden="True">id</th>
+                        <th>Nom</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                        <th>Temps restant</th>
+                        <th>Quantité</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tr data-ng-repeat="bid in bids">
-                        <td>{$ bid.id $}</td>
+                        <td hidden="true">{$ bid.id $}</td>
                         <td>{$ bid.name $}</td>
+                        <td>{$ bid.begin $}</td>
+                        <td>{$ bid.end $}</td>
+                        <td>{$ bid.time_left $}</td>
+                        <td>{$ bid.quantity $} {$ bid.quantity_type $}</td>
+                        <td>{$ bid.status $}</td>
                     </tr>
                 </table>
             </div>

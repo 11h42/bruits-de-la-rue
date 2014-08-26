@@ -112,7 +112,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 
-
 WWW_PATH = os.path.join(BASE_DIR, 'www')
 if not os.path.exists(WWW_PATH):
     os.makedirs(WWW_PATH)

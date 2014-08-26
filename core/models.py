@@ -185,7 +185,7 @@ class Bid(models.Model):
         # todo add base64 photo
 
         data = {'id': self.id, 'name': self.name, 'begin': self.begin, 'end': self.end, 'quantity': self.quantity,
-                'quantity_type': self.quantity_type, 'emergency_level': self.emergency_level.id}
+                'quantity_type': self.quantity_type, 'emergency_level': self.emergency_level.id, 'status': self.status}
 
         return clean_serialize(data)
 
