@@ -1,12 +1,13 @@
 # coding=utf-8
 import json
-from django.contrib.auth.decorators import login_required
+from datetime import time
 
+from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseNotFound
 
 from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed
-from core.models import Bid
+from core.models import Bid, bid_json_valid
 
 
 @login_required()
@@ -26,8 +27,8 @@ def get_bids(request):
 def handle_bids(request):
     if request.method == "GET":
         return get_bids(request)
-    # if request.method == "POST":
-    # return create_bid(request)
+    if request.method == "POST":
+        return create_bid(request)
     return HttpMethodNotAllowed()
 
 
@@ -37,7 +38,7 @@ def handle_bid(request, bid_id):
     if request.method == 'GET':
         return get_bid(request, bid_id)
     # if request.method == 'POST':
-    # return HttpMethodNotAllowed()
+    # return create_bid(request)
     #
     # if request.method == 'PUT':
     # return update_bid(request, bid_id)
@@ -45,6 +46,17 @@ def handle_bid(request, bid_id):
     # if request.method == 'DELETE':
     # return delete_bid(request, bid_id)
     return HttpMethodNotAllowed()
+
+
+def create_bid(request):
+    try:
+        bid = json.loads(request.body)
+        if bid:
+            if bid_json_valid(bid) is True:
+                return HttpResponse()
+    except:
+        pass
+    return HttpResponse()
 
 
 def get_bid(request, bid_id):
@@ -84,13 +96,13 @@ def get_bid(request, bid_id):
         # u'caller': Bid.objects.get(bid.user.id),
         # u'name': bid.name,
         # u'acceptor': bid.acceptor,
-        #             u'begin': time.strptime(bid.begin,"%d%b%Y"),
-        #             u'end': time.strptime(bid.begin,"%d%b%Y")str(bid.end),
-        #             u'quantity': str(bid.quantity),
-        #             u'adress1': bid.adress1,
-        #             u'adress2': bid.adress2,
-        #             u'zipcode': bid.zipcode,
-        #             u'town': bid.town,
+        # u'begin': time.strptime(bid.begin,"%d%b%Y"),
+        # u'end': time.strptime(bid.begin,"%d%b%Y")str(bid.end),
+        # u'quantity': str(bid.quantity),
+        # u'adress1': bid.adress1,
+        # u'adress2': bid.adress2,
+        # u'zipcode': bid.zipcode,
+        # u'town': bid.town,
         #             u'country': bid.country,
         #             u'real_author': bid.real_author,
         #             u'description': bid.description,

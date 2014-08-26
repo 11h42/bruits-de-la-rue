@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from time import strptime
-from datetime import date
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.transaction import commit_on_success_unless_managed
 
 
 class Association(models.Model):
@@ -149,6 +148,16 @@ def clean_serialize(data):
     return data
 
 
+def bid_json_valid(bid):
+    # todo check if the json is valid
+    Bid(caller=User.objects.get(id=bid['caller']), name=str(bid['name']), real_author=str(bid['real_author']),
+        description=str(bid['description']), bidCategory=BidCategories.objects.get(name=bid['bidCategory']),
+        type=bid['type'], emergency_level=EmergencyLevels.objects.get(level=bid['emergency_level_level'])).save(
+        commit_on_success_unless_managed())
+
+    return True
+
+
 class Bid(models.Model):
     caller = models.ForeignKey(User, related_name='caller_fk_user')
     acceptor = models.ForeignKey(User, related_name='acceptor_fk_user', null=True)
@@ -170,14 +179,13 @@ class Bid(models.Model):
     bidCategory = models.ForeignKey(BidCategories)
 
     photo = models.FileField(upload_to=upload_to, blank=True, null=True)
-    quantity_type = models.CharField(max_length=255)
+    quantity_type = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255)
     type = models.CharField(max_length=10)
     emergency_level = models.ForeignKey(EmergencyLevels)
 
-
     def serialize(self):
-        """Serialize Recipient object"""
+        """Serialize Bid object"""
         caller = self.caller.username if self.caller else None
         acceptor = self.acceptor.username if self.acceptor else None
         end = self.end.isoformat() if self.end else None
@@ -189,9 +197,8 @@ class Bid(models.Model):
 
         return clean_serialize(data)
 
-
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % self.name
 
     def get_absolute_url(self):
         return reverse('api:get-bid', args=(self.pk, ))
