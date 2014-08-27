@@ -41,10 +41,10 @@ def handle_bid(request, bid_id):
 @catch_any_unexpected_exception
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
+    return_bids = []
     if bids:
-        return HttpResponse(json.dumps(bids[0].serialize()), content_type='application/json')
-    else:
-        return HttpResponseNotFound
+            return_bids.append(bids[0].serialize())
+    return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
 
