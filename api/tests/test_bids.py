@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+
 from django.test import TestCase
 
 from core.tests.factories import BidFactory

@@ -19,8 +19,7 @@ class BidForm(forms.ModelForm):
         self.fields['bidCategory'].choices = [(Category.id, Category.bid_category_name) for Category in
                                               BidCategories.objects.all()]
         self.fields['emergency_level'].choices = [(Emergency.id, Emergency.name) for Emergency in
-                                              EmergencyLevels.objects.all()]
-
+                                                  EmergencyLevels.objects.all()]
 
 
     TYPES = (('Offre', 'Offre', ), ('Demande', 'Demande', ))

@@ -49,9 +49,10 @@ describe('Bids Application', function () {
             var idBid = scope.getidBid('http://localhost:8000/annonce/1/');
             assert.equal(idBid, '1')
         });
-                it('should GET bids when controller is instantiated', function () {
+        it('should GET bids when controller is instantiated', function () {
             httpBackend.expectGET('/api/bid/1/').respond({});
             httpBackend.flush();
+            console.log('toto');
         });
 
     });

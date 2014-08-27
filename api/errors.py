@@ -4,7 +4,7 @@
 # ZZ error number
 
 error_codes = {
-    #global
+    # global
     "10900": "the json sent is not a valid json",
     "10901": "your contacts' limit is reached",
     "10666": "unknown error"
