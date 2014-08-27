@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div data-ng-app="bidsModule">
+            <div data-ng-controller="bidController">
+                <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
+                {$ bid $}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/bidModule.js"></script>
+{% endblock %}
