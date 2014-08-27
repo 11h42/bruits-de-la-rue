@@ -13,13 +13,11 @@ from core.models import Bid
 @catch_any_unexpected_exception
 def get_bids(request):
     bids = Bid.objects.all()
-
+    return_bids = []
     if bids:
-        return_bids = []
         for bid in bids:
             return_bids.append(bid.serialize())
-        return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
-    return HttpResponseNotFound()
+    return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
 @is_authenticated
@@ -27,15 +25,7 @@ def get_bids(request):
 def handle_bids(request):
     if request.method == "GET":
         return get_bids(request)
-    if request.method == "POST":
-        return create_bid(request)
     return HttpMethodNotAllowed()
-
-
-def create_bid(request):
-    print
-    return HttpResponse()
-
 
 @is_authenticated
 @catch_any_unexpected_exception
@@ -47,6 +37,8 @@ def handle_bid(request, bid_id):
 
 
 # todo test me
+@is_authenticated
+@catch_any_unexpected_exception
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if bids:

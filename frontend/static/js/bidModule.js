@@ -14,7 +14,6 @@ bidsModule.controller('bidsController', function ($scope, $http) {
                 $scope.bids = data.bids;
             }).error(function (data, status, headers, config) {
                 $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
-                console.log('error')
             });
     };
     $scope.getBids();
