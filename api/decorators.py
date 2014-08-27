@@ -1,5 +1,7 @@
 from functools import wraps
+
 from django.views.decorators.csrf import csrf_exempt
+
 from api.errors import error_codes
 from api.http_response import HttpBadRequest, HttpResponseUnauthorized
 
