@@ -1,1 +1,2 @@
-from tests import *
+from test_bids import *
+from test_factories import *

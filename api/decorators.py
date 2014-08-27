@@ -1,5 +1,7 @@
+from functools import wraps
+from django.views.decorators.csrf import csrf_exempt
 from api.errors import error_codes
-from api.http_response import HttpBadRequest
+from api.http_response import HttpBadRequest, HttpResponseUnauthorized
 
 
 def catch_any_unexpected_exception(view_func):
@@ -17,5 +19,20 @@ def catch_any_unexpected_exception(view_func):
             # todo add logger
             # logger.exception('catch unexpected error in %s api function' % view_func.__name__)
             return HttpBadRequest(10666, error_codes['10666'])
+
+    return _wrapped_view
+
+
+def b2rue_authenticated(view_func):
+    """Decorator which ensures the credentials (user and api key) are corrects."""
+
+    @csrf_exempt
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+
+        if hasattr(request, "user") and request.user.is_authenticated():
+            return view_func(request, *args, **kwargs)
+
+        return HttpResponseUnauthorized()
 
     return _wrapped_view

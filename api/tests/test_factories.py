@@ -8,8 +8,9 @@ class TestFactories(TestCase):
     def test_user_factory(self):
         user = factories.UserFactory()
         self.assertTrue(isinstance(user, User))
+        self.assertEquals(user.email, 'factory_user@akema.fr')
 
-    def test_user_factory_login(self):
+    def test_user_factory_is_authenticated(self):
         user = factories.UserFactory()
-        login = self.client.login(username=user.email, password="password")
-        self.assertTrue(login)
+        is_authenticated = self.client.login(username=user.email, password="password")
+        self.assertTrue(is_authenticated)

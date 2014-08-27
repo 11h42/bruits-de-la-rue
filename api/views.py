@@ -1,16 +1,16 @@
 # coding=utf-8
 import json
-from datetime import time
 
-from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseNotFound
 
+from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed
-from core.models import Bid, bid_json_valid
+from core.models import Bid
 
 
-@login_required()
+@is_authenticated
+@catch_any_unexpected_exception
 def get_bids(request):
     bids = Bid.objects.all()
 
@@ -22,7 +22,7 @@ def get_bids(request):
     return HttpResponseNotFound()
 
 
-@login_required
+@is_authenticated
 @catch_any_unexpected_exception
 def handle_bids(request):
     if request.method == "GET":
@@ -32,40 +32,25 @@ def handle_bids(request):
     return HttpMethodNotAllowed()
 
 
-@login_required
+def create_bid(request):
+    print
+    return HttpResponse()
+
+
+@is_authenticated
 @catch_any_unexpected_exception
 def handle_bid(request, bid_id):
     if request.method == 'GET':
         return get_bid(request, bid_id)
-    # if request.method == 'POST':
-    # return create_bid(request)
-    #
-    # if request.method == 'PUT':
-    # return update_bid(request, bid_id)
-    #
-    # if request.method == 'DELETE':
-    # return delete_bid(request, bid_id)
+
     return HttpMethodNotAllowed()
 
 
-def create_bid(request):
-    try:
-        bid = json.loads(request.body)
-        if bid:
-            if bid_json_valid(bid) is True:
-                return HttpResponse()
-    except Exception, e:
-        print "############### DEBUT EXCEPTION ##################"
-        print "L'erreur 'ascii' codec can't encode character u'\xe9' in position 11: ordinal not in range(128) est due au test_bid_json_valid() des tests API qui casse volontairement (jusqu'a ce que la méthode sois testée correctement)"
-        print e
-        print "############### FIN EXCEPTION ##################"
-    return HttpResponse()
-
-
+# todo test me
 def get_bid(request, bid_id):
-    bid = Bid.objects.filter(id=bid_id)
-    if bid:
-        return HttpResponse(json.dumps({'bid': bid[0].serialize()}), content_type='application/json')
+    bids = Bid.objects.filter(id=bid_id)
+    if bids:
+        return HttpResponse(json.dumps(bids[0].serialize()), content_type='application/json')
     else:
         return HttpResponseNotFound
 
@@ -92,7 +77,7 @@ def get_bid(request, bid_id):
         # return HttpResponseBadRequest()
         #
         #
-        # @login_required()
+        # @is_authenticated()
         # def post_bid(request):
         # bid = json.loads(request.body)
         # data = {
@@ -106,9 +91,9 @@ def get_bid(request, bid_id):
         # u'adress2': bid.adress2,
         # u'zipcode': bid.zipcode,
         # u'town': bid.town,
-        #             u'country': bid.country,
-        #             u'real_author': bid.real_author,
-        #             u'description': bid.description,
+        # u'country': bid.country,
+        # u'real_author': bid.real_author,
+        # u'description': bid.description,
         #             u'bidCategory': bid.bidCategory.bid_category_name,
         #             u'photo': bid.photo.url,
         #             u'quantity_type': bid.quantity_type,
