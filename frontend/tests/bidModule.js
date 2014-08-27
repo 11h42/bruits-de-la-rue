@@ -52,7 +52,6 @@ describe('Bids Application', function () {
         it('should GET bids when controller is instantiated', function () {
             httpBackend.expectGET('/api/bid/1/').respond({});
             httpBackend.flush();
-            console.log('toto');
         });
 
     });
