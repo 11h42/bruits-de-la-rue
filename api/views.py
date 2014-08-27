@@ -36,6 +36,7 @@ def handle_bid(request, bid_id):
     return HttpMethodNotAllowed()
 
 
+
 # todo test me
 @is_authenticated
 @catch_any_unexpected_exception
