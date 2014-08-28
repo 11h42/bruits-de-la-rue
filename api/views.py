@@ -32,7 +32,7 @@ def create_bid(request):
                 new_bid = Bid(**bid)
                 new_bid.save()
                 new_bid_id = new_bid.id
-                return HttpCreated(json.dumps({'mailing_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
+                return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
             except Exception:
                 raise
     return HttpBadRequest(10203, error_codes['10900'])

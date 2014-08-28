@@ -18,8 +18,27 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     };
     $scope.getBids();
 
-    $scope.showBid = function(element) {
+    $scope.showBid = function (element) {
+
         window.location = '/annonces/' + element.bid.id + '/';
+
+    };
+});
+
+bidsModule.controller('createBidController', function ($scope, $http) {
+
+    $scope.bid = {};
+    $scope.createBid = function () {
+        if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
+            $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
+        } else {
+            $http.post('/api/bids/', $scope.bid).
+                success(function (data, status, headers, config) {
+                    window.location = '/annonces/' + data['bid_id'] + '/';
+                }).error(function (data, status, headers, config) {
+                    $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                });
+        }
     };
 });
 
