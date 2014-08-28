@@ -3,7 +3,7 @@ import json
 
 from django.test import TestCase
 
-from api.validators import json_bid_is_valid
+from api.validators import BidValidator
 from core.models import Bid
 
 from core.tests.factories import BidFactory
@@ -24,6 +24,7 @@ class TestBidApi(TestCase):
     def setUp(self):
         self.user = factories.UserFactory()
         self.client.login(username=self.user.username, password="password")
+        self.validator = BidValidator()
 
     def test_get_a_bid_and_returns_200(self):
         """
@@ -46,24 +47,26 @@ class TestBidApi(TestCase):
         required fields.
         """
 
-        response = self.client.post('/api/bids/', json.dumps(
-            {"title": "Ma première annonce wouhouhou test 1234", "creator": self.user.id,
-             "description": 'Ceci est une description'}),
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description'
+                                    }),
                                     content_type="application/json; charset=utf-8")
-        bid_created = Bid.objects.filter(title='Ma première annonce wouhouhou test 1234')[:1]
-        self.assertTrue(bool(bid_created))
-        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bid_created[0].title)
+        bids = Bid.objects.all()
+        self.assertEquals(len(bids), 1)
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
     def test_json_bid_is_valid_with_bad_fields_returns_false(self):
-        self.assertFalse(json_bid_is_valid({}))
-        self.assertFalse(json_bid_is_valid({'title': "", 'description': "", "creator": self.user.id}))
-        self.assertFalse(json_bid_is_valid({'title': "Toto", 'description': "Titi", "creator": "tata"}))
-        self.assertFalse(json_bid_is_valid({'title': "Toto", 'description': "Titi", "creator": 2456}))
+        self.assertFalse(self.validator.bid_is_valid({}))
+        self.assertFalse(self.validator.bid_is_valid({'title': "", 'description': "", "creator": self.user.id}))
+        self.assertFalse(self.validator.bid_is_valid({'title': "Toto", 'description': "Titi", "creator": "tata"}))
+        self.assertFalse(self.validator.bid_is_valid({'title': "Toto", 'description': "Titi", "creator": 2456}))
 
-    def test_json_bid_is_valid_with_good_fields_returns_true(self):
-        self.assertTrue(json_bid_is_valid(
-            {'title': "Chaise", 'description': "Un siège, un dossier, 4 pieds", "creator": self.user.id}))
+    def test_bid_is_valid_with_good_fields_returns_true(self):
+        self.assertTrue(
+            self.validator.bid_is_valid({'title': "Chaise", 'description': "Un siège, un dossier, 4 pieds"}))
 
 
 class TestBidsApi(TestCase):

@@ -41,3 +41,9 @@ def display_bid(request, bid_id):
     t = get_template('bids/bid.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
+
+def create_bid(request):
+    t = get_template('bids/create_bid.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))

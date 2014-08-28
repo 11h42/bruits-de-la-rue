@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <form role="form">
+            <div class="form-group">
+                <label for="bid_title">Titre :</label>
+                <input name="bid_title" type="text" class="form-control" id="bid_title" placeholder="Titre de l'annonce">
+            </div>
+            <div class="form-group">
+                <label for="bid_descritpion">Description</label>
+                <textarea name="bid_description" id="bid_descritpion" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

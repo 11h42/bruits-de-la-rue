@@ -1,18 +1,22 @@
 from core.models import User
 
 
-def json_bid_is_valid(bid):
-    """
-    Json bid values integrity test
-    :param bid:
-    :return: True if all the rules are respected. False instead.
-    """
-
-    if not 'title' in bid or not 'creator' in bid or not 'description' in bid or len(bid['title']) is 0 or len(
-            bid['description']) is 0 or type(bid['creator']) is not int:
-        return False
-
-    if not User.objects.filter(id=bid['creator'])[:1]:
-        return False
-
-    return True
+class BidValidator():
+    @staticmethod
+    def bid_is_valid(bid):
+        """
+        return true if a given bid is valid
+        :param bid:
+        :return: True if all the rules are respected. False instead.
+        """
+        authorized_fields = ['title', 'description']
+        errors = []
+        if bid:
+            for key, value in bid.items():
+                if key not in authorized_fields:
+                    errors.append('key %s is not valid' % key)
+                elif not value:
+                    errors.append('key %s could not be null' % key)
+        else:
+            errors.append('bid could not be null')
+        return len(errors) == 0

@@ -1,14 +1,14 @@
 # coding=utf-8
 import json
 
-from django.http.response import HttpResponse, HttpResponseBadRequest
-
-from api import validators
+from django.http.response import HttpResponse
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
-from api.http_response import HttpMethodNotAllowed, HttpCreated
-from core.models import Bid, User
+from api.errors import error_codes
+from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest
+from api.validators import BidValidator
+from core.models import Bid
 
 
 @is_authenticated
@@ -25,14 +25,17 @@ def get_bids(request):
 def create_bid(request):
     bid = json.loads(request.body)
     if bid:
-        if validators.json_bid_is_valid(bid) is True:
-            new_bid = Bid()
-            new_bid.creator = User.objects.filter(id=bid['creator'])[0]
-            new_bid.title = bid['title']
-            new_bid.description = bid['description']
-            new_bid.save()
-            return HttpCreated(json.dumps({'bid_id': new_bid.id}))
-    return HttpResponseBadRequest()
+        bid_validator = BidValidator()
+        if bid_validator.bid_is_valid(bid):
+            bid['creator'] = request.user
+            try:
+                new_bid = Bid(**bid)
+                new_bid.save()
+                new_bid_id = new_bid.id
+                return HttpCreated(json.dumps({'mailing_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
+            except Exception:
+                raise
+    return HttpBadRequest(10203, error_codes['10900'])
 
 
 @is_authenticated

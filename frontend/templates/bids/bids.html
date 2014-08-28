@@ -2,13 +2,16 @@
 {% block header %}
 
 {% endblock %}
+{% block body %}
+    <body data-ng-app="bidsModule" data-ng-controller="bidsController">
+{% endblock %}
 {% block content %}
     <div class="container">
-        <div data-ng-app="bidsModule">
-            <div data-ng-controller="bidsController">
+        <div>
+            <div>
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <h1>Bids</h1>
-                <table class="table table-bordered">
+                <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>Nom</th>
@@ -23,6 +26,7 @@
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.begin $}</td>
                         <td>{$ bid.end $}</td>
+                        <td></td>
                         <td>{$ bid.quantity $}</td>
                         <td>{$ bid.status $}</td>
                     </tr>
