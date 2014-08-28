@@ -1,7 +1,8 @@
 # coding=utf-8
 import json
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
+
 from api import validators
 
 from api.decorators import b2rue_authenticated as is_authenticated
@@ -22,23 +23,16 @@ def get_bids(request):
 
 
 def create_bid(request):
-    try:
-        bid = json.loads(request.body)
-        if bid:
-            if validators.json_bid_is_valid(bid) is True:
-                new_bid = Bid()
-                new_bid.creator = User.objects.filter(id=bid['creator'])[0]
-                new_bid.title = bid['title']
-                new_bid.description = bid['description']
-                new_bid.save()
-                return HttpCreated(json.dumps({'bid_id': new_bid.id}))
-
-    except Exception, e:
-        print '######### EXCEPTION #######'
-        print e
-        print '######### EXCEPTION #######'
-
-
+    bid = json.loads(request.body)
+    if bid:
+        if validators.json_bid_is_valid(bid) is True:
+            new_bid = Bid()
+            new_bid.creator = User.objects.filter(id=bid['creator'])[0]
+            new_bid.title = bid['title']
+            new_bid.description = bid['description']
+            new_bid.save()
+            return HttpCreated(json.dumps({'bid_id': new_bid.id}))
+    return HttpResponseBadRequest()
 
 
 @is_authenticated

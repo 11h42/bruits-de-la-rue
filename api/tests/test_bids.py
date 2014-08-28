@@ -2,6 +2,8 @@
 import json
 
 from django.test import TestCase
+
+from api.validators import json_bid_is_valid
 from core.models import Bid
 
 from core.tests.factories import BidFactory
@@ -48,10 +50,14 @@ class TestBidApi(TestCase):
             {"title": "Ma première annonce wouhouhou test 1234", "creator": self.user.id,
              "description": 'Ceci est une description'}),
                                     content_type="application/json; charset=utf-8")
-
-        bid_created = Bid.objects.filter(title='Ma première annonce wouhouhou test 1234')[0]
-        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bid_created.title)
+        bid_created = Bid.objects.filter(title='Ma première annonce wouhouhou test 1234')[:1]
+        self.assertTrue(bool(bid_created))
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bid_created[0].title)
         self.assertEquals(201, response.status_code)
+
+    def test_valid_json_bid_with_required_fields_missing(self):
+        self.assertFalse(json_bid_is_valid({}))
+        self.assertFalse(json_bid_is_valid({'title': "", 'description': "", "creator": self.user.id}))
 
 
 class TestBidsApi(TestCase):
