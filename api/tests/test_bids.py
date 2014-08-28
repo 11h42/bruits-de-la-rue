@@ -2,6 +2,7 @@
 import json
 
 from django.test import TestCase
+from core.models import Bid
 
 from core.tests.factories import BidFactory
 from core.tests import factories
@@ -36,6 +37,21 @@ class TestBidApi(TestCase):
         self.assertEquals(bids[0]['title'], 'Annonce de test')
 
         self.assertEquals(200, response.status_code)
+
+    def test_post_a_bid_with_minimum_info_and_return_201(self):
+        """
+        To create a new bid you should post on /api/bid/. This post should contains a JSON with the miniumum
+        required fields.
+        """
+
+        response = self.client.post('/api/bids/', json.dumps(
+            {"title": "Ma première annonce wouhouhou test 1234", "creator": self.user.id,
+             "description": 'Ceci est une description'}),
+                                    content_type="application/json; charset=utf-8")
+
+        bid_created = Bid.objects.filter(title='Ma première annonce wouhouhou test 1234')[0]
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bid_created.title)
+        self.assertEquals(201, response.status_code)
 
 
 class TestBidsApi(TestCase):

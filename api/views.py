@@ -2,11 +2,12 @@
 import json
 
 from django.http.response import HttpResponse
+from api import validators
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
-from api.http_response import HttpMethodNotAllowed
-from core.models import Bid
+from api.http_response import HttpMethodNotAllowed, HttpCreated
+from core.models import Bid, User
 
 
 @is_authenticated
@@ -20,11 +21,34 @@ def get_bids(request):
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
+def create_bid(request):
+    try:
+        bid = json.loads(request.body)
+        if bid:
+            if validators.json_bid_is_valid(bid) is True:
+                new_bid = Bid()
+                new_bid.creator = User.objects.filter(id=bid['creator'])[0]
+                new_bid.title = bid['title']
+                new_bid.description = bid['description']
+                new_bid.save()
+                return HttpCreated(json.dumps({'bid_id': new_bid.id}))
+
+    except Exception, e:
+        print '######### EXCEPTION #######'
+        print e
+        print '######### EXCEPTION #######'
+
+
+
+
 @is_authenticated
 @catch_any_unexpected_exception
 def handle_bids(request):
     if request.method == "GET":
         return get_bids(request)
+
+    if request.method == "POST":
+        return create_bid(request)
     return HttpMethodNotAllowed()
 
 
