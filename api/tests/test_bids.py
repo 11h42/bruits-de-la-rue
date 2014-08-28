@@ -55,9 +55,15 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bid_created[0].title)
         self.assertEquals(201, response.status_code)
 
-    def test_valid_json_bid_with_required_fields_missing(self):
+    def test_json_bid_is_valid_with_bad_fields_returns_false(self):
         self.assertFalse(json_bid_is_valid({}))
         self.assertFalse(json_bid_is_valid({'title': "", 'description': "", "creator": self.user.id}))
+        self.assertFalse(json_bid_is_valid({'title': "Toto", 'description': "Titi", "creator": "tata"}))
+        self.assertFalse(json_bid_is_valid({'title': "Toto", 'description': "Titi", "creator": 2456}))
+
+    def test_json_bid_is_valid_with_good_fields_returns_true(self):
+        self.assertTrue(json_bid_is_valid(
+            {'title': "Chaise", 'description': "Un siège, un dossier, 4 pieds", "creator": self.user.id}))
 
 
 class TestBidsApi(TestCase):
