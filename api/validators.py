@@ -1,6 +1,3 @@
-from core.models import User
-
-
 class BidValidator():
     @staticmethod
     def bid_is_valid(bid):
