@@ -11,7 +11,6 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th hidden="True">id</th>
                         <th>Nom</th>
                         <th>Début</th>
                         <th>Fin</th>
@@ -20,8 +19,7 @@
                         <th>Status</th>
                     </tr>
                     </thead>
-                    <tr data-ng-repeat="bid in bids">
-                        <td hidden="true">{$ bid.id $}</td>
+                    <tr id="{$ bid.id $}" ng-click="showBid(this);" data-ng-repeat="bid in bids">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.begin $}</td>
                         <td>{$ bid.end $}</td>
@@ -32,8 +30,6 @@
             </div>
         </div>
     </div>
-
-
 
 {% endblock %}
 

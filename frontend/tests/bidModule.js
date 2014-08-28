@@ -30,6 +30,7 @@ describe('Bids Application', function () {
             httpBackend.flush();
             assert.deepEqual(scope.bids, bids);
         });
+
     });
 
     describe('Bid controller', function () {

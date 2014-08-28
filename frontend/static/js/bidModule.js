@@ -17,6 +17,10 @@ bidsModule.controller('bidsController', function ($scope, $http) {
             });
     };
     $scope.getBids();
+
+    $scope.showBid = function(element) {
+        window.location = '/annonce/' + element.bid.id + '/';
+    };
 });
 
 bidsModule.controller('bidController', function ($scope, $http, $location) {
