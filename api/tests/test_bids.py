@@ -32,7 +32,7 @@ class TestBidApi(TestCase):
         This test check if the json contains the good informations  and if the api url is good.
         """
         bid = BidFactory(creator=self.user)
-        response = self.client.get('/api/bid/' + str(bid.id) + '/')
+        response = self.client.get('/api/bids/' + str(bid.id) + '/')
         bids = json.loads(response.content)['bids']
 
         self.assertEquals(len(bids), 1)

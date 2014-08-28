@@ -19,7 +19,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     $scope.getBids();
 
     $scope.showBid = function(element) {
-        window.location = '/annonce/' + element.bid.id + '/';
+        window.location = '/annonces/' + element.bid.id + '/';
     };
 });
 
@@ -29,14 +29,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.getidBid = function (url) {
         var url_split = url.split('/');
-        var indexOfId = url_split.indexOf('annonce') + 1;
+        var indexOfId = url_split.indexOf('annonces') + 1;
         return url_split[indexOfId];
     };
 
     $scope.idBid = $scope.getidBid($location.absUrl());
 
     $scope.getBid = function () {
-        $http.get('/api/bid/' + $scope.idBid + '/').
+        $http.get('/api/bids/' + $scope.idBid + '/').
             success(function (data) {
                 $scope.bid = data.bids;
             }).error(function () {

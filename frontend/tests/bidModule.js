@@ -40,18 +40,18 @@ describe('Bids Application', function () {
         beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
             scope = $rootScope.$new();
             var fakeLocation = {absUrl: function () {
-                return 'http://localhost:8000/annonce/1/'
+                return 'http://localhost:8000/annonces/1/'
             }};
             httpBackend = $httpBackend;
             controller = $controller('bidController', {$scope: scope, $location: fakeLocation});
         }));
 
         it("shoud get the bid id in the url", function () {
-            var idBid = scope.getidBid('http://localhost:8000/annonce/1/');
+            var idBid = scope.getidBid('http://localhost:8000/annonces/1/');
             assert.equal(idBid, '1')
         });
         it('should GET bids when controller is instantiated', function () {
-            httpBackend.expectGET('/api/bid/1/').respond({});
+            httpBackend.expectGET('/api/bids/1/').respond({});
             httpBackend.flush();
         });
 
