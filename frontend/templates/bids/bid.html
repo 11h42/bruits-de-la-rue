@@ -5,9 +5,40 @@
         <div data-ng-app="bidsModule">
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
-                {$ bid $}
+                <div data-ng-repeat="element in bid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="text-center">{$ element.title $}</h4>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjcwIiB5PSI3MCIgc3R5bGU9ImZpbGw6I2FhYTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjE0MHgxNDA8L3RleHQ+PC9zdmc+"
+                                 alt="..." class="img-thumbnail">
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <ul>
+                                <li><b>Quantité :</b> <span ng-hide="element.quantity">Non renseigné</span> {$ element.quantity $}
+                                </li>
+                                <li><b>Ajouté le :</b> <span ng-hide="element.begin">Non renseigné</span> {$ element.begin $}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p><b>Description</b></p>
+                            <blockquote>
+                                <p>{$ element.description $}</p>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 
 
