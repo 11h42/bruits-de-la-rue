@@ -57,6 +57,18 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
+    def test_post_a_bid_with_all_authorized_informations(self):
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description'
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+        bids = Bid.objects.all()
+        self.assertEquals(len(bids), 1)
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
+        self.assertEquals(201, response.status_code)
+
     def test_bid_is_valid_with_bad_fields_returns_false(self):
         self.assertFalse(self.validator.bid_is_valid({}))
         self.assertFalse(self.validator.bid_is_valid({'description': ""}))
