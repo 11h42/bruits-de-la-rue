@@ -79,6 +79,7 @@ class Bid(models.Model):
             'begin': begin,
             'end': end,
             'quantity': self.quantity,
+            'description': self.description,
         }
 
     def __unicode__(self):
