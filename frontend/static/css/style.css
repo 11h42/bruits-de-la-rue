@@ -41,8 +41,10 @@ body {
 
 }
 
+ul > li {
+        list-style-type: none;
+}
 #left_panel_emergencies > nav > ul > li {
-    list-style-type: none;
     color: #323232;
     font-size: 1.2em;
    -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
