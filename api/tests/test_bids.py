@@ -5,7 +5,6 @@ from django.test import TestCase
 
 from api.validators import BidValidator
 from core.models import Bid
-
 from core.tests.factories import BidFactory
 from core.tests import factories
 
@@ -58,11 +57,10 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
-    def test_json_bid_is_valid_with_bad_fields_returns_false(self):
+    def test_bid_is_valid_with_bad_fields_returns_false(self):
         self.assertFalse(self.validator.bid_is_valid({}))
-        self.assertFalse(self.validator.bid_is_valid({'title': "", 'description': "", "creator": self.user.id}))
-        self.assertFalse(self.validator.bid_is_valid({'title': "Toto", 'description': "Titi", "creator": "tata"}))
-        self.assertFalse(self.validator.bid_is_valid({'title': "Toto", 'description': "Titi", "creator": 2456}))
+        self.assertFalse(self.validator.bid_is_valid({'description': ""}))
+        self.assertFalse(self.validator.bid_is_valid({'title': "Toto", 'description': "Titi", "toto": "tata"}))
 
     def test_bid_is_valid_with_good_fields_returns_true(self):
         self.assertTrue(

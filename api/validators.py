@@ -15,6 +15,10 @@ class BidValidator():
                     errors.append('key %s is not valid' % key)
                 elif not value:
                     errors.append('key %s could not be null' % key)
+
+            for fields in required_fields:
+                if fields not in bid:
+                    errors.append('key %s is required' % fields)
         else:
             errors.append('bid could not be null')
         return len(errors) == 0
