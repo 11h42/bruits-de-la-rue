@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <aside class="hidden-sm hidden-xs hidden-md hidden-print" id="left_panel_emergencies">
+    <h5 id="emergency_panel_title" class="text-center text-capitalize">Urgences</h5>
+        <nav>
+            <ul>
+                <li>
+                    <span class="emergency_title">Aliments</span>
+                    <br>
+                    <span class="emergency_description">Légumes en vrac</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12 thumbnail">
                 <a class="btn btn-primary btn-centered" href="/annonces/">Consulter les annonces</a>
@@ -9,4 +22,5 @@
                 <a class="btn btn-info btn-centered" href="/annonces/creer/">Créer une annonce</a>
             </div>
         </div>
+    </div>
 {% endblock %}

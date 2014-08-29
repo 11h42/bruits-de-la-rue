@@ -8,10 +8,6 @@ body {
     }
 }
 
-a:hover {
-    text-decoration: none;
-}
-
 .btn-centered {
     font-size: 2em;
     text-align: center;
@@ -21,4 +17,48 @@ a:hover {
 
 .thumbnail {
     border: none;
+}
+
+#left_panel_emergencies {
+    padding-top: 49px;
+    position: absolute;
+    top: 15px;
+    z-index: 904;
+    background-color: #dedddd;
+    width: 10%;
+    height: 100%;
+    padding-left: 3px;
+}
+#left_panel_emergencies > nav {
+
+}
+#left_panel_emergencies > nav > ul {
+    padding-left: 0;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+}
+#left_panel_emergencies > nav > ul > li {
+    list-style-type: none;
+    color: #323232;
+    font-size: 1.2em;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+#emergency_panel_title {
+    font-size: 1.8em;
+}
+
+.emergency_title{
+    font-size: 1em;
+
+}
+
+.emergency_description {
+font-size: 0.8em;
 }
