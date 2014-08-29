@@ -24,24 +24,30 @@ body {
     position: absolute;
     top: 15px;
     z-index: 904;
-    background-color: #dedddd;
+    background-color: #F5F5F5;
     width: 10%;
     height: 100%;
     padding-left: 3px;
+    border: solid #CCC 1px;
+
 }
+
 #left_panel_emergencies > nav {
 
 }
+
 #left_panel_emergencies > nav > ul {
     padding-left: 0;
-    -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+
 }
+
 #left_panel_emergencies > nav > ul > li {
     list-style-type: none;
     color: #323232;
     font-size: 1.2em;
+   -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
 footer {
@@ -54,11 +60,11 @@ footer {
     font-size: 1.8em;
 }
 
-.emergency_title{
+.emergency_title {
     font-size: 1em;
 
 }
 
 .emergency_description {
-font-size: 0.8em;
+    font-size: 0.8em;
 }
