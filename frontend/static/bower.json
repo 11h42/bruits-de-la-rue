@@ -3,7 +3,8 @@
   "dependencies": {
     "angular": "~1.2.23",
     "bootstrap": "~3.2.0",
-    "moment": "~2.8.2"
+    "moment": "~2.8.2",
+    "bootswatch-dist": "3.2.0-paper"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.23"

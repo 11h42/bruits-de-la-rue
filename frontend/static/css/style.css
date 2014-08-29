@@ -1,0 +1,24 @@
+body {
+    padding-top: 100px;
+}
+
+@-moz-document url-prefix() {
+    fieldset {
+        display: table-cell;
+    }
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.btn-centered {
+    font-size: 2em;
+    text-align: center;
+    display: block;
+    height: 100px;
+}
+
+.thumbnail {
+    border: none;
+}
