@@ -33,7 +33,6 @@ def b2rue_authenticated(view_func):
     def _wrapped_view(request, *args, **kwargs):
         if hasattr(request, "user") and request.user.is_authenticated():
             return view_func(request, *args, **kwargs)
-
         return HttpResponseUnauthorized()
 
     return _wrapped_view

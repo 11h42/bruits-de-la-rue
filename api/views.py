@@ -5,7 +5,6 @@ from django.http.response import HttpResponse
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
-from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest
 from api.validators import BidValidator
 from core.models import Bid
@@ -58,7 +57,6 @@ def handle_bid(request, bid_id):
     return HttpMethodNotAllowed()
 
 
-# todo test me
 @is_authenticated
 @catch_any_unexpected_exception
 def get_bid(request, bid_id):

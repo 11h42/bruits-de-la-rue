@@ -12,6 +12,7 @@ urlpatterns = patterns(
     '',
     url(r'^$', index, name='index'),
     url(r'^login/$', views.display_login, name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}, name='logout'),
 
     #Annonces
     url(r'^annonces/$', views.display_bids, name='display-bids'),
