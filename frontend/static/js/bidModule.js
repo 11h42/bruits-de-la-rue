@@ -1,5 +1,5 @@
 var bidsModule = angular.module('bidsModule', []);
-
+    $scope.technicalError = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
 bidsModule.filter('startFrom', function () {
     return function (input, start) {
         start = +start; //parse to int
@@ -26,7 +26,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
             success(function (data) {
                 $scope.bids = data.bids;
             }).error(function () {
-                $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                $scope.errorMessage = $scope.technicalError;
             });
     };
     $scope.getBids();
@@ -45,6 +45,16 @@ bidsModule.controller('bidsController', function ($scope, $http) {
 bidsModule.controller('createBidController', function ($scope, $http) {
     $scope.form_title = "Création d'une annonce";
     $scope.bid = {};
+
+    $scope.getCategories = function () {
+        $http.get('/api/categories/').
+            success(function (data) {
+                $scope.categories = data.categories;
+            }).error(function () {
+                $scope.errorMessage = $scope.technicalError;
+            });
+    };
+
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
@@ -53,7 +63,7 @@ bidsModule.controller('createBidController', function ($scope, $http) {
                 success(function (data, status, headers, config) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
                 }).error(function (data, status, headers, config) {
-                    $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                    $scope.errorMessage = $scope.technicalError;
                 });
         }
     };
@@ -80,7 +90,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.bid = data.bids;
             }).error(function () {
-                $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                $scope.errorMessage = $scope.technicalError;
             });
     };
     $scope.getBid();
@@ -90,7 +100,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                $scope.errorMessage = $scope.technicalError;
             });
     };
 
