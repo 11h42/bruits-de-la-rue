@@ -33,3 +33,11 @@ class BidFactory(DjangoModelFactory):
     creator = factory.SubFactory(UserFactory)
     description = "Factory d'une annonce"
     title = "Annonce de test"
+
+
+class BidCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = 'core.BidCategories'
+        django_get_or_create = ('name', )
+
+    name = "Alimentaire"

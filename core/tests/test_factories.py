@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from core.models import User
+from core.models import User, BidCategories
 from core.tests import factories
 from core.tests.factories import AddressFactory, BidFactory
 
@@ -27,3 +27,7 @@ class TestFactories(TestCase):
         self.assertEquals(bid.creator, creator)
         self.assertEquals(bid.description, "Factory d'une annonce")
 
+    def test_bid_category_factory(self):
+        category = factories.BidCategoryFactory()
+
+        self.assertEquals(category.name, BidCategories.objects.get(name=category.name).name)
