@@ -24,7 +24,12 @@ def get_bids(request):
 @catch_any_unexpected_exception
 def create_bid(request):
     bid = json.loads(request.body)
+
     if bid:
+        if 'category' in bid:
+            category = BidCategories.objects.filter(id=bid['category']['id'])
+            if category:
+                bid.category = category[0]
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid):
             bid['creator'] = request.user
@@ -33,8 +38,9 @@ def create_bid(request):
                 new_bid.save()
                 new_bid_id = new_bid.id
                 return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
-            except Exception:
+            except Exception, e:
                 raise
+
     return HttpBadRequest()
 
 

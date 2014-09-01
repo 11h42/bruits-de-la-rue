@@ -26,5 +26,5 @@ class BidValidator():
                     errors.append('Erreur')
         else:
             errors.append('bid could not be null')
-
         return len(errors) == 0
+
