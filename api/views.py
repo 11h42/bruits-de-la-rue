@@ -7,7 +7,7 @@ from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest
 from api.validators import BidValidator
-from core.models import Bid, User
+from core.models import Bid, User, BidCategories
 
 
 @is_authenticated
@@ -82,4 +82,20 @@ def accept_bid(request, bid_id):
                 bid.status = "ACCEPTED"
                 bid.save()
                 return HttpResponse(reason=202)
+    return HttpMethodNotAllowed()
+
+
+def get_available_categories():
+    categories = BidCategories.objects.all()
+    return_categories = []
+    if categories:
+        for category in categories:
+            return_categories.append(category.serialize())
+    return HttpResponse(json.dumps({'categories': return_categories}), content_type='application/json')
+
+
+def handle_categories(request):
+    if request.method == "GET":
+        return get_available_categories()
+
     return HttpMethodNotAllowed()
