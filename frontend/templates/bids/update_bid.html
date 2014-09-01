@@ -3,16 +3,18 @@
 
     <div class="container">
         <div data-ng-app="bidsModule">
-            <div data-ng-controller="createBidController">
+            <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         Les champs marqués d'une étoile (<span class="text-danger">*</span>) sont obligatoires.
                     </div>
                 </div>
-                <form ng-submit="createBid()" role="form">
-                    {% include "forms/bid_form.html" %}
-                </form>
+                <div data-ng-repeat="element in bid">
+                    <form ng-submit="updateBid()" role="form">
+                        {% include "forms/bid_form.html" %}
+                    </form>
+                </div>
             </div>
         </div>
     </div>
