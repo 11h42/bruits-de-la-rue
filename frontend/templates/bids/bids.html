@@ -9,6 +9,16 @@
 
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <h1>Bids</h1>
+
+                <div ng-show="bids">
+                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                        Précédant
+                    </button>
+                    {$ currentPage+1 $}/{$ bids.length/pageSize $}
+                    <button ng-disabled="currentPage >= bids.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                        Suivant
+                    </button>
+                </div>
                 <table class="table table-responsive table-bordered table-hover">
                     <thead>
                     <tr>
@@ -21,7 +31,7 @@
                     </tr>
                     </thead>
                     <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
-                        data-ng-repeat="bid in bids">
+                        data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.begin $}</td>
                         <td>{$ bid.end $}</td>
@@ -30,13 +40,20 @@
                         <td>{$ bid.status $}</td>
                     </tr>
                 </table>
-
+                <div ng-show="bids">
+                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                        Précédant
+                    </button>
+                    {$ currentPage+1 $}/{$ bids.length/pageSize $}
+                    <button ng-disabled="currentPage >= bids.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                        Suivant
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
 {% endblock %}
-
 {% block javascript %}
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
     <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>

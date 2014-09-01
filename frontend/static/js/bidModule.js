@@ -1,13 +1,26 @@
 var bidsModule = angular.module('bidsModule', []);
 
+bidsModule.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+});
+
+
+
 bidsModule.config(function ($interpolateProvider) {
     $interpolateProvider.startSymbol('{$');
     $interpolateProvider.endSymbol('$}');
 });
 
 bidsModule.controller('bidsController', function ($scope, $http) {
+
+    $scope.pageSize = 10;
+
     $scope.hasError = false;
     $scope.bids = [];
+    $scope.currentPage = 0;
     $scope.getBids = function () {
         $http.get('/api/bids/').
             success(function (data) {
