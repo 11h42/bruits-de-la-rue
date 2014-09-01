@@ -1,12 +1,12 @@
 var bidsModule = angular.module('bidsModule', []);
 
-bidsModule.filter('startFrom', function() {
-    return function(input, start) {
+bidsModule.filter('startFrom', function () {
+    return function (input, start) {
         start = +start; //parse to int
+
         return input.slice(start);
     }
 });
-
 
 
 bidsModule.config(function ($interpolateProvider) {
@@ -30,6 +30,10 @@ bidsModule.controller('bidsController', function ($scope, $http) {
             });
     };
     $scope.getBids();
+
+    $scope.numberOfPages = function () {
+        return Math.ceil($scope.bids.length / $scope.pageSize);
+    }
 
     $scope.showBid = function (element) {
 

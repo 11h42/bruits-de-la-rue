@@ -14,7 +14,7 @@
                     <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                         Précédant
                     </button>
-                    {$ currentPage+1 $}/{$ bids.length/pageSize $}
+                    Page {$ currentPage+1 $}/{$ numberOfPages() $}
                     <button ng-disabled="currentPage >= bids.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                         Suivant
                     </button>
@@ -23,28 +23,26 @@
                     <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Début</th>
-                        <th>Fin</th>
-                        <th>Temps restant</th>
                         <th>Quantité</th>
-                        <th>Status</th>
+                        <th>Temps restant</th>
+                        <th>Localisation</th>
+                        <th>Association responsable</th>
                     </tr>
                     </thead>
                     <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
                         data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td>{$ bid.title $}</td>
-                        <td>{$ bid.begin $}</td>
-                        <td>{$ bid.end $}</td>
-                        <td></td>
                         <td>{$ bid.quantity $}</td>
-                        <td>{$ bid.status $}</td>
+                        <td>TEMPS RESTANT</td>
+                        <td>{$ bid.localization.town $}</td>
+                        <td>ASSOCIATIONS</td>
                     </tr>
                 </table>
                 <div ng-show="bids">
                     <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                         Précédant
                     </button>
-                    {$ currentPage+1 $}/{$ bids.length/pageSize $}
+                    Page {$ currentPage+1 $}/{$ numberOfPages() $}
                     <button ng-disabled="currentPage >= bids.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                         Suivant
                     </button>
