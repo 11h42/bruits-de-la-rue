@@ -34,9 +34,9 @@
                             Suivant
                         </button>
                     </div>
-                    <div class="col-lg-6 pull-right">
+                    <div ng-show="bids" class="col-lg-6 pull-right">
                         <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
-                        <input id="table_search" ng-show="bids" ng-model="searchText" type="text"/>
+                        <input id="table_search" ng-model="searchText" type="text"/>
                     </div>
                 </div>
 
@@ -85,4 +85,9 @@
 {% block javascript %}
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
     <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#annonce_navbar_button').addClass('active');
+        })
+    </script>
 {% endblock %}

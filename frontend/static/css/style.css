@@ -83,3 +83,7 @@ body {
         display: table-cell;
     }
 }
+
+.alert{
+    font-weight: bold;
+}

@@ -1,5 +1,4 @@
 var bidsModule = angular.module('bidsModule', []);
-    $scope.technicalError = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
 bidsModule.filter('startFrom', function () {
     return function (input, start) {
         start = +start; //parse to int
@@ -26,7 +25,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
             success(function (data) {
                 $scope.bids = data.bids;
             }).error(function () {
-                $scope.errorMessage = $scope.technicalError;
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
     $scope.getBids();
@@ -51,9 +50,10 @@ bidsModule.controller('createBidController', function ($scope, $http) {
             success(function (data) {
                 $scope.categories = data.categories;
             }).error(function () {
-                $scope.errorMessage = $scope.technicalError;
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
+    $scope.getCategories();
 
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
@@ -63,7 +63,7 @@ bidsModule.controller('createBidController', function ($scope, $http) {
                 success(function (data, status, headers, config) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
                 }).error(function (data, status, headers, config) {
-                    $scope.errorMessage = $scope.technicalError;
+                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 });
         }
     };
@@ -90,7 +90,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.bid = data.bids;
             }).error(function () {
-                $scope.errorMessage = $scope.technicalError;
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
     $scope.getBid();
@@ -100,7 +100,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                $scope.errorMessage = $scope.technicalError;
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 

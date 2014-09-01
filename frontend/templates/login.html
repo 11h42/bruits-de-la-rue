@@ -12,7 +12,7 @@
             left: 0;
             bottom: 0;
             right: 0;
-            width: 300px;
+            width: 600px;
             height: 480px
         }
 
@@ -21,12 +21,12 @@
         }
     </style>
 {% endblock %}
-{% block header %}{% endblock %}
+{% block header %}<h1 class="text-center">Bienvenu(e) sur l'application Bruit de Rue</h1>{% endblock %}
 {% block content %}
     <div id="login">
         <form id="form-signin" method="POST" action="/login/">
             {% csrf_token %}
-            <legend>Connectez-vous</legend>
+            <legend>Pour accéder au annonces, merci de vous identifier</legend>
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>
                 <input type="text" class="form-control" id="username"
