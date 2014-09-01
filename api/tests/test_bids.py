@@ -122,6 +122,27 @@ class TestBidApi(TestCase):
                 'description': "Un siège, un dossier, 4 pieds",
                 'type': 'Offer'}))
 
+    def test_accept_bid(self):
+        user_2 = factories.UserFactory(username='demo', email='demo@akema.fr', password='password')
+        bid = factories.BidFactory(creator=user_2)
+
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, {})
+        self.assertEquals(200, response.status_code)
+
+        bid_accepted = Bid.objects.get(id=bid.id)
+        self.assertEquals("ACCEPTED", bid_accepted.status)
+        self.assertEquals(self.user, bid_accepted.purchaser)
+
+    def test_accept_bid_with_user_is_creator(self):
+        bid = factories.BidFactory(creator=self.user)
+
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, {})
+        self.assertEquals(405, response.status_code)
+
+        bid_non_modified = Bid.objects.get(id=bid.id)
+        self.assertEquals("RUNNING", bid_non_modified.status)
+        self.assertEquals(None, bid_non_modified.purchaser)
+
     class TestBidsApi(TestCase):
         def setUp(self):
             self.user = factories.UserFactory()
