@@ -95,7 +95,8 @@ class Bid(models.Model):
             'end': end,
             'quantity': self.quantity,
             'description': self.description,
-            'localization': self.localization
+            'localization': self.localization,
+            'creator': self.creator.id
         }
 
     def __unicode__(self):
