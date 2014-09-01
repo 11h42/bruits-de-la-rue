@@ -33,15 +33,14 @@
             <div class="form-group">
                 <label for="bid_title">Titre : <span class="text-danger">*</span></label>
                 <input ng-value="element.title" ng-model="bid.title" type="text" class="form-control" id="bid_title"
-                        required="true">
+                       required="true">
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="bid_category">Catégorie :</label>
-                <select class="form-control" name="bid_category" id="bid_category">
-                    <option value=""></option>
-                    <option value="Toto">titi</option>
+                <select id="bid_category" class="form-control" ng-model="bid.category"
+                        ng-options="category.name for category in categories">
                 </select>
             </div>
         </div>
