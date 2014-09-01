@@ -5,6 +5,7 @@
         <div data-ng-app="bidsModule">
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
+                <div class="alert alert-success" role="alert" ng-show="successMessage">{$ successMessage $}</div>
                 <div data-ng-repeat="element in bid">
                     <div class="row"><a href="/annonces/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à
                         la liste des annonces</a></div>

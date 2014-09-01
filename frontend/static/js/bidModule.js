@@ -43,7 +43,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
 });
 
 bidsModule.controller('createBidController', function ($scope, $http) {
-
+    $scope.form_title = "Création d'une annonce";
     $scope.bid = {};
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
@@ -59,13 +59,14 @@ bidsModule.controller('createBidController', function ($scope, $http) {
     };
 });
 
+
 bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.hasError = false;
     $scope.bid = [];
 
     $scope.user_id = "";
     $scope.bid_id = "";
-
+    $scope.form_title = "Modification d'une annonce";
     $scope.getidBid = function (url) {
         var url_split = url.split('/');
         var indexOfId = url_split.indexOf('annonces') + 1;
@@ -87,10 +88,10 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.acceptBid = function () {
         $http.put('/api/bids/' + $scope.idBid + '/accept/').
             success(function (data, status, headers, config) {
-                    window.alert = "Vous avez bien accepté l'annonce. Félicitations :-)";
-                }).error(function (data, status, headers, config) {
-                    $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
-                });
-    }
+                $scope.successMessage = "Vous avez accepté cette annonce";
+            }).error(function (data, status, headers, config) {
+                $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+            });
+    };
 
 });
