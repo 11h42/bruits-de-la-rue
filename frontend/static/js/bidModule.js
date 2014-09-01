@@ -17,7 +17,7 @@ bidsModule.config(function ($interpolateProvider) {
 bidsModule.controller('bidsController', function ($scope, $http) {
 
     $scope.pageSize = 10;
-
+    $scope.searchText = "";
     $scope.hasError = false;
     $scope.bids = [];
     $scope.currentPage = 0;
@@ -33,7 +33,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
 
     $scope.numberOfPages = function () {
         return Math.ceil($scope.bids.length / $scope.pageSize);
-    }
+    };
 
     $scope.showBid = function (element) {
 
@@ -63,6 +63,9 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.hasError = false;
     $scope.bid = [];
 
+    $scope.user_id = "";
+    $scope.bid_id = "";
+
     $scope.getidBid = function (url) {
         var url_split = url.split('/');
         var indexOfId = url_split.indexOf('annonces') + 1;
@@ -80,4 +83,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
     $scope.getBid();
+
+    $scope.acceptBid = function () {
+        $http.put('/api/bids/' + $scope.idBid + '/accept/').
+            success(function (data, status, headers, config) {
+                    window.alert = "Vous avez bien accepté l'annonce. Félicitations :-)";
+                }).error(function (data, status, headers, config) {
+                    $scope.errorMessage = "L'accès au serveur n'est pas possible, retentez dans quelques instants";
+                });
+    }
+
 });

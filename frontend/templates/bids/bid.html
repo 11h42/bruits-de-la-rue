@@ -6,6 +6,8 @@
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div data-ng-repeat="element in bid">
+                    <div class="row"><a href="/annonces/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à
+                        la liste des annonces</a></div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h4 class="text-center">{$ element.title $}</h4>
@@ -19,12 +21,17 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <ul>
-                                <li><b>Quantité :</b> <span ng-hide="element.quantity">Non renseigné</span> {$ element.quantity $}</li>
-                                <li><b>Ajouté le :</b> <span ng-hide="element.begin">Non renseigné</span> {$ element.begin $}</li>
+                                <li><b>Quantité :</b> <span ng-hide="element.quantity">Non renseigné</span> {$
+                                    element.quantity $}
+                                </li>
+                                <li><b>Ajouté le :</b> <span ng-hide="element.begin">Non renseigné</span> {$
+                                    element.begin $}
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <br/>
+
                     <div class="row">
                         <div class="col-lg-12">
                             <p><b>Description</b></p>
@@ -33,6 +40,13 @@
                             </blockquote>
                         </div>
                     </div>
+                    <p>Creator : {$ element.creator $}</p>
+
+                    <p>Current User : {$ element.current_user $}</p>
+
+                    {# todo NG-HIDE if current user == creator #}
+                    <a class="btn btn-success" ng-click="acceptBid()">Accepter cette annonce</a>
+
                 </div>
             </div>
         </div>

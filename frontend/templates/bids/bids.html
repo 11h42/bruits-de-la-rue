@@ -6,11 +6,23 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
+                    </div>
+                </div>
 
-                <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
-                <h1>Bids</h1>
+                <div class="row">
 
-                <div ng-show="bids">
+                    <h1>Bids</h1>
+
+                    <div class="pull-right">
+                        <a class="btn btn-info" href="/annonces/creer/">Je propose</a>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6" ng-show="bids">
                     <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                         Précédant
                     </button>
@@ -18,6 +30,9 @@
                     <button ng-disabled="currentPage >= bids.length/pageSize - 1" ng-click="currentPage=currentPage+1">
                         Suivant
                     </button>
+                </div>
+                <div class="col-lg-6">
+                    <input ng-model="searchText" type="text"/>
                 </div>
                 <table class="table table-responsive table-bordered table-hover">
                     <thead>
@@ -30,7 +45,7 @@
                     </tr>
                     </thead>
                     <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
-                        data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize">
+                        data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.quantity $}</td>
                         <td>TEMPS RESTANT</td>
