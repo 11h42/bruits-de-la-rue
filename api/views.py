@@ -85,7 +85,9 @@ def accept_bid(request, bid_id):
     return HttpMethodNotAllowed()
 
 
-def get_available_categories():
+@is_authenticated
+@catch_any_unexpected_exception
+def get_available_categories(request):
     categories = BidCategories.objects.all()
     return_categories = []
     if categories:
@@ -94,8 +96,9 @@ def get_available_categories():
     return HttpResponse(json.dumps({'categories': return_categories}), content_type='application/json')
 
 
+@is_authenticated
+@catch_any_unexpected_exception
 def handle_categories(request):
     if request.method == "GET":
-        return get_available_categories()
-
+        return get_available_categories(request)
     return HttpMethodNotAllowed()
