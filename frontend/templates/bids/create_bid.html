@@ -12,18 +12,20 @@
                 </div>
                 <form ng-submit="createBid()" role="form">
                     <div class="form-group">
-                        <label class="col-lg-2 control-label">Type d'annonce :</label>
+                        <label class="col-lg-2 control-label">Type d'annonce : <span
+                                class="text-danger">*</span></label>
 
                         <div class="col-lg-12">
                             <div class="radio">
                                 <label for="bid_type_1">
-                                    <input name="bid_type_radio" id="bid_type_1" value="option1" checked=""
-                                           type="radio">
+                                    <input ng-model="bid.type" name="bid_type_radio" id="bid_type_1" value="SUPPLY"
+                                           type="radio" required="true">
                                     Offre</label>
                             </div>
                             <div class="radio">
                                 <label for="bid_type_2">
-                                    <input name="bid_type_radio" id="bid_type_2" value="option2" type="radio">
+                                    <input ng-model="bid.type" name="bid_type_radio" id="bid_type_2" value="DEMAND"
+                                           type="radio" required="true">
                                     Demande</label>
                             </div>
                         </div>

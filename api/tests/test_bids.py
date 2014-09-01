@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 
 from django.test import TestCase
@@ -49,7 +50,8 @@ class TestBidApi(TestCase):
         response = self.client.post('/api/bids/',
                                     json.dumps({
                                         "title": "Ma première annonce wouhouhou test 1234",
-                                        "description": 'Ceci est une description'
+                                        "description": 'Ceci est une description',
+                                        "type": "OFFER"
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()
@@ -57,11 +59,50 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
+    def test_post_a_bid_with_bad_dates(self):
+        """
+        The date of a bid is not mandatory. But if the end and the begin is given, the end must be later than begin.
+        """
+
+        today = datetime.datetime.today()
+        yesterday = today - datetime.timedelta(days=1)
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description',
+                                        "type": "DEMAND",
+                                        "begin": today.isoformat(),
+                                        "end": yesterday.isoformat(),
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+
+        self.assertEquals(400, response.status_code)
+
+    def test_post_a_bid_with_good_dates(self):
+        """
+        The date of a bid is not mandatory. But if the end and the begin is given, the end must be later than begin.
+        """
+
+        today = datetime.datetime.today()
+        tomorrow = today + datetime.timedelta(days=1)
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description',
+                                        "type": "DEMAND",
+                                        "begin": today.isoformat(),
+                                        "end": tomorrow.isoformat(),
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+
+        self.assertEquals(201, response.status_code)
+
     def test_post_a_bid_with_all_authorized_informations(self):
         response = self.client.post('/api/bids/',
                                     json.dumps({
                                         "title": "Ma première annonce wouhouhou test 1234",
-                                        "description": 'Ceci est une description'
+                                        "description": 'Ceci est une description',
+                                        "type": "OFFER",
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()
@@ -76,25 +117,27 @@ class TestBidApi(TestCase):
 
     def test_bid_is_valid_with_good_fields_returns_true(self):
         self.assertTrue(
-            self.validator.bid_is_valid({'title': "Chaise", 'description': "Un siège, un dossier, 4 pieds"}))
+            self.validator.bid_is_valid({
+                'title': "Chaise",
+                'description': "Un siège, un dossier, 4 pieds",
+                'type': 'Offer'}))
 
+    class TestBidsApi(TestCase):
+        def setUp(self):
+            self.user = factories.UserFactory()
+            self.client.login(username=self.user.username, password="password")
 
-class TestBidsApi(TestCase):
-    def setUp(self):
-        self.user = factories.UserFactory()
-        self.client.login(username=self.user.username, password="password")
+        def test_get_bids_empty(self):
+            response = self.client.get('/api/bids/')
+            self.assertEquals(200, response.status_code)
+            bids = json.loads(response.content)['bids']
+            self.assertEquals(bids, [])
 
-    def test_get_bids_empty(self):
-        response = self.client.get('/api/bids/')
-        self.assertEquals(200, response.status_code)
-        bids = json.loads(response.content)['bids']
-        self.assertEquals(bids, [])
-
-    def test_get_bids_200(self):
-        bid = BidFactory(creator=self.user)
-        response = self.client.get('/api/bids/')
-        self.assertEquals(200, response.status_code)
-        bids = json.loads(response.content)['bids']
-        self.assertEquals(len(bids), 1)
-        self.assertEquals(bids[0]['id'], bid.id)
-        self.assertEquals(bids[0]['title'], 'Annonce de test')
+        def test_get_bids_200(self):
+            bid = BidFactory(creator=self.user)
+            response = self.client.get('/api/bids/')
+            self.assertEquals(200, response.status_code)
+            bids = json.loads(response.content)['bids']
+            self.assertEquals(len(bids), 1)
+            self.assertEquals(bids[0]['id'], bid.id)
+            self.assertEquals(bids[0]['title'], 'Annonce de test')

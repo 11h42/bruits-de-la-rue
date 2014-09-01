@@ -35,7 +35,7 @@ def create_bid(request):
                 return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
             except Exception:
                 raise
-    return HttpBadRequest(10203, error_codes['10900'])
+    return HttpBadRequest()
 
 
 @is_authenticated
