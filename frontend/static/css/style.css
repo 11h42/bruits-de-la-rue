@@ -42,12 +42,13 @@ body {
 }
 
 ul > li {
-        list-style-type: none;
+    list-style-type: none;
 }
+
 #left_panel_emergencies > nav > ul > li {
     color: #323232;
     font-size: 1.2em;
-   -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
@@ -69,4 +70,15 @@ footer {
 
 .emergency_description {
     font-size: 0.8em;
+}
+
+body {
+    background-color: #fdfdfd;
+
+}
+
+@-moz-document url-prefix() {
+    fieldset {
+        display: table-cell;
+    }
 }
