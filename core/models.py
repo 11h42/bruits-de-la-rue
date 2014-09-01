@@ -39,6 +39,13 @@ class User(AbstractUser, DatedModel):
 class BidCategories(models.Model):
     name = models.CharField(unique=True, max_length=255)
 
+    def serialize(self):
+
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
 
 class TypeBids(object):
     SUPPLY = 'SUPPLY'
