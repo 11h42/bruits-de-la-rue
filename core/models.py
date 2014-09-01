@@ -49,6 +49,17 @@ class TypeBids(object):
     )
 
 
+class StatusBids(object):
+    CLOSED = 'CLOSED'
+    ACCEPTED = 'ACCEPTED'
+    RUNNING = 'RUNNING'
+    TYPE_CHOICES = (
+        (CLOSED, _('Closed')),
+        (ACCEPTED, _('Accepted')),
+        (RUNNING, _('Running')),
+    )
+
+
 class Bid(models.Model):
     creator = models.ForeignKey(User, related_name='creators')
     purchaser = models.ForeignKey(User, related_name='purchasers', null=True, blank=True)
@@ -66,6 +77,10 @@ class Bid(models.Model):
     type = models.CharField(choices=TypeBids.TYPE_CHOICES,
                             default=TypeBids.SUPPLY,
                             max_length=20)
+
+    status = models.CharField(choices=StatusBids.TYPE_CHOICES,
+                              default=StatusBids.RUNNING,
+                              max_length=20)
 
     def serialize(self):
         # creator = self.creator.username if self.creator else None
