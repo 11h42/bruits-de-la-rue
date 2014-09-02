@@ -39,13 +39,12 @@ bidsModule.controller('bidsController', function ($scope, $http) {
 });
 
 
-
-
 bidsModule.controller('bidController', function ($scope, $http, $location) {
     function isInt(n) {
         var intRegex = /^\d+$/;
         return intRegex.test(n);
     }
+
     $scope.form_title = "Création d'une annonce";
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
@@ -119,16 +118,35 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.hasError = false;
     $scope.user_id = "";
     $scope.bid_id = "";
-//    $scope.form_title = "Modification d'une annonce";
 
-
+    // TODO : TEST ME !
     $scope.acceptBid = function () {
-        $http.put('/api/bids/' + $scope.bidId + '/accept/').
+        $http.put('/api/bids/' + $scope.bidId + '/').
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                if (status == 403) {
+                    $scope.errorMessage = "Vous ne pouvez pas accepter une annonce que vous avez créée."
+                } else {
+                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                }
             });
     };
+
+    // TODO : TEST ME !
+    $scope.deleteBid = function () {
+        if (confirm("Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?")) {
+            $http.delete('/api/bids/' + $scope.bidId + '/').
+                success(function (data, status, headers, config) {
+                    window.location = '/annonces/'
+                }).error(function (data, status, headers, config) {
+                    if (status == 403) {
+                        $scope.errorMessage = "Vous n'avez pas le droit de supprimer cette annonce"
+                    } else {
+                        $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    }
+                });
+        }
+    }
 
 });
