@@ -34,5 +34,6 @@ class TestValidators(TestCase):
             'type': 'Offer',
             'category': 'ALIMENTAIRE',
             "begin": today.isoformat(),
-            "end": tomorrow.isoformat()}
+            "end": tomorrow.isoformat(),
+            "quantity": 1}
         ))

@@ -94,6 +94,7 @@ class Bid(models.Model):
         # purchaser = self.purchaser.username if self.purchaser else None
         begin = self.begin.isoformat() if self.begin else None
         end = self.end.isoformat() if self.end else None
+        category = self.category.name if self.category else None
 
         return {
             'id': self.id,
@@ -102,7 +103,8 @@ class Bid(models.Model):
             'end': end,
             'quantity': self.quantity,
             'description': self.description,
-            'creator': self.creator.id
+            'creator': self.creator.id,
+            'category': category
         }
 
     def __unicode__(self):

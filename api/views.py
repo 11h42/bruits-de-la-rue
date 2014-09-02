@@ -20,16 +20,27 @@ def get_bids(request):
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
-def create_bid(request):
-    bid = json.loads(request.body)
+def clean_dict(dict):
+    """
+    :param dict: 
+    :return: The dict containing only fields with values.
+    """
+    cleaned_dict = {}
+    for key, value in dict.items():
+        if value:
+            cleaned_dict[key] = value
+    return cleaned_dict
 
-    if bid:
+
+def create_bid(request):
+    bid_cleaned = clean_dict(json.loads(request.body))
+    if bid_cleaned:
         bid_validator = BidValidator()
-        if bid_validator.bid_is_valid(bid):
-            bid['creator'] = request.user
-            if 'category' in bid:
-                bid['category'], created = BidCategories.objects.get_or_create(name=bid['category'])
-            new_bid = Bid(**bid)
+        if bid_validator.bid_is_valid(bid_cleaned):
+            bid_cleaned['creator'] = request.user
+            if 'category' in bid_cleaned:
+                bid_cleaned['category'], created = BidCategories.objects.get_or_create(name=bid_cleaned['category'])
+            new_bid = Bid(**bid_cleaned)
             new_bid.save()
             new_bid_id = new_bid.id
             return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)

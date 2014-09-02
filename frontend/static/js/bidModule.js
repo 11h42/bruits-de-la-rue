@@ -38,11 +38,15 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     };
 });
 
-bidsModule.controller('createBidController', function ($scope, $http) {
+
+
+
+bidsModule.controller('bidController', function ($scope, $http, $location) {
+    function isInt(n) {
+        var intRegex = /^\d+$/;
+        return intRegex.test(n);
+    }
     $scope.form_title = "Création d'une annonce";
-    $scope.bid = {};
-
-
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
@@ -55,10 +59,6 @@ bidsModule.controller('createBidController', function ($scope, $http) {
                 });
         }
     };
-});
-
-
-bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.getBidId = function (url) {
         var url_split = url.split('/');
@@ -67,37 +67,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
     $scope.updateCategories = function () {
-          $http.get('/api/categories/').
+        $http.get('/api/categories/').
             success(function (data) {
-                $scope.bid.categories = data.categories;
+                $scope.categories = data.categories;
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
-    $scope.bid = {
-            id: null,
-            'title': '',
-            'description': '',
-            'type': 'OFFER',
-            'quantity': '',
-            'begin': '',
-            'end': '',
-            'categories': []
-    };
-
-    $scope.init = function () {
-        var url = $location.absUrl();
-        $scope.bid.id = $scope.getBidId(url);
-        $scope.updateCategories();
-    };
-
-    $scope.init();
-
-    $scope.hasError = false;
-    $scope.user_id = "";
-    $scope.bid_id = "";
-    $scope.form_title = "Modification d'une annonce";
 
     $scope.getBid = function () {
         $http.get('/api/bids/' + $scope.bidId + '/').
@@ -107,6 +84,43 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
+    $scope.bid = {
+        'title': '',
+        'description': '',
+        'type': 'OFFER',
+        'quantity': '',
+        'begin': '',
+        'end': '',
+        'category': ''
+    };
+
+    $scope.get_page_type = function (url) {
+        if (isInt($scope.getBidId(url))) {
+            $scope.bidId = $scope.getBidId(url);
+            return "GET OR UPDATE"
+        } else {
+            return "CREATE"
+        }
+    };
+
+    $scope.init = function () {
+        var url = $location.absUrl();
+
+        if ($scope.get_page_type(url) == "GET OR UPDATE") {
+            $scope.getBid();
+        } else {
+            $scope.updateCategories();
+        }
+
+    };
+
+    $scope.init();
+
+    $scope.hasError = false;
+    $scope.user_id = "";
+    $scope.bid_id = "";
+//    $scope.form_title = "Modification d'une annonce";
+
 
     $scope.acceptBid = function () {
         $http.put('/api/bids/' + $scope.bidId + '/accept/').

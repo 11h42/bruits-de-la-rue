@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 
 from django.test import TestCase
 
@@ -36,20 +37,34 @@ class TestBidApi(TestCase):
 
         self.assertEquals(200, response.status_code)
 
-    def test_post_a_bid_with_all_authorized_informations(self):
+    def test_post_a_bid_with_all_required_fields(self):
         response = self.client.post('/api/bids/',
                                     json.dumps({
                                         "title": "Ma première annonce wouhouhou test 1234",
                                         "description": 'Ceci est une description',
                                         "type": "OFFER",
-                                        "category": "ALIMENTAIRE"
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()
         self.assertEquals(len(bids), 1)
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
-        self.assertEquals('ALIMENTAIRE', bids[0].category.name)
+
+    def test_post_a_bid_with_all_authorized_fields(self):
+        today = datetime.datetime.today()
+        tomorrow = today + datetime.timedelta(days=1)
+        category = factories.BidCategoryFactory()
+        bid = {'title': 'My bid',
+               'description': 'The bid description',
+               'type': 'OFFER',
+               'begin': today.isoformat(),
+               'end': tomorrow.isoformat(),
+               'category': category.name,
+               'quantity': 2}
+        response = self.client.post('/api/bids/', json.dumps(bid), content_type="application/json; charset=utf-8")
+        bid = Bid.objects.get(title=bid['title'])
+        self.assertEquals(201, response.status_code)
+        self.assertEquals(u'My bid', bid.title)
 
     def test_accept_bid(self):
         creator = factories.UserFactory(username='bid creator')

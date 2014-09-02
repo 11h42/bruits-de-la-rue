@@ -34,6 +34,34 @@ describe('Bids Application', function () {
     });
 
     describe('Bid controller', function () {
+        var scope, controller, httpBackend;
+        beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
+            scope = $rootScope.$new();
+            var fakeLocation = {absUrl: function () {
+                return 'http://localhost:8000/annonces/1/'
+            }};
+            httpBackend = $httpBackend;
+            controller = $controller('bidController', {$scope: scope, $location: fakeLocation});
+        }));
+
+        it('should set scope.bid with returned values', function () {
+            var bid = {
+                'id': 1,
+                'title': 'Titre',
+                'description': 'Description',
+                'type': 'OFFER',
+                'quantity': '',
+                'begin': '',
+                'end': '',
+                'category': '1'
+            };
+            httpBackend.when('GET', '/api/bids/1/').respond(bid);
+            httpBackend.flush();
+            assert.deepEqual(scope.bid, bid);
+        });
+    });
+
+    describe('Bid controller', function () {
 
         var scope, controller, httpBackend;
 
@@ -48,21 +76,24 @@ describe('Bids Application', function () {
 
 
         it('should have an empty bid', function () {
-            var categories = [{'id': 1, 'name': 'ALIMENTAIRE'}, {'id': 2, 'name': 'SERVICE'}];
+            var categories = [
+                {'id': 1, 'name': 'ALIMENTAIRE'},
+                {'id': 2, 'name': 'SERVICE'}
+            ];
             var bid = {
-                id: null,
                 'title': '',
                 'description': '',
                 'type': 'OFFER',
                 'quantity': '',
                 'begin': '',
                 'end': '',
-                'categories': categories
+                'category': ''
             };
+
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.flush();
-
-            assert.deepEqual(scope.bid, bid)
+            assert.deepEqual(scope.bid, bid);
+            assert.deepEqual(scope.categories, categories);
         });
 
     });
@@ -83,6 +114,14 @@ describe('Bids Application', function () {
         it("should get bid id", function () {
             assert.equal(scope.getBidId('http://localhost:8000/annonces/creer/'), 'creer');
             assert.equal(scope.getBidId('http://localhost:8000/annonces/1234/'), '1234');
+        });
+
+        it("should return GET if url is /annonces/(id)/", function () {
+            assert.equal(scope.get_page_type('http://localhost:8000/annonces/1234/'), 'GET OR UPDATE')
+        });
+
+        it('should return CREATE if url is /annonces/creer', function () {
+            assert.equal(scope.get_page_type('http://localhost:8000/annonces/creer/'), 'CREATE')
         });
 
     });
