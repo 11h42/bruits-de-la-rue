@@ -16,5 +16,6 @@ class CategoriesTest(TestCase):
         response = self.client.get('/api/categories/')
         categories_returned = json.loads(response.content)['categories']
 
+        self.assertEquals(categories_returned[0]['id'], category.id)
         self.assertEquals(categories_returned[0]['name'], category.name)
         self.assertEqual(len(categories_returned), 1)

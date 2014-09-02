@@ -40,20 +40,52 @@ describe('Bids Application', function () {
         beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
             scope = $rootScope.$new();
             var fakeLocation = {absUrl: function () {
-                return 'http://localhost:8000/annonces/1/'
+                return 'http://localhost:8000/annonces/creer/'
             }};
             httpBackend = $httpBackend;
             controller = $controller('bidController', {$scope: scope, $location: fakeLocation});
         }));
 
-        it("shoud get the bid id in the url", function () {
-            var idBid = scope.getidBid('http://localhost:8000/annonces/1/');
-            assert.equal(idBid, '1')
-        });
-        it('should GET bids when controller is instantiated', function () {
-            httpBackend.expectGET('/api/bids/1/').respond({});
+
+        it('should have an empty bid', function () {
+            var categories = [{'id': 1, 'name': 'ALIMENTAIRE'}, {'id': 2, 'name': 'SERVICE'}];
+            var bid = {
+                id: null,
+                'title': '',
+                'description': '',
+                'type': 'OFFER',
+                'quantity': '',
+                'begin': '',
+                'end': '',
+                'categories': categories
+            };
+            httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.flush();
+
+            assert.deepEqual(scope.bid, bid)
         });
 
     });
+
+    describe('Bid controller', function () {
+
+        var scope, controller, httpBackend;
+
+        beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
+            scope = $rootScope.$new();
+            httpBackend = $httpBackend;
+            var fakeLocation = {absUrl: function () {
+                return 'http://localhost:8000/annonces/creer/'
+            }};
+            controller = $controller('bidController', {$scope: scope, $location: fakeLocation});
+        }));
+
+        it("should get bid id", function () {
+            assert.equal(scope.getBidId('http://localhost:8000/annonces/creer/'), 'creer');
+            assert.equal(scope.getBidId('http://localhost:8000/annonces/1234/'), '1234');
+        });
+
+    });
+
+
 });
