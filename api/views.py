@@ -1,12 +1,12 @@
 # coding=utf-8
 import json
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseForbidden
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
-from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest
+from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
 from core.models import Bid, BidCategories
 
@@ -63,7 +63,7 @@ def accept_bid(request, bid_id):
             bid.status = "ACCEPTED"
             bid.save()
             return HttpResponse()
-    return HttpMethodNotAllowed()
+    return HttpResponseForbidden()
 
 
 @is_authenticated
@@ -77,6 +77,20 @@ def handle_bids(request):
     return HttpMethodNotAllowed()
 
 
+def delete_bid(request, bid_id):
+    bids = Bid.objects.filter(id=bid_id)
+    if bids:
+        bid = bids[0]
+        if bid.creator == request.user or request.user.is_staff:
+            bid.delete()
+            return HttpNoContent()
+        return HttpResponseForbidden()
+    return HttpBadRequest
+
+
+
+
+
 @is_authenticated
 @catch_any_unexpected_exception
 def handle_bid(request, bid_id):
@@ -84,6 +98,8 @@ def handle_bid(request, bid_id):
         return get_bid(request, bid_id)
     if request.method == 'PUT':
         return accept_bid(request, bid_id)
+    if request.method == 'DELETE':
+        return delete_bid(request, bid_id)
     return HttpMethodNotAllowed()
 
 
