@@ -6,12 +6,12 @@
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div class="alert alert-success" role="alert" ng-show="successMessage">{$ successMessage $}</div>
-                <div data-ng-repeat="element in bid">
+                <div >
                     <div class="row"><a href="/annonces/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à
                         la liste des annonces</a></div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h4 class="text-center">{$ element.title $}</h4>
+                            <h4 class="text-center">{$ bid.title $}</h4>
                         </div>
                     </div>
                     <hr/>
@@ -22,11 +22,11 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <ul>
-                                <li><b>Quantité :</b> <span ng-hide="element.quantity">Non renseigné</span> {$
-                                    element.quantity $}
+                                <li><b>Quantité :</b> <span ng-hide="bid.quantity">Non renseigné</span> {$
+                                    bid.quantity $}
                                 </li>
-                                <li><b>Ajouté le :</b> <span ng-hide="element.begin">Non renseigné</span> {$
-                                    element.begin $}
+                                <li><b>Ajouté le :</b> <span ng-hide="bid.begin">Non renseigné</span> {$
+                                    bid.begin $}
                                 </li>
                             </ul>
                         </div>
@@ -37,7 +37,7 @@
                         <div class="col-lg-12">
                             <p><b>Description</b></p>
                             <blockquote>
-                                <p>{$ element.description $}</p>
+                                <p>{$ bid.description $}</p>
                             </blockquote>
                         </div>
                     </div>
