@@ -1,5 +1,5 @@
 # coding=utf-8
-class BidValidator():
+class BidValidator(object):
     @staticmethod
     def bid_is_valid(bid):
         """
@@ -8,7 +8,7 @@ class BidValidator():
         :return: True if all the rules are respected. False instead.
         """
         required_fields = ['title', 'description', 'type']
-        authorized_fields = required_fields + ['localization', 'purchaser', 'begin', 'end', 'quantity', 'category']
+        authorized_fields = required_fields + ['begin', 'end', 'category']
         errors = []
         if bid:
             for key, value in bid.items():
@@ -27,4 +27,3 @@ class BidValidator():
         else:
             errors.append('bid could not be null')
         return len(errors) == 0
-

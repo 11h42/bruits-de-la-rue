@@ -9,5 +9,5 @@ class BidTestCase(TestCase):
         self.client.login(username=user.username, password="password")
         bid = factories.BidFactory(creator=user)
         expected_bid = {'begin': None, 'quantity': None, 'end': None, 'id': bid.id, 'title': 'Annonce de test',
-                        'description': bid.description}
+                        'creator': user.id, 'description': bid.description}
         self.assertEquals(bid.serialize(), expected_bid)

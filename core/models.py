@@ -36,6 +36,7 @@ class User(AbstractUser, DatedModel):
     associations = models.ManyToManyField('Association', blank=True, null=True)
 
 
+# todo change to BidCategory
 class BidCategories(models.Model):
     name = models.CharField(unique=True, max_length=255)
 
@@ -101,7 +102,6 @@ class Bid(models.Model):
             'end': end,
             'quantity': self.quantity,
             'description': self.description,
-            'localization': self.localization,
             'creator': self.creator.id
         }
 

@@ -5,13 +5,12 @@ from django.http.response import HttpResponse
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
+from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest
 from api.validators import BidValidator
-from core.models import Bid, User, BidCategories
+from core.models import Bid, BidCategories
 
 
-@is_authenticated
-@catch_any_unexpected_exception
 def get_bids(request):
     bids = Bid.objects.filter(status="RUNNING")
     return_bids = []
@@ -21,27 +20,39 @@ def get_bids(request):
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
-@catch_any_unexpected_exception
 def create_bid(request):
     bid = json.loads(request.body)
 
     if bid:
-        if 'category' in bid:
-            category = BidCategories.objects.filter(id=bid['category']['id'])
-            if category:
-                bid.category = category[0]
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid):
             bid['creator'] = request.user
-            try:
-                new_bid = Bid(**bid)
-                new_bid.save()
-                new_bid_id = new_bid.id
-                return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
-            except Exception, e:
-                raise
+            if 'category' in bid:
+                bid['category'], created = BidCategories.objects.get_or_create(name=bid['category'])
+            new_bid = Bid(**bid)
+            new_bid.save()
+            new_bid_id = new_bid.id
+            return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
+    return HttpBadRequest(10900, error_codes['10900'])
 
-    return HttpBadRequest()
+
+def get_bid(request, bid_id):
+    bids = Bid.objects.filter(id=bid_id)
+    if bids:
+        return HttpResponse(json.dumps(bids[0].serialize()), content_type='application/json')
+
+
+def accept_bid(request, bid_id):
+    bids = Bid.objects.filter(id=bid_id)
+    if bids:
+        bid = bids[0]
+        user = request.user
+        if user != bid.creator and bid.status == "RUNNING":
+            bid.purchaser = user
+            bid.status = "ACCEPTED"
+            bid.save()
+            return HttpResponse()
+    return HttpMethodNotAllowed()
 
 
 @is_authenticated
@@ -60,39 +71,11 @@ def handle_bids(request):
 def handle_bid(request, bid_id):
     if request.method == 'GET':
         return get_bid(request, bid_id)
-
-    return HttpMethodNotAllowed()
-
-
-@is_authenticated
-@catch_any_unexpected_exception
-def get_bid(request, bid_id):
-    bids = Bid.objects.filter(id=bid_id)
-    return_bids = []
-    if bids:
-        return_bids.append(bids[0].serialize())
-    return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
-
-
-@is_authenticated
-@catch_any_unexpected_exception
-def accept_bid(request, bid_id):
     if request.method == 'PUT':
-        bids = Bid.objects.filter(id=bid_id)
-        users = User.objects.filter(id=request.user.id)
-        if bids and users:
-            bid = bids[0]
-            user = users[0]
-            if request.user.id != bid.creator.id and bid.status == "RUNNING":
-                bid.purchaser = user
-                bid.status = "ACCEPTED"
-                bid.save()
-                return HttpResponse(reason=202)
+        return accept_bid(request, bid_id)
     return HttpMethodNotAllowed()
 
 
-@is_authenticated
-@catch_any_unexpected_exception
 def get_available_categories(request):
     categories = BidCategories.objects.all()
     return_categories = []
