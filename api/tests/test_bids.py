@@ -81,11 +81,33 @@ class TestBidApi(TestCase):
         bid = factories.BidFactory(creator=self.user)
 
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps({'status': 'ACCEPTED'}))
-        self.assertEquals(405, response.status_code)
+        self.assertEquals(403, response.status_code)
 
         bid_non_modified = Bid.objects.get(id=bid.id)
         self.assertEquals("RUNNING", bid_non_modified.status)
         self.assertEquals(None, bid_non_modified.purchaser)
+
+    def test_delete_bid_owned(self):
+        bid = factories.BidFactory(creator=self.user)
+
+        response = self.client.delete('/api/bids/%s/' % bid.id)
+        self.assertEquals(204, response.status_code)
+
+    def test_delete_bid_not_owned(self):
+        bid = factories.BidFactory(creator=factories.UserFactory(username="OtherUser"))
+
+        response = self.client.delete('/api/bids/%s/' % bid.id)
+        self.assertEquals(403, response.status_code)
+
+    def test_delete_bid_not_owned_with_superuser_account(self):
+        self.client.logout()
+        superuser = factories.UserFactory(username="Superman", is_staff=True)
+        login = self.client.login(username=superuser.username, password='password')
+        self.assertTrue(login)
+        bid = factories.BidFactory(creator=self.user)
+
+        response = self.client.delete('/api/bids/%s/' % bid.id)
+        self.assertEquals(204, response.status_code)
 
 
 class TestBidsApi(TestCase):
