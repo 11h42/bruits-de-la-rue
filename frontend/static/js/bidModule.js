@@ -23,7 +23,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
         $http.get('/api/bids/').
             success(function (data) {
                 $scope.bids = data.bids;
-            }).error(function () {
+            }).error(function (data, status, headers, config) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
