@@ -56,6 +56,7 @@ def get_bid(request, bid_id):
         return HttpResponse(json.dumps(bids[0].serialize()), content_type='application/json')
 
 
+# todo : refactor this method to update_bid
 def accept_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if bids:
