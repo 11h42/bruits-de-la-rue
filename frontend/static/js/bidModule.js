@@ -54,7 +54,12 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 success(function (data, status, headers, config) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
                 }).error(function (data, status, headers, config) {
-                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    if(data.code == '10215'){
+                        $scope.errorMessage = data.message;
+                    }else{
+                        $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    }
+
                 });
         }
     };
