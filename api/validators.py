@@ -13,17 +13,15 @@ class BidValidator(object):
         if bid:
             for key, value in bid.items():
                 if key not in authorized_fields:
-                    errors.append('key %s is not valid' % key)
-                elif not value:
-                    errors.append('key %s could not be null' % key)
+                    errors.append(u'Le champs %s est invalide' % key)
 
             for fields in required_fields:
                 if fields not in bid:
-                    errors.append('key %s is required' % fields)
+                    errors.append(u'key %s is required' % fields)
 
             if 'begin' in bid and 'end' in bid:
                 if bid['begin'] > bid['end']:
-                    errors.append('Erreur')
+                    errors.append(u'Erreur : La date de début doit être strictement inférieur à la date de fin')
         else:
-            errors.append('bid could not be null')
-        return len(errors) == 0
+            errors.append(u'Erreur: Veillez à bien remplir tous les champs')
+        return errors

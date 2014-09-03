@@ -38,7 +38,7 @@ def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
     if bid_cleaned:
         bid_validator = BidValidator()
-        if bid_validator.bid_is_valid(bid_cleaned):
+        if len(bid_validator.bid_is_valid(bid_cleaned)) == 0:
             bid_cleaned['creator'] = request.user
             if 'category' in bid_cleaned:
                 bid_cleaned['category'], created = BidCategories.objects.get_or_create(
@@ -47,6 +47,8 @@ def create_bid(request):
             new_bid.save()
             new_bid_id = new_bid.id
             return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
+        else:
+            HttpBadRequest(400, bid_validator.bid_is_valid(bid_cleaned))
     return HttpBadRequest(10900, error_codes['10900'])
 
 
