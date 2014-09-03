@@ -27,8 +27,6 @@ def clean_dict(dict):
     """
     cleaned_dict = {}
     for key, value in dict.items():
-        print 'key: %s' % key
-        print 'value: %s' % value
         if value:
             cleaned_dict[key] = value
     return cleaned_dict
@@ -36,6 +34,7 @@ def clean_dict(dict):
 
 def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
+
     if bid_cleaned:
         bid_validator = BidValidator()
         if len(bid_validator.bid_is_valid(bid_cleaned)) == 0:
@@ -48,7 +47,7 @@ def create_bid(request):
             new_bid_id = new_bid.id
             return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
         else:
-            HttpBadRequest(400, bid_validator.bid_is_valid(bid_cleaned))
+           return HttpBadRequest(400, bid_validator.bid_is_valid(bid_cleaned))
     return HttpBadRequest(10900, error_codes['10900'])
 
 
