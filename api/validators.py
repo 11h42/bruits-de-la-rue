@@ -24,4 +24,4 @@ class BidValidator(object):
                     errors.append(u'Erreur : La date de début doit être strictement inférieur à la date de fin')
         else:
             errors.append(u'Erreur: Veillez à bien remplir tous les champs')
-        return errors
+        return len(errors) == 0
