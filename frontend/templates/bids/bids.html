@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-    <body data-ng-app="bidsModule" data-ng-controller="bidsController">
+    <body data-ng-app="bidsModule" class="ng-cloak" data-ng-controller="bidsController">
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -70,7 +70,8 @@
                             Suivant
                         </button>
                     </div>
-                    <div class="alert alert-success text-center" ng-hide="bids">Il semble qu'il n'y ai aucune annonce
+                    <div class="alert alert-success text-center ng-cloak" ng-hide="bids">Il semble qu'il n'y ai aucune
+                        annonce
                         disponible. <a
                                 href="/annonces/creer/" class="btn btn-info btn-sm">Proposez une annonce</a> ou revenez
                         plus
@@ -85,9 +86,4 @@
 {% block javascript %}
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
     <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#annonce_navbar_button').addClass('active');
-        })
-    </script>
 {% endblock %}
