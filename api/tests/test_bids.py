@@ -59,7 +59,7 @@ class TestBidApi(TestCase):
                'type': 'OFFER',
                'begin': today.isoformat(),
                'end': tomorrow.isoformat(),
-               'category': category.name,
+               'category': {'id': category.id, 'name': category.name},
                'quantity': 2}
         response = self.client.post('/api/bids/', json.dumps(bid), content_type="application/json; charset=utf-8")
         bid = Bid.objects.get(title=bid['title'])
@@ -108,6 +108,7 @@ class TestBidApi(TestCase):
 
         response = self.client.delete('/api/bids/%s/' % bid.id)
         self.assertEquals(204, response.status_code)
+
 
 
 class TestBidsApi(TestCase):

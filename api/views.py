@@ -27,6 +27,8 @@ def clean_dict(dict):
     """
     cleaned_dict = {}
     for key, value in dict.items():
+        print 'key: %s' % key
+        print 'value: %s' % value
         if value:
             cleaned_dict[key] = value
     return cleaned_dict
@@ -39,7 +41,8 @@ def create_bid(request):
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
             if 'category' in bid_cleaned:
-                bid_cleaned['category'], created = BidCategories.objects.get_or_create(name=bid_cleaned['category'])
+                bid_cleaned['category'], created = BidCategories.objects.get_or_create(
+                    name=bid_cleaned['category']['name'])
             new_bid = Bid(**bid_cleaned)
             new_bid.save()
             new_bid_id = new_bid.id
@@ -86,9 +89,6 @@ def delete_bid(request, bid_id):
             return HttpNoContent()
         return HttpResponseForbidden()
     return HttpBadRequest
-
-
-
 
 
 @is_authenticated
