@@ -1,4 +1,4 @@
-var bidsModule = angular.module('bidsModule', []);
+var bidsModule = angular.module('bidsModule', ['ui.bootstrap.datetimepicker']);
 
 bidsModule.filter('startFrom', function () {
     return function (input, start) {

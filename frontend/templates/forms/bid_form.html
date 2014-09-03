@@ -45,19 +45,13 @@
             </div>
         </div>
         {# todo : find why no value is posted in begin and date using the datetimepicker to fill the fields #}
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label for="bid_begin">Début :</label>
-                <input ng-model="bid.begin" type="text" class="datetimepickerbegin form-control" id="bid_begin"
-                       placeholder="Début de l'annonce">
-            </div>
+        <div class='col-lg-3'>
+            <label for="begin">Début :</label>
+            <datetimepicker data-on-set-time="onTimeSet" data-ng-model="bid.begin"></datetimepicker>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <label for="bid_end">Fin :</label>
-                <input ng-model="bid.end" type="text" class="form-control datetimepickerend" id="bid_end"
-                       placeholder="Fin de l'annonce">
-            </div>
+        <div class='col-lg-3'>
+            <label for="end">Fin :</label>
+            <datetimepicker data-ng-model="bid.end"></datetimepicker>
         </div>
         <div class="col-lg-12">
             <div class="form-group">

@@ -21,19 +21,5 @@
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
     <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
     <script type="text/javascript"
-            src="/static/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
-    <script>
-        $(document).ready(function () {
-            addDateTimePicker($('.datetimepickerbegin'));
-            addDateTimePicker($('.datetimepickerend'));
-        });
-        function addDateTimePicker(element) {
-            element.datetimepicker({
-                useCurrent: false,
-                language: '{{ LANGUAGE_CODE }}'
-            });
-        }
-
-    </script>
-
+            src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
 {% endblock %}
