@@ -103,7 +103,8 @@ class TestBidApi(TestCase):
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(400, response.status_code)
-        self.assertEquals('{"message": "Vous ne pouvez accepter votre propre annonce", "code": 10217}', response.content)
+        self.assertEquals('{"message": "Vous ne pouvez accepter votre propre annonce", "code": 10217}',
+                          response.content)
 
         bid_non_modified = Bid.objects.get(id=bid.id)
         self.assertEquals("RUNNING", bid_non_modified.status)

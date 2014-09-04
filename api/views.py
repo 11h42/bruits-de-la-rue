@@ -148,4 +148,4 @@ def handle_categories(request):
 @is_authenticated
 @catch_any_unexpected_exception
 def get_current_user_username(request):
-    return HttpResponse((request.user.username), content_type='application/json')
+    return HttpResponse(request.user.username, content_type='application/json')
