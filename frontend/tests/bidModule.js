@@ -117,7 +117,7 @@ describe('Bids Application', function () {
         });
 
         it("should return GET if url is /annonces/(id)/", function () {
-            assert.equal(scope.get_page_type('http://localhost:8000/annonces/1234/'), 'GET OR UPDATE')
+            assert.equal(scope.get_page_type('http://localhost:8000/annonces/1234/'), 'GET')
         });
 
         it('should return CREATE if url is /annonces/creer', function () {

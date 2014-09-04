@@ -54,9 +54,9 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 success(function (data, status, headers, config) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
                 }).error(function (data, status, headers, config) {
-                    if(data.code == '10215'){
+                    if (data.code == '10215') {
                         $scope.errorMessage = data.message;
-                    }else{
+                    } else {
                         $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                     }
 
@@ -101,8 +101,10 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.get_page_type = function (url) {
         if (isInt($scope.getBidId(url))) {
             $scope.bidId = $scope.getBidId(url);
-            return "GET OR UPDATE"
-        } else {
+            return "GET";
+        } else if ($scope.getBidId(url) == 'modifier') {
+            return "UPDATE"
+        } else if ($scope.getBidId(url) == 'creer') {
             return "CREATE"
         }
     };
@@ -110,7 +112,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.init = function () {
         var url = $location.absUrl();
 
-        if ($scope.get_page_type(url) == "GET OR UPDATE") {
+        if ($scope.get_page_type(url) == "GET") {
             $scope.getBid();
         } else {
             $scope.updateCategories();
