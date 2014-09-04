@@ -73,7 +73,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         var url_split = url.split('/');
         var indexOfId = url_split.indexOf('annonces') + 1;
 
-        if ( url_split[url_split.indexOf('annonces') + 2] == 'modifier') {
+        if (url_split[url_split.indexOf('annonces') + 2] == 'modifier') {
             $scope.bidId = url_split[url_split.indexOf('annonces') + 1];
             return 'modifier';
         }
@@ -138,11 +138,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.updateCategories();
             $scope.setRealAuthor();
             $scope.form_title = "Création d'une annonce";
+            $scope.submit_button_name = "Créer"
+
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.updateCategories();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
+            $scope.submit_button_name = "Modifier"
         }
 
     };
@@ -185,7 +188,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
-                $scope.successMessage = "Vous avez accepté cette annonce";
+                window.location = '/annonces/' + $scope.bidId;
             }).error(function (data, status, headers, config) {
                 if (data.code == 10216) {
                     $scope.errorMessage = data.message;
