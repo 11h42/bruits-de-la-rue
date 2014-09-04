@@ -174,6 +174,7 @@ class TestBidsApi(TestCase):
         self.assertEquals(len(bids), 1)
         self.assertEquals(bids[0]['id'], bid.id)
         self.assertEquals(bids[0]['title'], 'Annonce de test')
+        self.assertEquals(bids[0]['real_author'], 'Jean Dupont')
 
     def test_post_a_bid_with_minimum_info_and_return_201(self):
         """
