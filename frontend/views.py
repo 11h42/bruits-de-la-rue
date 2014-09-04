@@ -53,3 +53,10 @@ def create_bid(request):
     t = get_template('bids/create_bid.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
+
+@login_required()
+def update_bid(request, bid_id):
+    t = get_template('bids/update_bid.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
