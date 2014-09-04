@@ -37,7 +37,7 @@ class BidFactory(DjangoModelFactory):
 
 class BidCategoryFactory(DjangoModelFactory):
     class Meta:
-        model = 'core.BidCategories'
+        model = 'core.BidCategory'
         django_get_or_create = ('name', )
 
     name = "Alimentaire"

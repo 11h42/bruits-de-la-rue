@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from PIL import Image
 
-from core.models import Bid, BidCategories, EmergencyLevels
+from core.models import Bid, BidCategory, EmergencyLevels
 
 
 class BidForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class BidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BidForm, self).__init__(*args, **kwargs)
         self.fields['bidCategory'].choices = [(Category.id, Category.bid_category_name) for Category in
-                                              BidCategories.objects.all()]
+                                              BidCategory.objects.all()]
         self.fields['emergency_level'].choices = [(Emergency.id, Emergency.name) for Emergency in
                                                   EmergencyLevels.objects.all()]
 

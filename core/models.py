@@ -36,8 +36,7 @@ class User(AbstractUser, DatedModel):
     associations = models.ManyToManyField('Association', blank=True, null=True)
 
 
-# todo change to BidCategory
-class BidCategories(models.Model):
+class BidCategory(models.Model):
     name = models.CharField(unique=True, max_length=255)
 
     def serialize(self):
@@ -80,7 +79,7 @@ class Bid(models.Model):
     description = models.TextField()
     title = models.CharField(max_length=255)
 
-    category = models.ForeignKey(BidCategories, blank=True, null=True)
+    category = models.ForeignKey(BidCategory, blank=True, null=True)
     type = models.CharField(choices=TypeBids.TYPE_CHOICES,
                             default=TypeBids.SUPPLY,
                             max_length=20)

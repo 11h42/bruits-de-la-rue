@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategories
+from core.models import Bid, BidCategory
 
 
 def get_bids(request):
@@ -39,15 +39,15 @@ def create_bid(request):
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
             if 'category' in bid_cleaned:
-                bid_cleaned['category'], created = BidCategories.objects.get_or_create(
+                bid_cleaned['category'], created = BidCategory.objects.get_or_create(
                     name=bid_cleaned['category']['name'])
         if 'begin' in bid_cleaned and 'end' in bid_cleaned:
             if bid_cleaned['begin'] > bid_cleaned['end']:
                 return HttpBadRequest(10215, error_codes['10215'])
-            new_bid = Bid(**bid_cleaned)
-            new_bid.save()
-            new_bid_id = new_bid.id
-            return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
+        new_bid = Bid(**bid_cleaned)
+        new_bid.save()
+        new_bid_id = new_bid.id
+        return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
     return HttpBadRequest(10900, error_codes['10900'])
 
 
@@ -106,7 +106,7 @@ def handle_bid(request, bid_id):
 
 
 def get_available_categories(request):
-    categories = BidCategories.objects.all()
+    categories = BidCategory.objects.all()
     return_categories = []
     if categories:
         for category in categories:
