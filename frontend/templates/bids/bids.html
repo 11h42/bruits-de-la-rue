@@ -45,18 +45,16 @@
                     <tr>
                         <th>Nom</th>
                         <th>Quantité</th>
-                        <th>Temps restant</th>
-                        <th>Localisation</th>
-                        <th>Association responsable</th>
+                        <th>Début</th>
+                        <th>Fin</th>
                     </tr>
                     </thead>
                     <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
                         data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.quantity $}</td>
-                        <td>TEMPS RESTANT</td>
-                        <td>{$ bid.localization.town $}</td>
-                        <td>ASSOCIATIONS</td>
+                        <td>{$ bid.begin $}</td>
+                        <td>{$ bid.end $}</td>
                     </tr>
                 </table>
                 <div class="row">
