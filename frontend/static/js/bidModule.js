@@ -50,7 +50,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         return intRegex.test(n);
     }
 
-    $scope.form_title = "Création d'une annonce";
+
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
@@ -73,8 +73,9 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         var url_split = url.split('/');
         var indexOfId = url_split.indexOf('annonces') + 1;
 
-        if (url_split.indexOf('annonces') + 2 == 'modifier') {
-            indexOfId = 'modifier';
+        if ( url_split[url_split.indexOf('annonces') + 2] == 'modifier') {
+            $scope.bidId = url_split[url_split.indexOf('annonces') + 1];
+            return 'modifier';
         }
 
         return url_split[indexOfId];
@@ -136,10 +137,12 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         } else if ($scope.get_page_type(url) == "CREATE") {
             $scope.updateCategories();
             $scope.setRealAuthor();
+            $scope.form_title = "Création d'une annonce";
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.updateCategories();
             $scope.getBid();
+            $scope.form_title = "Modification d'une annonce";
         }
 
     };
