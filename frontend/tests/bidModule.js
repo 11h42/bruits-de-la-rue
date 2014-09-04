@@ -80,6 +80,7 @@ describe('Bids Application', function () {
                 {'id': 1, 'name': 'ALIMENTAIRE'},
                 {'id': 2, 'name': 'SERVICE'}
             ];
+
             var bid = {
                 'title': '',
                 'description': '',
@@ -88,11 +89,10 @@ describe('Bids Application', function () {
                 'begin': '',
                 'end': '',
                 'category': '',
-                'real_author': ''
+                'real_author': 'abriand'
             };
-            console.log(bid);
-            console.log(scope.bid);
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
+            httpBackend.when('GET', '/api/users/current/').respond('abriand');
             httpBackend.flush();
             assert.deepEqual(scope.bid, bid);
             assert.deepEqual(scope.categories, categories);

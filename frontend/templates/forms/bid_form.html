@@ -53,6 +53,11 @@
             <label for="end">Fin :</label>
             <datetimepicker data-ng-model="bid.end"></datetimepicker>
         </div>
+        <div class="col-lg-6">
+            <label for="real_author">Auteur réel <span
+                        class="text-danger">*</span></label>
+            <input class="form-control" id="real_author" type="text" ng-model="bid.real_author" required="required"/>
+        </div>
         <div class="col-lg-12">
             <div class="form-group">
                 <label for="bid_descritpion">Description : <span

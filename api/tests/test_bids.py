@@ -45,6 +45,7 @@ class TestBidApi(TestCase):
                                         "title": "Ma première annonce wouhouhou test 1234",
                                         "description": 'Ceci est une description',
                                         "type": "SUPPLY",
+                                        'real_author': 'Jean Dupont',
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()
@@ -59,6 +60,7 @@ class TestBidApi(TestCase):
         bid = {'title': 'My bid',
                'description': 'The bid description',
                'type': 'OFFER',
+               'real_author': 'Jean Dupont',
                'begin': today.isoformat(),
                'end': tomorrow.isoformat(),
                'category': {'id': category.id, 'name': category.name},
@@ -135,7 +137,8 @@ class TestBidApi(TestCase):
             'id': bid.id,
             'title': 'Nouveau titre',
             'description': bid.description,
-            'type': bid.type
+            'type': bid.type,
+            'real_author': 'toto'
 
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
@@ -190,7 +193,8 @@ class TestBidsApi(TestCase):
                                     json.dumps({
                                         "title": "Ma première annonce wouhouhou test 1234",
                                         "description": 'Ceci est une description',
-                                        "type": "OFFER"
+                                        "type": "OFFER",
+                                        'real_author': 'Jean Dupont',
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()

@@ -143,3 +143,9 @@ def handle_categories(request):
     if request.method == "GET":
         return get_available_categories(request)
     return HttpMethodNotAllowed()
+
+
+@is_authenticated
+@catch_any_unexpected_exception
+def get_current_user_username(request):
+    return HttpResponse((request.user.username), content_type='application/json')

@@ -1,5 +1,10 @@
 var bidsModule = angular.module('bidsModule', ['ui.bootstrap.datetimepicker']);
 
+bidsModule.config(function ($interpolateProvider) {
+    $interpolateProvider.startSymbol('{$');
+    $interpolateProvider.endSymbol('$}');
+});
+
 bidsModule.filter('startFrom', function () {
     return function (input, start) {
         start = +start;
@@ -115,6 +120,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         }
     };
 
+    $scope.setRealAuthor = function () {
+        $http.get('/api/users/current/').
+            success(function (data) {
+                $scope.bid['real_author'] = data;
+            }).error(function () {
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            });
+    };
     $scope.init = function () {
         var url = $location.absUrl();
 
@@ -122,6 +135,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getBid();
         } else if ($scope.get_page_type(url) == "CREATE") {
             $scope.updateCategories();
+            $scope.setRealAuthor();
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.updateCategories();

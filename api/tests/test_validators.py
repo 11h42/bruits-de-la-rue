@@ -37,5 +37,6 @@ class TestValidators(TestCase):
             'category': 'ALIMENTAIRE',
             "begin": today.isoformat(),
             "end": tomorrow.isoformat(),
-            "quantity": ""}
+            "quantity": "",
+            "real_author": "titi"}
         ))
