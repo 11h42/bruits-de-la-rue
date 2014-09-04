@@ -86,7 +86,6 @@ def update_bid(request, bid_id):
         bid = matching_bid[0]
         if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED':
             return accept_bid(request, bid_dict, bid)
-
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
                 matching_bid.update(**bid_dict)

@@ -104,7 +104,7 @@ class Bid(models.Model):
             'end': end,
             'quantity': self.quantity,
             'description': self.description,
-            'creator': self.creator.id,
+            'creator': self.creator.username,
             'category': category,
             'type': self.type,
             'real_author': self.real_author,

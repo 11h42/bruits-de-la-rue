@@ -33,7 +33,7 @@ class BidFactory(DjangoModelFactory):
     creator = factory.SubFactory(UserFactory)
     description = "Factory d'une annonce"
     title = "Annonce de test"
-    type = "OFFER"
+    type = "SUPPLY"
     status = "RUNNING"
     real_author = "Jean Dupont"
 

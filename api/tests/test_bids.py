@@ -34,7 +34,7 @@ class TestBidApi(TestCase):
         returned_bid = json.loads(response.content)
         self.assertEquals(returned_bid['id'], bid.id)
         self.assertEquals(returned_bid['title'], 'Annonce de test')
-        self.assertEquals(returned_bid['type'], 'OFFER')
+        self.assertEquals(returned_bid['type'], 'SUPPLY')
         self.assertEquals(returned_bid['current_user_id'], self.user.id)
         self.assertEquals(returned_bid['current_user_is_staff'], self.user.is_staff)
         self.assertEquals(200, response.status_code)
@@ -44,7 +44,7 @@ class TestBidApi(TestCase):
                                     json.dumps({
                                         "title": "Ma première annonce wouhouhou test 1234",
                                         "description": 'Ceci est une description',
-                                        "type": "OFFER",
+                                        "type": "SUPPLY",
                                     }),
                                     content_type="application/json; charset=utf-8")
         bids = Bid.objects.all()
@@ -94,13 +94,14 @@ class TestBidApi(TestCase):
             'id': bid.id,
             'title': bid.title,
             'description': bid.description,
-            'creator': bid.creator.id,
+            'creator': bid.creator.username,
             'status': 'ACCEPTED',
             'purchaser': self.user.id,
 
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
-        self.assertEquals(403, response.status_code)
+        self.assertEquals(400, response.status_code)
+        self.assertEquals('{"message": "Vous ne pouvez accepter votre propre annonce", "code": 10217}', response.content)
 
         bid_non_modified = Bid.objects.get(id=bid.id)
         self.assertEquals("RUNNING", bid_non_modified.status)
@@ -142,17 +143,20 @@ class TestBidApi(TestCase):
         bid_updated = Bid.objects.get(id=bid.id)
         self.assertEquals(bid_updated.title, 'Nouveau titre')
 
-    def test_update_bid_passing_creator(self):
+    def test_update_bid_passing_creator_does_not_change_creator(self):
         bid = factories.BidFactory(creator=self.user, status='RUNNING')
+        fakeCreator = factories.UserFactory(username='fakeCreator')
         bid_updated = {
             'id': bid.id,
             'title': 'Nouveau titre',
             'description': bid.description,
-            'creator': bid.creator.id
+            'creator': fakeCreator.id,
+            'type': 'SUPPLY'
 
         }
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
-        self.assertEquals(403, response.status_code)
+        self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
+        update_bid = Bid.objects.get(id=bid.id)
+        self.assertEquals(update_bid.creator, self.user)
 
 
 class TestBidsApi(TestCase):
