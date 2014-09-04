@@ -88,6 +88,8 @@ class Bid(models.Model):
                               default=StatusBids.RUNNING,
                               max_length=20)
 
+    real_author = models.CharField(blank=True, null=True, max_length=255)
+
     def serialize(self):
         # creator = self.creator.username if self.creator else None
         # purchaser = self.purchaser.username if self.purchaser else None
@@ -105,6 +107,7 @@ class Bid(models.Model):
             'creator': self.creator.id,
             'category': category,
             'type': self.type,
+            'real_author': self.real_author,
         }
 
     def __unicode__(self):
