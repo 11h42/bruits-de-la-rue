@@ -28,13 +28,14 @@ class UserFactory(DjangoModelFactory):
 class BidFactory(DjangoModelFactory):
     class Meta:
         model = 'core.Bid'
-        django_get_or_create = ('creator', 'description', 'title', 'status', 'type')
+        django_get_or_create = ('creator', 'description', 'title', 'status', 'type', 'real_author')
 
     creator = factory.SubFactory(UserFactory)
     description = "Factory d'une annonce"
     title = "Annonce de test"
     type = "OFFER"
     status = "RUNNING"
+    real_author = "Jean Dupont"
 
 
 class BidCategoryFactory(DjangoModelFactory):

@@ -29,9 +29,10 @@ class TestFactories(TestCase):
     def test_bid_factory(self):
         creator = factories.UserFactory(username='creator')
         bid = BidFactory(creator=creator)
-        self.assertEquals(bid.title, 'Annonce de test')
-        self.assertEquals(bid.creator, creator)
-        self.assertEquals(bid.description, "Factory d'une annonce")
+        self.assertEquals('Annonce de test', bid.title)
+        self.assertEquals(creator, bid.creator)
+        self.assertEquals("Factory d'une annonce", bid.description)
+        self.assertEquals('Jean Dupont', bid.real_author)
 
     def test_bid_category_factory(self):
         category = factories.BidCategoryFactory()
