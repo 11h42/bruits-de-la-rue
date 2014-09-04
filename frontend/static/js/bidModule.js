@@ -96,7 +96,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid = {
         'title': '',
         'description': '',
-        'type': 'OFFER',
+        'type': 'SUPPLY',
         'quantity': '',
         'begin': '',
         'end': '',
