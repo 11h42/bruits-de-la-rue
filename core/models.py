@@ -12,6 +12,18 @@ class Address(models.Model):
     zipcode = models.IntegerField(max_length=10)
     town = models.CharField(max_length=255)
 
+    def serialize(self):
+
+        return {
+            'id': self.id,
+            'title': self.title,
+            'recipient_name': self.recipient_name,
+            'address1': self.address1,
+            'address2': self.address2,
+            'zipcode': self.zipcode,
+            'town': self.town
+        }
+
 
 class Association(models.Model):
     name = models.CharField(max_length=255)

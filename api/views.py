@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory
+from core.models import Bid, BidCategory, Address
 
 
 def get_bids(request):
@@ -151,5 +151,10 @@ def get_current_user_username(request):
     return HttpResponse(request.user.username, content_type='application/json')
 
 
-def get_current_username_address(request):
-    return HttpResponse(json.dumps({}), content_type='application/json')
+def get_current_user_address(request):
+    address = Address.objects.filter(user=request.user)
+    return_address = []
+    if address:
+        for e in address:
+            return_address.append(e.serialize())
+    return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
