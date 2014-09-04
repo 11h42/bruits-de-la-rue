@@ -20,10 +20,6 @@ class UsersTest(TestCase):
         response = self.client.get('/api/users/current/address')
         address_returned = json.loads(response.content)
         self.assertEquals(200, response.status_code)
-        self.assertEquals(address_returned, {'address': [{u'address1': u'3 chemin de marticot',
-                                             u'address2': None,
-                                             u'id': 1,
-                                             u'recipient_name': u'Akema',
-                                             u'title': u'Akema',
-                                             u'town': u'Cestas',
-                                             u'zipcode': 33610}]})
+        self.assertEquals(address_returned, {"address": [
+            {"town": "Cestas", "title": "Akema", "address1": "3 chemin de marticot", "address2": None, "zipcode": 33610,
+             "recipient_name": "Akema", "id": 3}]})
