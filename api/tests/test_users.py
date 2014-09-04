@@ -1,4 +1,5 @@
 import json
+
 from django.test.testcases import TestCase
 
 from core.tests import factories
