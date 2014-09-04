@@ -38,3 +38,11 @@ class TestFactories(TestCase):
         category = factories.BidCategoryFactory()
 
         self.assertEquals(category.name, BidCategory.objects.get(name=category.name).name)
+
+    def test_create_user_with_address(self):
+        address = factories.AddressFactory(title='kr')
+        address2 = factories.AddressFactory(title='kr2')
+        address3 = factories.AddressFactory(title='kr3')
+        address4 = factories.AddressFactory(title='kr4')
+
+        user = factories.UserFactory(username='addressman', address=[address, address2, address3, address4])

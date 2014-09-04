@@ -8,6 +8,7 @@ class AddressFactory(DjangoModelFactory):
         model = 'core.Address'
         django_get_or_create = ('recipient_name', 'address1', 'zipcode', 'town')
 
+    title = 'Akema'
     recipient_name = 'Akema'
     address1 = '3 chemin de marticot'
     zipcode = '33610'
@@ -23,6 +24,15 @@ class UserFactory(DjangoModelFactory):
     email = 'test@akema.fr'
     password = factory.PostGenerationMethodCall('set_password',
                                                 'password')
+
+    @factory.post_generation
+    def address(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for item in extracted:
+                self.address.add(item)
 
 
 class BidFactory(DjangoModelFactory):
