@@ -67,6 +67,11 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.getBidId = function (url) {
         var url_split = url.split('/');
         var indexOfId = url_split.indexOf('annonces') + 1;
+
+        if (url_split.indexOf('annonces') + 2 == 'modifier') {
+            indexOfId = 'modifier';
+        }
+
         return url_split[indexOfId];
     };
 
@@ -114,8 +119,12 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         if ($scope.get_page_type(url) == "GET") {
             $scope.getBid();
-        } else {
+        } else if ($scope.get_page_type(url) == "CREATE") {
             $scope.updateCategories();
+        }
+        else if ($scope.get_page_type(url) == "UPDATE") {
+            $scope.updateCategories();
+            $scope.getBid();
         }
 
     };
@@ -128,7 +137,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     // TODO : TEST ME !
     $scope.acceptBid = function () {
-        $http.put('/api/bids/' + $scope.bidId + '/').
+        $scope.bid['status'] = 'ACCEPTED';
+        $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
@@ -154,6 +164,19 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                     }
                 });
         }
+    };
+    // TODO: TEST ME !
+    $scope.updateBid = function () {
+        $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
+            success(function (data, status, headers, config) {
+                $scope.successMessage = "Vous avez accepté cette annonce";
+            }).error(function (data, status, headers, config) {
+                if (status == 403) {
+                    $scope.errorMessage = "Une erreur est survenue"
+                } else {
+                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                }
+            });
     }
 
 });
