@@ -34,7 +34,9 @@ class TestBidApi(TestCase):
         returned_bid = json.loads(response.content)
         self.assertEquals(returned_bid['id'], bid.id)
         self.assertEquals(returned_bid['title'], 'Annonce de test')
-
+        self.assertEquals(returned_bid['type'], 'OFFER')
+        self.assertEquals(returned_bid['current_user_id'], self.user.id)
+        self.assertEquals(returned_bid['current_user_is_staff'], self.user.is_staff)
         self.assertEquals(200, response.status_code)
 
     def test_post_a_bid_with_all_required_fields(self):
@@ -68,9 +70,18 @@ class TestBidApi(TestCase):
 
     def test_accept_bid(self):
         creator = factories.UserFactory(username='bid creator')
-        bid = factories.BidFactory(creator=creator)
+        purchaser = self.user
+        bid = factories.BidFactory(creator=creator, status='RUNNING')
+        bid_accept = {
+            'id': bid.id,
+            'title': bid.title,
+            'description': bid.description,
+            'creator': bid.creator.id,
+            'status': 'ACCEPTED',
+            'purchaser': purchaser.id,
 
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps({'status': 'ACCEPTED'}))
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(200, response.status_code)
 
         bid_accepted = Bid.objects.get(id=bid.id)
@@ -79,8 +90,16 @@ class TestBidApi(TestCase):
 
     def test_cant_accept_bid_that_belong_to_the_user(self):
         bid = factories.BidFactory(creator=self.user)
+        bid_accept = {
+            'id': bid.id,
+            'title': bid.title,
+            'description': bid.description,
+            'creator': bid.creator.id,
+            'status': 'ACCEPTED',
+            'purchaser': self.user.id,
 
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps({'status': 'ACCEPTED'}))
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(403, response.status_code)
 
         bid_non_modified = Bid.objects.get(id=bid.id)
@@ -109,6 +128,31 @@ class TestBidApi(TestCase):
         response = self.client.delete('/api/bids/%s/' % bid.id)
         self.assertEquals(204, response.status_code)
 
+    def test_update_bid(self):
+        bid = factories.BidFactory(creator=self.user, status='RUNNING')
+        bid_updated = {
+            'id': bid.id,
+            'title': 'Nouveau titre',
+            'description': bid.description,
+            'type': bid.type
+
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
+        self.assertEquals(200, response.status_code)
+        bid_updated = Bid.objects.get(id=bid.id)
+        self.assertEquals(bid_updated.title, 'Nouveau titre')
+
+    def test_update_bid_passing_creator(self):
+        bid = factories.BidFactory(creator=self.user, status='RUNNING')
+        bid_updated = {
+            'id': bid.id,
+            'title': 'Nouveau titre',
+            'description': bid.description,
+            'creator': bid.creator.id
+
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
+        self.assertEquals(403, response.status_code)
 
 
 class TestBidsApi(TestCase):
