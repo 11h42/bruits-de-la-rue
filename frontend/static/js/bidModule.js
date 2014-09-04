@@ -135,7 +135,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.user_id = "";
     $scope.bid_id = "";
 
-    // TODO : TEST ME !
     $scope.acceptBid = function () {
         $scope.bid['status'] = 'ACCEPTED';
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
@@ -150,7 +149,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    // TODO : TEST ME !
     $scope.deleteBid = function () {
         if (confirm("Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?")) {
             $http.delete('/api/bids/' + $scope.bidId + '/').
@@ -165,7 +163,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 });
         }
     };
-    // TODO: TEST ME !
     $scope.updateBid = function () {
 
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
