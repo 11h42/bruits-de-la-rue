@@ -34,6 +34,7 @@ class DatedModel(models.Model):
 
 class User(AbstractUser, DatedModel):
     associations = models.ManyToManyField('Association', blank=True, null=True)
+    address = models.ManyToManyField('Address', blank=True, null=True)
 
 
 class BidCategory(models.Model):

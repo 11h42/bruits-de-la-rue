@@ -149,3 +149,7 @@ def handle_categories(request):
 @catch_any_unexpected_exception
 def get_current_user_username(request):
     return HttpResponse(request.user.username, content_type='application/json')
+
+
+def get_current_username_address(request):
+    return HttpResponse(json.dumps({}), content_type='application/json')
