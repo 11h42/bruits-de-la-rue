@@ -8,7 +8,7 @@ class BidValidator(object):
         :return: True if all the rules are respected. False instead.
         """
         required_fields = ['title', 'description', 'type']
-        authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity']
+        authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id']
         errors = []
         if bid:
             for key, value in bid.items():
