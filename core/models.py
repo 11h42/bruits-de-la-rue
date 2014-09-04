@@ -103,7 +103,8 @@ class Bid(models.Model):
             'quantity': self.quantity,
             'description': self.description,
             'creator': self.creator.id,
-            'category': category
+            'category': category,
+            'type': self.type,
         }
 
     def __unicode__(self):
