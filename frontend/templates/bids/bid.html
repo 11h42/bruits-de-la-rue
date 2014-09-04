@@ -31,7 +31,7 @@
                                 <li><b>Début de l'annonce :</b> <span ng-hide="bid.begin">Non renseigné</span> {$
                                     bid.begin | date:'dd MMM yy HH:mm' $}
                                 </li>
-                                <li><b>Déposé par :</b> {$ bid.creator | filter:capitalize $} <span ng-show="bid.real_author"> pour {$ bid.real_author $}</span>
+                                <li><b>Déposé par :</b> {$ bid.creator $} <span ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
                                 </li>
                             </ul>
                         </div>
