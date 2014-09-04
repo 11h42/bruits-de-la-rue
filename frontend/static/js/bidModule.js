@@ -142,8 +142,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                if (status == 403) {
-                    $scope.errorMessage = "Vous ne pouvez pas accepter une annonce que vous avez créée."
+                if (data.code == 10217) {
+                    $scope.errorMessage = data.message;
                 } else {
                     $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
@@ -167,12 +167,13 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
     // TODO: TEST ME !
     $scope.updateBid = function () {
+
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                if (status == 403) {
-                    $scope.errorMessage = "Une erreur est survenue"
+                if (data.code == 10216) {
+                    $scope.errorMessage = data.message;
                 } else {
                     $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }

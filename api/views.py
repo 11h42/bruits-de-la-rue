@@ -72,7 +72,7 @@ def accept_bid(request, bid_dict, matching_bid):
         matching_bid.status = "ACCEPTED"
         matching_bid.save()
         return HttpResponse()
-    return HttpResponseForbidden()
+    return HttpBadRequest(10217, error_codes['10217'])
 
 
 def update_bid(request, bid_id):
@@ -91,7 +91,8 @@ def update_bid(request, bid_id):
             if bid_validator.bid_is_valid(bid_dict):
                 matching_bid.update(**bid_dict)
                 return HttpResponse()
-    return HttpResponseForbidden()
+        return HttpBadRequest(10216, error_codes['10216'])
+    return HttpBadRequest(10900, error_codes['10900'])
 
 
 @is_authenticated
