@@ -54,20 +54,43 @@ def create_bid(request):
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if bids:
-        return HttpResponse(json.dumps(bids[0].serialize()), content_type='application/json')
+        serialize = bids[0].serialize()
+        serialize['current_user_id'] = request.user.id
+        serialize['current_user_is_staff'] = request.user.is_staff
+        return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
-# todo : refactor this method to update_bid
-def accept_bid(request, bid_id):
-    bids = Bid.objects.filter(id=bid_id)
-    if bids:
-        bid = bids[0]
-        user = request.user
-        if user != bid.creator and bid.status == "RUNNING":
-            bid.purchaser = user
-            bid.status = "ACCEPTED"
-            bid.save()
-            return HttpResponse()
+def accept_bid(request, bid_dict, matching_bid):
+    user = request.user
+    if user != matching_bid.creator and matching_bid.status == "RUNNING":
+        matching_bid_serialized = matching_bid.serialize()
+        for key, value in bid_dict.items():
+            if key != 'status' and key != 'purchaser':
+                if value != matching_bid_serialized[key]:
+                    return HttpBadRequest(10900, error_codes['10900'])
+        matching_bid.purchaser = user
+        matching_bid.status = "ACCEPTED"
+        matching_bid.save()
+        return HttpResponse()
+    return HttpResponseForbidden()
+
+
+def update_bid(request, bid_id):
+    bid_dict = clean_dict(json.loads(request.body))
+    matching_bid = Bid.objects.filter(id=bid_dict['id'])
+    bid_validator = BidValidator()
+    if matching_bid and bid_dict:
+        bid_dict.pop('creator', None)
+        bid_dict.pop('current_user_is_staff', None)
+        bid_dict.pop('current_user_id', None)
+        bid = matching_bid[0]
+        if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED':
+            return accept_bid(request, bid_dict, bid)
+
+        if bid.creator == request.user or request.user.is_staff:
+            if bid_validator.bid_is_valid(bid_dict):
+                matching_bid.update(**bid_dict)
+                return HttpResponse()
     return HttpResponseForbidden()
 
 
@@ -99,7 +122,7 @@ def handle_bid(request, bid_id):
     if request.method == 'GET':
         return get_bid(request, bid_id)
     if request.method == 'PUT':
-        return accept_bid(request, bid_id)
+        return update_bid(request, bid_id)
     if request.method == 'DELETE':
         return delete_bid(request, bid_id)
     return HttpMethodNotAllowed()
