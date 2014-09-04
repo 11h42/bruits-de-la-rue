@@ -83,13 +83,15 @@ describe('Bids Application', function () {
             var bid = {
                 'title': '',
                 'description': '',
-                'type': 'OFFER',
+                'type': 'SUPPLY',
                 'quantity': '',
                 'begin': '',
                 'end': '',
-                'category': ''
+                'category': '',
+                'real_author': ''
             };
-
+            console.log(bid);
+            console.log(scope.bid);
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.flush();
             assert.deepEqual(scope.bid, bid);

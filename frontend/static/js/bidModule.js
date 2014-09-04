@@ -100,7 +100,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'quantity': '',
         'begin': '',
         'end': '',
-        'category': ''
+        'category': '',
+        'real_author': ''
     };
 
     $scope.get_page_type = function (url) {
