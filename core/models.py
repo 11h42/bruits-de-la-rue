@@ -108,7 +108,8 @@ class Bid(models.Model):
         # purchaser = self.purchaser.username if self.purchaser else None
         begin = self.begin.isoformat() if self.begin else None
         end = self.end.isoformat() if self.end else None
-        category = self.category.name if self.category else None
+        category = self.category.serialize() if self.category else None
+        localization = self.localization.serialize() if self.localization else None
 
         return {
             'id': self.id,
@@ -121,6 +122,7 @@ class Bid(models.Model):
             'category': category,
             'type': self.type,
             'real_author': self.real_author,
+            'localization': localization
         }
 
     def __unicode__(self):

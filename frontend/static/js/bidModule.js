@@ -119,6 +119,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         $http.get('/api/bids/' + $scope.bidId + '/').
             success(function (data) {
                 $scope.bid = data;
+                console.log($scope.bid)
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
@@ -132,7 +133,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'begin': '',
         'end': '',
         'category': '',
-        'real_author': ''
+        'real_author': '',
+        'localization': ''
     };
 
     $scope.get_page_type = function (url) {
@@ -178,7 +180,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
-            $scope.updateCategories();
+
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier"
