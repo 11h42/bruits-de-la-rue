@@ -37,9 +37,10 @@ def create_bid(request):
     if bid_cleaned:
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid_cleaned):
+
             bid_cleaned['creator'] = request.user
             if 'localization' in bid_cleaned:
-                bid_cleaned['localization'], created = Address.objects.get_or_create(id=bid_cleaned['localization'])
+                bid_cleaned['localization'], created = Address.objects.get_or_create(title=bid_cleaned['localization']['title'])
             if 'category' in bid_cleaned:
                 bid_cleaned['category'], created = BidCategory.objects.get_or_create(
                     name=bid_cleaned['category']['name'])
@@ -180,5 +181,4 @@ def get_current_user_address(request):
     if address:
         for a in address:
             return_address.append(a.serialize())
-            print json.dumps({'address': return_address})
     return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')

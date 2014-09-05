@@ -44,13 +44,14 @@
                 </select>
             </div>
         </div>
+        {$ bid.localization $}
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="bid_address">Localisation :</label>
                 <select id="bid_address"
                         class="form-control"
                         ng-model="bid.localization"
-                        ng-options="a.id as a.title for a in localization">
+                        ng-options="address.title for address in localization">
                 </select>
                 <button data-toggle="modal" data-target="#create_address" class="btn btn-default" type="button"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter une adresse</button>
             </div>

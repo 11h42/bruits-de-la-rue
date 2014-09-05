@@ -18,4 +18,3 @@ urlpatterns = patterns(
     url(r'^users/current/address/$', views.handle_address, name="current-name"),
 
 )
-

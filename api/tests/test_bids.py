@@ -66,7 +66,7 @@ class TestBidApi(TestCase):
                'end': tomorrow.isoformat(),
                'category': {'id': category.id, 'name': category.name},
                'quantity': 2,
-               'localization': self.user_address.id}
+               'localization': self.user_address.serialize()}
         response = self.client.post('/api/bids/', json.dumps(bid), content_type="application/json; charset=utf-8")
         bid = Bid.objects.get(title=bid['title'])
         self.assertEquals(201, response.status_code)
