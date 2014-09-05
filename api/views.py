@@ -35,6 +35,7 @@ def clean_dict(dict):
 def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
     if bid_cleaned:
+        print bid_cleaned
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
