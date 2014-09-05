@@ -17,9 +17,22 @@ class UsersTest(TestCase):
         self.assertEquals(response.content, self.user.username)
 
     def test_get_current_user_address(self):
-        response = self.client.get('/api/users/current/address')
+        response = self.client.get('/api/users/current/address/')
         address_returned = json.loads(response.content)
         self.assertEquals(200, response.status_code)
         self.assertEquals(address_returned, {"address": [
             {"town": "Cestas", "title": "Akema", "address1": "3 chemin de marticot", "address2": None, "zipcode": 33610,
-             "recipient_name": "Akema", "id": 3}]})
+             "recipient_name": "Akema", "id": 1}]})
+
+    def test_create_new_address(self):
+        address = {
+            'title': 'Akema',
+            'recipient_name': 'AKEMA SAS - Antoine Briand',
+            'address1': '3 chemins de marticot',
+            'address2': '',
+            'zipcode': '33610',
+            'town': 'CESTAS'
+        }
+        response = self.client.post('/api/users/current/address/', json.dumps(address),
+                                    content_type="application/json; charset=utf-8")
+        self.assertEquals(201, response.status_code)

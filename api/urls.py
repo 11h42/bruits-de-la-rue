@@ -15,8 +15,7 @@ urlpatterns = patterns(
 
 
     url(r'^users/current/$', views.get_current_user_username, name="current-name"),
-    url(r'^users/current/address/$', views.get_current_user_address, name="current-name"),
-
+    url(r'^users/current/address/$', views.handle_address, name="current-name"),
 
 )
 

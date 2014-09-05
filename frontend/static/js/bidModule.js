@@ -12,11 +12,6 @@ bidsModule.filter('startFrom', function () {
     }
 });
 
-bidsModule.config(function ($interpolateProvider) {
-    $interpolateProvider.startSymbol('{$');
-    $interpolateProvider.endSymbol('$}');
-});
-
 bidsModule.controller('bidsController', function ($scope, $http) {
 
     $scope.pageSize = 10;
@@ -42,7 +37,36 @@ bidsModule.controller('bidsController', function ($scope, $http) {
         window.location = '/annonces/' + element.bid.id + '/';
     };
 });
+bidsModule.controller('bidUser', function ($scope, $http, $location) {
+    $scope.address = {
+        'title': '',
+        'recipient_name': '',
+        'address1': '',
+        'address2': '',
+        'zipcode': '',
+        'town': ''
+    };
+    $scope.createUserAddress = function () {
+        if ($scope.address.title.length == 0
+            || $scope.address.recipient_name.length == 0
+            || $scope.address.address1.length == 0
+            || $scope.address.zipcode.length == 0
+            || $scope.address.town.length == 0) {
+            $scope.errorMessage = "Les champs suivants sont requis : Titre, Destinataire, Adresse, Code Postal, Ville";
+        } else {
+            $http.post('/api/users/current/address/', $scope.address).
+                success(function (data, status, headers, config) {
+                    $scope.errorMessage = '';
+                    $scope.successMessage = 'Votre adresse à bien été ajoutée.';
+                    $scope.updateAddress();
+                }).error(function (data, status, headers, config) {
 
+                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+
+                });
+        }
+    };
+});
 
 bidsModule.controller('bidController', function ($scope, $http, $location) {
     function isInt(n) {

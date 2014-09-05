@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory, Address
+from core.models import Bid, BidCategory, Address, User
 
 
 def get_bids(request):
@@ -153,12 +153,32 @@ def get_current_user_username(request):
     return HttpResponse(request.user.username, content_type='application/json')
 
 
+def create_new_address(request, user_id):
+    new_address_infos = clean_dict(json.loads(request.body))
+    user = User.objects.filter(id=user_id).select_related('address')
+    if new_address_infos and user:
+        new_address = Address(**new_address_infos)
+        new_address.save()
+        user[0].address.add(new_address)
+        return HttpCreated()
+
+    return HttpBadRequest(10900, error_codes['10900'])
+
+
 @is_authenticated
 @catch_any_unexpected_exception
+def handle_address(request):
+    if request.method == "GET":
+        return get_current_user_address(request)
+    if request.method == "POST":
+        return create_new_address(request, request.user.id)
+
+
 def get_current_user_address(request):
     address = Address.objects.filter(user=request.user)
     return_address = []
     if address:
         for a in address:
             return_address.append(a.serialize())
+            print json.dumps({'address': return_address})
     return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
