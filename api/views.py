@@ -36,11 +36,8 @@ def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
     if bid_cleaned:
         bid_validator = BidValidator()
-        print bid_cleaned
         if bid_validator.bid_is_valid(bid_cleaned):
-
             bid_cleaned['creator'] = request.user
-
             if 'localization' in bid_cleaned:
                 bid_cleaned['localization'] = Address.objects.get(
                     id=bid_cleaned['localization']['id'])

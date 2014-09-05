@@ -13,7 +13,6 @@ class Address(models.Model):
     town = models.CharField(max_length=255)
 
     def serialize(self):
-
         return {
             'id': self.id,
             'title': self.title,
