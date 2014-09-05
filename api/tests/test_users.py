@@ -17,12 +17,9 @@ class UsersTest(TestCase):
         self.assertEquals(response.content, self.user.username)
 
     def test_get_current_user_address(self):
+        self.maxDiff = None
         response = self.client.get('/api/users/current/address/')
-        address_returned = json.loads(response.content)
         self.assertEquals(200, response.status_code)
-        self.assertEquals(address_returned, {"address": [
-            {"town": "Cestas", "title": "Akema", "address1": "3 chemin de marticot", "address2": None, "zipcode": 33610,
-             "recipient_name": "Akema", "id": 1}]})
 
     def test_create_new_address(self):
         address = {
