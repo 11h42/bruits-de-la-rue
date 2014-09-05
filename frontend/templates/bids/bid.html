@@ -48,7 +48,7 @@
                     </div>
 
                     <a class="btn btn-success" ng-click="acceptBid()">Accepter cette
-                        annonce</a>{# todo NG-HIDE if current user == creator #}
+                        annonce</a>
                     <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff" class="btn btn-info"
                        ng-href="/annonces/{$ bid.id $}/modifier">Modifier cette annonce</a>
                     <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff" class="btn btn-danger"

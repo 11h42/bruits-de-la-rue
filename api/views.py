@@ -40,13 +40,10 @@ def create_bid(request):
         if bid_validator.bid_is_valid(bid_cleaned):
 
             bid_cleaned['creator'] = request.user
-            try:
-                if 'localization' in bid_cleaned:
-                    bid_cleaned['localization'] = Address.objects.get(
-                        id=bid_cleaned['localization']['id'])
-            except Exception, e:
-                print bid_cleaned['localization']['id']
-                print(e)
+
+            if 'localization' in bid_cleaned:
+                bid_cleaned['localization'] = Address.objects.get(
+                    id=bid_cleaned['localization']['id'])
 
             if 'category' in bid_cleaned:
                 bid_cleaned['category'], created = BidCategory.objects.get_or_create(
