@@ -44,6 +44,14 @@
                 </select>
             </div>
         </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="bid_address">Localisation :</label>
+                <select id="bid_address" class="form-control" ng-model="bid.localization"
+                        ng-options="a.id as a.title for a in localization">
+                </select>
+            </div>
+        </div>
         {# todo : find why no value is posted in begin and date using the datetimepicker to fill the fields #}
         <div class='col-lg-3'>
             <label for="begin">Début :</label>

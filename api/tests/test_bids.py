@@ -21,7 +21,8 @@ class TestAuthApi(TestCase):
 
 class TestBidApi(TestCase):
     def setUp(self):
-        self.user = factories.UserFactory()
+        self.user_address = factories.AddressFactory(title="Adresse de test")
+        self.user = factories.UserFactory(address=[self.user_address])
         self.client.login(username=self.user.username, password="password")
 
     def test_get_a_bid_and_returns_200(self):
@@ -64,7 +65,8 @@ class TestBidApi(TestCase):
                'begin': today.isoformat(),
                'end': tomorrow.isoformat(),
                'category': {'id': category.id, 'name': category.name},
-               'quantity': 2}
+               'quantity': 2,
+               'localization': self.user_address.id}
         response = self.client.post('/api/bids/', json.dumps(bid), content_type="application/json; charset=utf-8")
         bid = Bid.objects.get(title=bid['title'])
         self.assertEquals(201, response.status_code)

@@ -99,6 +99,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
+
     $scope.bid = {
         'title': '',
         'description': '',
@@ -129,6 +130,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
+
+    $scope.updateAddress = function () {
+        $http.get('/api/users/current/address/').
+            success(function (data) {
+                $scope.localization = data.address;
+            }).error(function () {
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            });
+    };
+
     $scope.init = function () {
         var url = $location.absUrl();
 
@@ -136,6 +147,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getBid();
         } else if ($scope.get_page_type(url) == "CREATE") {
             $scope.updateCategories();
+            $scope.updateAddress();
             $scope.setRealAuthor();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer"
@@ -184,6 +196,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 });
         }
     };
+
     $scope.updateBid = function () {
 
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).

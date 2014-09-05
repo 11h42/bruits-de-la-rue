@@ -38,12 +38,14 @@ def create_bid(request):
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
+            if 'localization' in bid_cleaned:
+                bid_cleaned['localization'], created = Address.objects.get_or_create(id=bid_cleaned['localization'])
             if 'category' in bid_cleaned:
                 bid_cleaned['category'], created = BidCategory.objects.get_or_create(
                     name=bid_cleaned['category']['name'])
-        if 'begin' in bid_cleaned and 'end' in bid_cleaned:
-            if bid_cleaned['begin'] > bid_cleaned['end']:
-                return HttpBadRequest(10215, error_codes['10215'])
+            if 'begin' in bid_cleaned and 'end' in bid_cleaned:
+                if bid_cleaned['begin'] > bid_cleaned['end']:
+                    return HttpBadRequest(10215, error_codes['10215'])
         new_bid = Bid(**bid_cleaned)
         new_bid.save()
         new_bid_id = new_bid.id
@@ -151,10 +153,12 @@ def get_current_user_username(request):
     return HttpResponse(request.user.username, content_type='application/json')
 
 
+@is_authenticated
+@catch_any_unexpected_exception
 def get_current_user_address(request):
     address = Address.objects.filter(user=request.user)
     return_address = []
     if address:
-        for e in address:
-            return_address.append(e.serialize())
+        for a in address:
+            return_address.append(a.serialize())
     return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
