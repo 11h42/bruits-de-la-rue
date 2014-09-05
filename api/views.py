@@ -31,7 +31,7 @@ def clean_dict(dict):
             cleaned_dict[key] = value
     return cleaned_dict
 
-
+# Todo : Explode / Refactor ..
 def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
     if bid_cleaned:

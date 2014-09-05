@@ -180,7 +180,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
-
+            $scope.updateCategories();
+            $scope.updateAddress();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier"
