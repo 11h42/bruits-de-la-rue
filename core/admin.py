@@ -1,12 +1,13 @@
 # Register your models here.
 from django import forms
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import Group
 
-from core.models import User
+from core.models import User, BidCategory
 
 
 admin.site.unregister(Group)
@@ -79,3 +80,6 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(BidCategory)
+
+LogEntry.objects.all().delete()
