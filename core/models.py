@@ -32,6 +32,12 @@ class Association(models.Model):
     url_site = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
 
 class DatedModel(models.Model):
     """ An abstract base class for models that needs date
