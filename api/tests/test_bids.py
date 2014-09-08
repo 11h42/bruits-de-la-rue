@@ -114,6 +114,25 @@ class TestBidApi(TestCase):
         self.assertEquals(120, bid_non_accepted.quantity)
         self.assertEquals(400, response.status_code)
 
+    def test_accept_a_bid_that_have_no_quantity(self):
+        creator = factories.UserFactory(username='bid creator')
+        purchaser = self.user
+        bid = factories.BidFactory(creator=creator, status='RUNNING')
+        bid_accept = {
+            'id': bid.id,
+            'title': bid.title,
+            'description': bid.description,
+            'creator': bid.creator.id,
+            'status': 'ACCEPTED',
+            'purchaser': purchaser.id,
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        self.assertEquals(200, response.status_code)
+
+        bid_accepted = Bid.objects.get(id=bid.id)
+        self.assertEquals("ACCEPTED", bid_accepted.status)
+        self.assertEquals(self.user, bid_accepted.purchaser)
+
     def test_cant_accept_bid_that_belong_to_the_user(self):
         bid = factories.BidFactory(creator=self.user, quantity=120)
         bid_accept = {

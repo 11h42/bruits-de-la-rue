@@ -83,6 +83,7 @@ def handle_accept_bid(request, bid_dict, matching_bid):
         if 'quantity' in bid_dict:
             return accept_bid_that_have_a_quantity(bid_dict, matching_bid, user)
         else:
+            matching_bid.purchaser = user
             matching_bid.status = "ACCEPTED"
             matching_bid.save()
             return HttpResponse()
