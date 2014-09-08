@@ -38,14 +38,12 @@ class TestFactories(TestCase):
 
         self.assertEquals(category.name, BidCategory.objects.get(name=category.name).name)
 
-    def test_create_user_with_address(self):
-        address = factories.AddressFactory(title='kr')
-        address2 = factories.AddressFactory(title='kr2')
-        address3 = factories.AddressFactory(title='kr3')
-        address4 = factories.AddressFactory(title='kr4')
-
-        user = factories.UserFactory(username='addressman', address=[address, address2, address3, address4])
-
     def test_create_association(self):
         association = factories.AssociationFactory(name="Association Lambda")
         self.assertEquals("Association Lambda", association.name)
+
+    def test_create_bid_with_association(self):
+        association = factories.AssociationFactory(name="Bid with association")
+        bid = factories.BidFactory(association=association)
+
+        self.assertEquals(association.name, bid.association.name)

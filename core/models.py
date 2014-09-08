@@ -108,6 +108,8 @@ class Bid(models.Model):
 
     real_author = models.CharField(blank=True, null=True, max_length=255)
 
+    association = models.ForeignKey(Association, blank=True, null=True)
+
     def serialize(self):
         # creator = self.creator.username if self.creator else None
         # purchaser = self.purchaser.username if self.purchaser else None

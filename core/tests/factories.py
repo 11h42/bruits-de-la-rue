@@ -42,27 +42,6 @@ class UserFactory(DjangoModelFactory):
                 self.associations.add(item)
 
 
-class BidFactory(DjangoModelFactory):
-    class Meta:
-        model = 'core.Bid'
-        django_get_or_create = ('creator', 'description', 'title', 'status', 'type', 'real_author')
-
-    creator = factory.SubFactory(UserFactory)
-    description = "Factory d'une annonce"
-    title = "Annonce de test"
-    type = "SUPPLY"
-    status = "RUNNING"
-    real_author = "Jean Dupont"
-
-
-class BidCategoryFactory(DjangoModelFactory):
-    class Meta:
-        model = 'core.BidCategory'
-        django_get_or_create = ('name', )
-
-    name = "Alimentaire"
-
-
 class AssociationFactory(DjangoModelFactory):
     class Meta:
         model = 'core.Association'
@@ -82,3 +61,25 @@ class AssociationFactory(DjangoModelFactory):
         if extracted:
             for item in extracted:
                 self.address.add(item)
+
+
+class BidFactory(DjangoModelFactory):
+    class Meta:
+        model = 'core.Bid'
+        django_get_or_create = ('creator', 'description', 'title', 'status', 'type', 'real_author')
+
+    creator = factory.SubFactory(UserFactory)
+    description = "Factory d'une annonce"
+    title = "Annonce de test"
+    type = "SUPPLY"
+    status = "RUNNING"
+    real_author = "Jean Dupont"
+    association = factory.SubFactory(AssociationFactory)
+
+
+class BidCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = 'core.BidCategory'
+        django_get_or_create = ('name', )
+
+    name = "Alimentaire"
