@@ -65,19 +65,23 @@ def get_bid(request, bid_id):
         return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
-def accept_bid(request, bid_dict, matching_bid):
+def accept_bid_that_have_a_quantity(bid_dict, matching_bid, user):
+    if 0 < bid_dict['quantity'] <= matching_bid.quantity:
+        matching_bid.quantity = matching_bid.quantity - bid_dict['quantity']
+    else:
+        return HttpBadRequest(10218, error_codes['10218'])
+    matching_bid.purchaser = user
+    if matching_bid.quantity == 0:
+        matching_bid.status = "ACCEPTED"
+    matching_bid.save()
+    return HttpResponse()
+
+
+def handle_accept_bid(request, bid_dict, matching_bid):
     user = request.user
     if user != matching_bid.creator and matching_bid.status == "RUNNING":
         if 'quantity' in bid_dict:
-            if 0 < bid_dict['quantity'] <= matching_bid.quantity:
-                matching_bid.quantity = matching_bid.quantity - bid_dict['quantity']
-            else:
-                return HttpBadRequest(10218, error_codes['10218'])
-            matching_bid.purchaser = user
-            if matching_bid.quantity == 0:
-                matching_bid.status = "ACCEPTED"
-            matching_bid.save()
-            return HttpResponse()
+            return accept_bid_that_have_a_quantity(bid_dict, matching_bid, user)
         else:
             matching_bid.status = "ACCEPTED"
             matching_bid.save()
@@ -105,7 +109,7 @@ def update_bid(request, bid_id):
         bid_dict_clean(bid_dict)
         bid = matching_bid[0]
         if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED' and bid.status != "ACCEPTED":
-            return accept_bid(request, bid_dict, bid)
+            return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
                 matching_bid.update(**bid_dict)
