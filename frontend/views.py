@@ -60,3 +60,9 @@ def update_bid(request, bid_id):
     t = get_template('bids/update_bid.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
+
+def display_associations(request):
+    t = get_template('associations/associations.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
