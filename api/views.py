@@ -32,6 +32,17 @@ def clean_dict(dict):
     return cleaned_dict
 
 
+def set_bid_objects(bid_cleaned):
+    if 'localization' in bid_cleaned:
+        bid_cleaned['localization'] = Address.objects.get(
+            id=bid_cleaned['localization']['id'])
+    if 'association' in bid_cleaned:
+        bid_cleaned['association'] = Association.objects.get(id=bid_cleaned['association']['id'])
+    if 'category' in bid_cleaned:
+        bid_cleaned['category'], created = BidCategory.objects.get_or_create(
+            name=bid_cleaned['category']['name'])
+
+
 # Todo : Explode / Refactor ..
 def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
@@ -39,15 +50,7 @@ def create_bid(request):
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
-            if 'localization' in bid_cleaned:
-                bid_cleaned['localization'] = Address.objects.get(
-                    id=bid_cleaned['localization']['id'])
-            if 'association' in bid_cleaned:
-                bid_cleaned['association'] = Association.objects.get(id=bid_cleaned['association']['id'])
-
-            if 'category' in bid_cleaned:
-                bid_cleaned['category'], created = BidCategory.objects.get_or_create(
-                    name=bid_cleaned['category']['name'])
+            set_bid_objects(bid_cleaned)
             if 'begin' in bid_cleaned and 'end' in bid_cleaned:
                 if bid_cleaned['begin'] > bid_cleaned['end']:
                     return HttpBadRequest(10215, error_codes['10215'])
@@ -217,6 +220,7 @@ def get_current_user_associations(request):
         for a in associations:
             return_associations.append(a.serialize())
     return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
+
 
 @is_authenticated
 @catch_any_unexpected_exception
