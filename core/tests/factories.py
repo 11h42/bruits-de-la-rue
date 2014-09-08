@@ -29,7 +29,6 @@ class UserFactory(DjangoModelFactory):
     def address(self, create, extracted, **kwargs):
         if not create:
             return
-
         if extracted:
             for item in extracted:
                 self.address.add(item)
@@ -38,7 +37,6 @@ class UserFactory(DjangoModelFactory):
     def associations(self, create, extracted, **kwargs):
         if not create:
             return
-
         if extracted:
             for item in extracted:
                 self.associations.add(item)

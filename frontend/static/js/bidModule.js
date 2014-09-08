@@ -138,7 +138,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'end': '',
         'category': '',
         'real_author': '',
-        'localization': ''
+        'localization': '',
+        'association': ''
     };
 
     $scope.get_page_type = function (url) {
@@ -170,6 +171,15 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
+    $scope.updateAssociations = function () {
+        $http.get('/api/users/current/associations/').
+            success(function (data) {
+                $scope.associations = data.associations;
+            }).error(function () {
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            });
+    };
+
     $scope.init = function () {
         var url = $location.absUrl();
 
@@ -180,6 +190,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.updateCategories();
             $scope.updateAddress();
             $scope.setRealAuthor();
+            $scope.updateAssociations();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer"
 
@@ -187,6 +198,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.updateCategories();
             $scope.updateAddress();
+            $scope.updateAssociations();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier"
