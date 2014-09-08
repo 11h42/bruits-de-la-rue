@@ -90,11 +90,13 @@ describe('Bids Application', function () {
                 'end': '',
                 'category': categories,
                 'real_author': 'abriand',
-                'localization': ''
+                'localization': '',
+                'association': ''
             };
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.when('GET', '/api/users/current/').respond('abriand');
             httpBackend.when('GET', '/api/users/current/address/').respond('abriand');
+            httpBackend.when('GET', '/api/users/current/associations/').respond('abriand');
             httpBackend.flush();
 //            assert.deepEqual(scope.bid, bid);
 //            assert.deepEqual(scope.bid.category, categories);
