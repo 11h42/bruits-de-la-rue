@@ -8,7 +8,7 @@ from core.tests import factories
 class UsersTest(TestCase):
     def setUp(self):
         self.address = factories.AddressFactory()
-        self.address2 = factories.AddressFactory(title='Maison')
+        self.address2 = factories.AddressFactory.create(title='Maison')
         self.association = factories.AssociationFactory(name="Association de jdupont")
         self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2],
                                                  associations=[self.association])
