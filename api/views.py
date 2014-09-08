@@ -42,6 +42,8 @@ def create_bid(request):
             if 'localization' in bid_cleaned:
                 bid_cleaned['localization'] = Address.objects.get(
                     id=bid_cleaned['localization']['id'])
+            if 'association' in bid_cleaned:
+                bid_cleaned['association'] = Association.objects.get(id=bid_cleaned['association']['id'])
 
             if 'category' in bid_cleaned:
                 bid_cleaned['category'], created = BidCategory.objects.get_or_create(

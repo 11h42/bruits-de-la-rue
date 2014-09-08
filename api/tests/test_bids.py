@@ -246,4 +246,24 @@ class TestBidsApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
+    def test_post_a_bid_with_its_association(self):
+        """
+        To create a new bid you should post on /api/bid/. This post should contains a JSON with the miniumum
+        required fields.
+        """
+        association = factories.AssociationFactory(name="bid association")
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description',
+                                        "type": "OFFER",
+                                        'real_author': 'Jean Dupont',
+                                        'association': association.serialize()
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+        bids = Bid.objects.all()
+        self.assertEquals(len(bids), 1)
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
+        self.assertEquals(201, response.status_code)
+
 
