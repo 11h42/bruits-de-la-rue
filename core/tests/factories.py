@@ -34,6 +34,15 @@ class UserFactory(DjangoModelFactory):
             for item in extracted:
                 self.address.add(item)
 
+    @factory.post_generation
+    def associations(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for item in extracted:
+                self.associations.add(item)
+
 
 class BidFactory(DjangoModelFactory):
     class Meta:
