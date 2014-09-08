@@ -121,7 +121,8 @@ class Bid(models.Model):
             'category': category,
             'type': self.type,
             'real_author': self.real_author,
-            'localization': localization
+            'localization': localization,
+            'status': self.status
         }
 
     def __unicode__(self):

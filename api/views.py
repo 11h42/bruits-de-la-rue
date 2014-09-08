@@ -78,6 +78,10 @@ def accept_bid(request, bid_dict, matching_bid):
                 matching_bid.status = "ACCEPTED"
             matching_bid.save()
             return HttpResponse()
+        else:
+            matching_bid.status = "ACCEPTED"
+            matching_bid.save()
+            return HttpResponse()
     return HttpBadRequest(10217, error_codes['10217'])
 
 
@@ -100,12 +104,14 @@ def update_bid(request, bid_id):
     if matching_bid and bid_dict:
         bid_dict_clean(bid_dict)
         bid = matching_bid[0]
-        if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED':
+        if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED' and bid.status != "ACCEPTED":
             return accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
                 matching_bid.update(**bid_dict)
                 return HttpResponse()
+            else:
+                return HttpBadRequest(10666, error_codes['10666'])
     return HttpBadRequest(10216, error_codes['10216'])
 
 
