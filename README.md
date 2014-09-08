@@ -1,6 +1,6 @@
 # todo 
   
-  * corriger test karma
+  * corriger test karma : OK
   * liste des associations sur le frontend
   * ajouter disqus
   * doc

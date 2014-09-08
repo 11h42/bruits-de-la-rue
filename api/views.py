@@ -213,8 +213,20 @@ def get_current_user_address(request):
     return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
 
 
+# TODO : Refactor to be under handle_associations
+@is_authenticated
+@catch_any_unexpected_exception
 def get_current_user_associations(request):
     associations = Association.objects.filter(user=request.user)
+    return_associations = []
+    if associations:
+        for a in associations:
+            return_associations.append(a.serialize())
+    return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
+
+
+def get_associations(request):
+    associations = Association.objects.all()
     return_associations = []
     if associations:
         for a in associations:
@@ -226,5 +238,5 @@ def get_current_user_associations(request):
 @catch_any_unexpected_exception
 def handle_associations(request):
     if request.method == "GET":
-        return get_current_user_associations(request)
+        return get_associations(request)
     return HttpMethodNotAllowed()
