@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory, Address, User
+from core.models import Bid, BidCategory, Address, User, Association
 
 
 def get_bids(request):
@@ -196,6 +196,7 @@ def handle_address(request):
         return get_current_user_address(request)
     if request.method == "POST":
         return create_new_address(request, request.user.id)
+    return HttpMethodNotAllowed()
 
 
 def get_current_user_address(request):
@@ -205,3 +206,19 @@ def get_current_user_address(request):
         for a in address:
             return_address.append(a.serialize())
     return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
+
+
+def get_current_user_associations(request):
+    associations = Association.objects.filter(user=request.user)
+    return_associations = []
+    if associations:
+        for a in associations:
+            return_associations.append(a.serialize())
+    return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
+
+@is_authenticated
+@catch_any_unexpected_exception
+def handle_associations(request):
+    if request.method == "GET":
+        return get_current_user_associations(request)
+    return HttpMethodNotAllowed()

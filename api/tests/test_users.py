@@ -9,7 +9,9 @@ class UsersTest(TestCase):
     def setUp(self):
         self.address = factories.AddressFactory()
         self.address2 = factories.AddressFactory(title='Maison')
-        self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
+        self.association = factories.AssociationFactory(name="Association de jdupont")
+        self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2],
+                                                 associations=[self.association])
         self.client.login(username=self.user.username, password="password")
 
     def test_get_current_user_username(self):
@@ -33,3 +35,10 @@ class UsersTest(TestCase):
         response = self.client.post('/api/users/current/address/', json.dumps(address),
                                     content_type="application/json; charset=utf-8")
         self.assertEquals(201, response.status_code)
+
+    def test_get_current_user_associations(self):
+        response = self.client.get('/api/users/current/associations/')
+        self.assertEquals(200, response.status_code)
+        self.assertTrue(response.content)
+        self.assertEquals({'associations': [{'id': self.association.id, 'name': self.association.name}]},
+                          json.loads(response.content))
