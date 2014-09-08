@@ -59,6 +59,9 @@ class User(AbstractUser, DatedModel):
     associations = models.ManyToManyField('Association', blank=True, null=True)
     address = models.ManyToManyField('Address', blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Utilisateur"
+
 
 class BidCategory(models.Model):
     name = models.CharField(unique=True, max_length=255)
@@ -68,6 +71,13 @@ class BidCategory(models.Model):
             'id': self.id,
             'name': self.name,
         }
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
+    class Meta:
+        verbose_name = "Catégorie d'une annonce"
+        verbose_name_plural = "Catégorie d'une annonce"
 
 
 class TypeBids(object):
