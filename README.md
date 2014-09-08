@@ -1,7 +1,7 @@
 # todo 
   
   * corriger test karma : OK
-  * liste des associations sur le frontend
+  * liste des associations sur le frontend : OK
   * ajouter disqus
   * doc
   * FAQ
