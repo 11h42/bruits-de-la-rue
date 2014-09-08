@@ -36,9 +36,15 @@ class Association(models.Model):
     email = models.CharField(max_length=255, blank=True, null=True)
 
     def serialize(self):
+        address = self.address.serialize() if self.address else None
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'address': address,
+            'phone': self.phone,
+            'fax': self.fax,
+            'url_site': self.url_site,
+            'email': self.email
         }
 
     def __unicode__(self):

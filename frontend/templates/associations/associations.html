@@ -40,13 +40,26 @@
                     <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Quantité</th>
-                        <th>Début</th>
-                        <th>Fin</th>
+                        <th>Addresse</th>
+                        <th>Téléphone</th>
+                        <th>Fax</th>
+                        <th>Site web</th>
+                        <th>Email</th>
                     </tr>
                     </thead>
                     <tr data-ng-repeat="association in associations | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
                         <td>{$ association.name $}</td>
+                        <td><ul style="list-style-type: none">
+                            <li>{$ association.address.title $}</li>
+                            <li>{$ association.address.recipient_name $}</li>
+                            <li>{$ association.address.address1 $}</li>
+                            <li ng-show="association.address.address2">{$ association.address.address2 $}</li>
+                            <li>{$ association.address.zipcode $} - {$ association.address.town $}</li>
+                        </ul></td>
+                        <td>{$ association.phone $}</td>
+                        <td>{$ association.fax $}</td>
+                        <td>{$ association.url_site $}</td>
+                        <td>{$ association.email $}</td>
                     </tr>
                 </table>
                 <div class="row">
