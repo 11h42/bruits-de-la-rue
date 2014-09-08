@@ -54,3 +54,24 @@ class BidCategoryFactory(DjangoModelFactory):
         django_get_or_create = ('name', )
 
     name = "Alimentaire"
+
+
+class AssociationFactory(DjangoModelFactory):
+    class Meta:
+        model = 'core.Association'
+        django_get_or_create = ('name', 'phone', 'fax', 'url_site', 'email')
+
+    name = "Association Lambda"
+    phone = '0123456789'
+    fax = '0987654321'
+    url_site = 'association-lambda.com'
+    email = 'contact@association-lambda.com'
+
+    @factory.post_generation
+    def address(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for item in extracted:
+                self.address.add(item)

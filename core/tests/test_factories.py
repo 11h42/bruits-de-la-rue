@@ -2,12 +2,11 @@ from django.test import TestCase
 
 from core.models import User, BidCategory
 from core.tests import factories
-from core.tests.factories import AddressFactory, BidFactory
 
 
 class TestFactories(TestCase):
     def test_address_factory(self):
-        address = AddressFactory()
+        address = factories.AddressFactory()
         self.assertEquals(address.recipient_name, 'Akema')
 
     def test_user_factory(self):
@@ -28,7 +27,7 @@ class TestFactories(TestCase):
 
     def test_bid_factory(self):
         creator = factories.UserFactory(username='creator')
-        bid = BidFactory(creator=creator)
+        bid = factories.BidFactory(creator=creator)
         self.assertEquals('Annonce de test', bid.title)
         self.assertEquals(creator, bid.creator)
         self.assertEquals("Factory d'une annonce", bid.description)
@@ -46,3 +45,7 @@ class TestFactories(TestCase):
         address4 = factories.AddressFactory(title='kr4')
 
         user = factories.UserFactory(username='addressman', address=[address, address2, address3, address4])
+
+    def test_create_association(self):
+        association = factories.AssociationFactory(name="Association Lambda")
+        self.assertEquals("Association Lambda", association.name)
