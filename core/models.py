@@ -23,6 +23,9 @@ class Address(models.Model):
             'town': self.town
         }
 
+    def __unicode__(self):
+        return u'%s' % self.title
+
 
 class Association(models.Model):
     name = models.CharField(max_length=255)
@@ -37,6 +40,9 @@ class Association(models.Model):
             'id': self.id,
             'name': self.name
         }
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 
 class DatedModel(models.Model):

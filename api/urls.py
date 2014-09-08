@@ -14,8 +14,14 @@ urlpatterns = patterns(
     url(r'^categories/$', views.handle_categories, name="handle-categories"),
 
 
-    url(r'^users/current/$', views.get_current_user_username, name="current-name"),
-    url(r'^users/current/address/$', views.handle_address, name="current-name"),
-    url(r'^users/current/associations/$', views.handle_associations, name="current-name"),
+    url(r'^users/current/$', views.get_current_user_username, name="user-name"),
+    url(r'^users/current/address/$', views.handle_address, name="user-address"),
+    url(r'^users/current/associations/$', views.handle_associations, name="user-association"),
 
+    # url(r'^users/current/$', views.get_current_user, name="user-name"),
+    # {'id':1234, "user_name":"gvincent"}
+
+    # url(r'^users/(?P<user_id>\d+)/addresses/$', views.handle_user_addresses, name="user-addresses"),
+
+    # url(r'^users/(?P<user_id>\d+)/associations/$', views.handle_associations, name="user-association"),
 )
