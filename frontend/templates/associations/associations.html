@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block body %}
+    <body data-ng-app="associationsModule" class="ng-cloak" data-ng-controller="associationsController">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
+                    </div>
+                    <div class="col-lg-12">
+                        <a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à la page d'accueil</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h1>Associations</h1>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3" ng-show="associations">
+                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            Précédant
+                        </button>
+                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
+                        <button ng-disabled="currentPage >= associations.length/pageSize - 1"
+                                ng-click="currentPage=currentPage+1">
+                            Suivant
+                        </button>
+                    </div>
+                    <div ng-show="associations" class="col-lg-6 pull-right">
+                        <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
+                        <input id="table_search" ng-model="searchText" type="text"/>
+                    </div>
+                </div>
+
+                <table ng-show="associations" class="table table-responsive table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Quantité</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                    </tr>
+                    </thead>
+                    <tr data-ng-repeat="association in associations | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
+                        <td>{$ association.name $}</td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-lg-6" ng-show="associations">
+                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            Précédant
+                        </button>
+                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
+                        <button ng-disabled="currentPage >= associations.length/pageSize - 1"
+                                ng-click="currentPage=currentPage+1">
+                            Suivant
+                        </button>
+                    </div>
+                    <div class="alert alert-success text-center ng-cloak" ng-hide="associations">Il semble qu'il n'y ai aucune
+                        associations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/associationModule.js"></script>
+    <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+{% endblock %}

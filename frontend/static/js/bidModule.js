@@ -20,7 +20,6 @@ bidsModule.controller('bidsController', function ($scope, $http) {
     $scope.bids = [];
     $scope.currentPage = 0;
     $scope.getBids = function () {
-        //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
         $http.get('/api/bids/').
             success(function (data) {
                 $scope.bids = data.bids;
@@ -38,7 +37,6 @@ bidsModule.controller('bidsController', function ($scope, $http) {
         window.location = '/annonces/' + element.bid.id + '/';
     };
 });
-//noinspection JSUnusedLocalSymbols
 bidsModule.controller('bidUser', function ($scope, $http, $location) {
     $scope.address = {
         'title': '',
@@ -56,7 +54,6 @@ bidsModule.controller('bidUser', function ($scope, $http, $location) {
             || $scope.address.town.length == 0) {
             $scope.errorMessage = "Les champs suivants sont requis : Titre, Destinataire, Adresse, Code Postal, Ville";
         } else {
-            //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
             $http.post('/api/users/current/address/', $scope.address).
                 success(function (data, status, headers, config) {
                     $scope.errorMessage = '';
@@ -82,7 +79,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
         } else {
-            //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
             $http.post('/api/bids/', $scope.bid).
                 success(function (data, status, headers, config) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
@@ -214,7 +210,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.acceptBid = function () {
         $scope.bid['status'] = 'ACCEPTED';
-        //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 window.location.reload(true);
@@ -252,7 +247,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.updateBid = function () {
 
-        //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 window.location = '/annonces/' + $scope.bidId;
