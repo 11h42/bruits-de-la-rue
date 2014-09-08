@@ -31,11 +31,11 @@ def clean_dict(dict):
             cleaned_dict[key] = value
     return cleaned_dict
 
+
 # Todo : Explode / Refactor ..
 def create_bid(request):
     bid_cleaned = clean_dict(json.loads(request.body))
     if bid_cleaned:
-        print bid_cleaned
         bid_validator = BidValidator()
         if bid_validator.bid_is_valid(bid_cleaned):
             bid_cleaned['creator'] = request.user
@@ -80,14 +80,25 @@ def accept_bid(request, bid_dict, matching_bid):
     return HttpBadRequest(10217, error_codes['10217'])
 
 
+# todo pop in validator
+def bid_dict_clean(bid_dict):
+    bid_dict.pop('creator', None)
+    bid_dict.pop('current_user_is_staff', None)
+    bid_dict.pop('current_user_id', None)
+    if 'localization' in bid_dict:
+
+        bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
+    if 'category' in bid_dict:
+        bid_dict['category'] = BidCategory.objects.get(id=bid_dict['category']['id'])
+    return bid_dict
+
+
 def update_bid(request, bid_id):
     bid_dict = clean_dict(json.loads(request.body))
     matching_bid = Bid.objects.filter(id=bid_dict['id'])
     bid_validator = BidValidator()
     if matching_bid and bid_dict:
-        bid_dict.pop('creator', None)
-        bid_dict.pop('current_user_is_staff', None)
-        bid_dict.pop('current_user_id', None)
+        bid_dict_clean(bid_dict)
         bid = matching_bid[0]
         if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED':
             return accept_bid(request, bid_dict, bid)
@@ -95,8 +106,7 @@ def update_bid(request, bid_id):
             if bid_validator.bid_is_valid(bid_dict):
                 matching_bid.update(**bid_dict)
                 return HttpResponse()
-        return HttpBadRequest(10216, error_codes['10216'])
-    return HttpBadRequest(10900, error_codes['10900'])
+    return HttpBadRequest(10216, error_codes['10216'])
 
 
 @is_authenticated

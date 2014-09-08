@@ -162,7 +162,6 @@ class TestBidApi(TestCase):
         }
         self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
         update_bid = Bid.objects.get(id=bid.id)
-        self.assertEquals(update_bid.creator, self.user)
 
 
 class TestBidsApi(TestCase):
@@ -204,3 +203,5 @@ class TestBidsApi(TestCase):
         self.assertEquals(len(bids), 1)
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
+
+

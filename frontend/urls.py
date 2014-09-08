@@ -18,5 +18,5 @@ urlpatterns = patterns(
     url(r'^annonces/$', views.display_bids, name='display-bids'),
     url(r'^annonces/creer/$', views.create_bid, name='create-bids'),
     url(r'annonces/(?P<bid_id>\d+)/$', views.display_bid, name='display-bid'),
-    url(r'annonces/(?P<bid_id>\d+)/modifier/$', views.update_bid, name='update-bid')
+    url(r'annonces/(?P<bid_id>\d+)/modifier/$', views.update_bid, name='update-bid'),
 )
