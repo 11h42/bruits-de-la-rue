@@ -68,15 +68,16 @@ def get_bid(request, bid_id):
 def accept_bid(request, bid_dict, matching_bid):
     user = request.user
     if user != matching_bid.creator and matching_bid.status == "RUNNING":
-        matching_bid_serialized = matching_bid.serialize()
-        for key, value in bid_dict.items():
-            if key != 'status' and key != 'purchaser':
-                if value != matching_bid_serialized[key]:
-                    return HttpBadRequest(10900, error_codes['10900'])
-        matching_bid.purchaser = user
-        matching_bid.status = "ACCEPTED"
-        matching_bid.save()
-        return HttpResponse()
+        if 'quantity' in bid_dict:
+            if 0 < bid_dict['quantity'] <= matching_bid.quantity:
+                matching_bid.quantity = matching_bid.quantity - bid_dict['quantity']
+            else:
+                return HttpBadRequest(10218, error_codes['10218'])
+            matching_bid.purchaser = user
+            if matching_bid.quantity == 0:
+                matching_bid.status = "ACCEPTED"
+            matching_bid.save()
+            return HttpResponse()
     return HttpBadRequest(10217, error_codes['10217'])
 
 
@@ -86,7 +87,6 @@ def bid_dict_clean(bid_dict):
     bid_dict.pop('current_user_is_staff', None)
     bid_dict.pop('current_user_id', None)
     if 'localization' in bid_dict:
-
         bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
     if 'category' in bid_dict:
         bid_dict['category'] = BidCategory.objects.get(id=bid_dict['category']['id'])

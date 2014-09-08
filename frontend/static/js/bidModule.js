@@ -123,7 +123,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         $http.get('/api/bids/' + $scope.bidId + '/').
             success(function (data) {
                 $scope.bid = data;
-                console.log($scope.bid)
+                $scope.bid_quantity = $scope.bid['quantity'];
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
@@ -175,6 +175,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         if ($scope.get_page_type(url) == "GET") {
             $scope.getBid();
+
         } else if ($scope.get_page_type(url) == "CREATE") {
             $scope.updateCategories();
             $scope.updateAddress();
@@ -204,11 +205,18 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
+                window.location.reload(true);
+                $scope.errorMessage = "";
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
                 if (data.code == 10217) {
+                    $scope.successMessage = "";
                     $scope.errorMessage = data.message;
-                } else {
+                }else if(data.code == 10218){
+                    $scope.successMessage = "";
+                    $scope.errorMessage = data.message;
+                }else {
+                    $scope.successMessage = "";
                     $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
             });

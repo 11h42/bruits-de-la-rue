@@ -72,10 +72,10 @@ class TestBidApi(TestCase):
         self.assertEquals(201, response.status_code)
         self.assertEquals(u'My bid', bid.title)
 
-    def test_accept_bid(self):
+    def test_accept_all_the_bid(self):
         creator = factories.UserFactory(username='bid creator')
         purchaser = self.user
-        bid = factories.BidFactory(creator=creator, status='RUNNING')
+        bid = factories.BidFactory(creator=creator, status='RUNNING', quantity=120)
         bid_accept = {
             'id': bid.id,
             'title': bid.title,
@@ -83,6 +83,7 @@ class TestBidApi(TestCase):
             'creator': bid.creator.id,
             'status': 'ACCEPTED',
             'purchaser': purchaser.id,
+            'quantity': 120
 
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
@@ -92,8 +93,29 @@ class TestBidApi(TestCase):
         self.assertEquals("ACCEPTED", bid_accepted.status)
         self.assertEquals(self.user, bid_accepted.purchaser)
 
+    def test_accept_bid_with_negative_value(self):
+        creator = factories.UserFactory(username='bid creator')
+        purchaser = self.user
+        bid = factories.BidFactory(creator=creator, status='RUNNING', quantity=120)
+        bid_accept = {
+            'id': bid.id,
+            'title': bid.title,
+            'description': bid.description,
+            'creator': bid.creator.id,
+            'status': 'ACCEPTED',
+            'purchaser': purchaser.id,
+            'quantity': -120
+
+        }
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        bid_non_accepted = Bid.objects.get(id=bid.id)
+        self.assertEquals("RUNNING", bid_non_accepted.status)
+        self.assertEquals(bid.purchaser, None)
+        self.assertEquals(120, bid_non_accepted.quantity)
+        self.assertEquals(400, response.status_code)
+
     def test_cant_accept_bid_that_belong_to_the_user(self):
-        bid = factories.BidFactory(creator=self.user)
+        bid = factories.BidFactory(creator=self.user, quantity=120)
         bid_accept = {
             'id': bid.id,
             'title': bid.title,
@@ -101,6 +123,7 @@ class TestBidApi(TestCase):
             'creator': bid.creator.username,
             'status': 'ACCEPTED',
             'purchaser': self.user.id,
+            'quantity': 120
 
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))

@@ -31,7 +31,8 @@
                                 <li><b>Début de l'annonce :</b> <span ng-hide="bid.begin">Non renseigné</span> {$
                                     bid.begin | date:'dd MMM yy HH:mm' $}
                                 </li>
-                                <li><b>Déposé par :</b> {$ bid.creator $} <span ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
+                                <li><b>Déposé par :</b> {$ bid.creator $} <span
+                                        ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
                                 </li>
                             </ul>
                         </div>
@@ -46,9 +47,10 @@
                             </blockquote>
                         </div>
                     </div>
-
-                    <a class="btn btn-success" ng-click="acceptBid()">Accepter cette
-                        annonce</a>
+                    <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default" type="button"><span
+                            class="glyphicon glyphicon-ok-sign"></span> Accepter cette
+                        annonce
+                    </button>
                     <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff" class="btn btn-info"
                        ng-href="/annonces/{$ bid.id $}/modifier">Modifier cette annonce</a>
                     <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff" class="btn btn-danger"
@@ -56,6 +58,7 @@
 
                 </div>
             </div>
+            {% include 'modales/accept_bid.html' %}
         </div>
     </div>
     </div>
@@ -68,3 +71,4 @@
     <script type="text/javascript"
             src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
 {% endblock %}
+
