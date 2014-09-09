@@ -61,6 +61,17 @@ class DatedModel(models.Model):
         abstract = True
 
 
+class Faq(DatedModel):
+    question = models.CharField(max_length=255)
+    answer = models.TextField()
+
+    def serialize(self):
+        return {
+            'question': self.question,
+            'answer': self.answer
+        }
+
+
 class User(AbstractUser, DatedModel):
     associations = models.ManyToManyField('Association', blank=True, null=True)
     address = models.ManyToManyField('Address', blank=True, null=True)

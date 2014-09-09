@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory, Address, User, Association
+from core.models import Bid, BidCategory, Address, User, Association, Faq
 
 
 def get_bids(request):
@@ -240,3 +240,12 @@ def handle_associations(request):
     if request.method == "GET":
         return get_associations(request)
     return HttpMethodNotAllowed()
+
+
+def get_faq(request):
+    faqs = Faq.objects.all()
+    return_faq = []
+    if faqs:
+        for faq in faqs:
+            return_faq.append(faq.serialize())
+    return HttpResponse(json.dumps({'faqs': return_faq}), content_type='application/json')

@@ -83,3 +83,12 @@ class BidCategoryFactory(DjangoModelFactory):
         django_get_or_create = ('name', )
 
     name = "Alimentaire"
+
+
+class FaqFactory(DjangoModelFactory):
+    class Meta:
+        model ='core.Faq'
+        django_get_or_create = ('question', 'answer')
+
+    question = 'Factored question'
+    answer = 'Factored answer'

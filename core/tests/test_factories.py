@@ -47,3 +47,8 @@ class TestFactories(TestCase):
         bid = factories.BidFactory(association=association)
 
         self.assertEquals(association.name, bid.association.name)
+
+    def test_create_faq(self):
+        faq = factories.FaqFactory(question="How do I create a faq ?", answer="With a factory !")
+        self.assertEquals("How do I create a faq ?", faq.question)
+        self.assertEquals("With a factory !", faq.answer)
