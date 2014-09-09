@@ -40,5 +40,8 @@ class UsersTest(TestCase):
         response = self.client.get('/api/users/current/associations/')
         self.assertEquals(200, response.status_code)
         self.assertTrue(response.content)
-        self.assertEquals({'associations': [{'id': self.association.id, 'name': self.association.name}]},
+        self.assertEquals({u'associations': [{u'fax': u'0987654321', u'name': u'Association de jdupont',
+                                              u'url_site': u'association-lambda.com',
+                                              u'email': u'contact@association-lambda.com', u'phone': u'0123456789',
+                                              u'address': None, u'id': 1}]},
                           json.loads(response.content))

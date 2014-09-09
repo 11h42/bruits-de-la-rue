@@ -1,4 +1,3 @@
-# Register your models here.
 from django import forms
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth import get_user_model
@@ -7,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import Group
 
-from core.models import User, BidCategory
+from core.models import User, BidCategory, Association
 
 
 admin.site.unregister(Group)
@@ -54,24 +53,22 @@ class UserChangeForm(forms.ModelForm):
 
 
 class CustomUserAdmin(UserAdmin):
-    # The forms to add and change user instances
     form = UserChangeForm
     add_form = UserCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
     list_display = ('username', 'email', 'first_name', 'last_name')
+
     list_filter = ()
     fieldsets = (
         (None, {'fields': ('email', 'password', 'username')}),
-        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Informations personnelles', {'fields': ('first_name', 'last_name')}),
     )
     add_fieldsets = (
         (
             None, {
                 'classes': ('wide',),
-                'fields': ('email', 'first_name', 'username', 'last_name', 'password1', 'password2')}
+                'fields': (
+                'email', 'first_name', 'username', 'last_name', 'password1', 'password2')}
         ),
     )
     search_fields = ('username',)
@@ -81,5 +78,6 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(BidCategory)
+admin.site.register(Association)
 
 LogEntry.objects.all().delete()
