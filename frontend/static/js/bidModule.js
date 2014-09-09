@@ -77,7 +77,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     }
 
 
-    $scope.createBid = function () {
+    $scope.createBid = function ($scope) {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
         } else {
@@ -142,7 +142,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'real_author': '',
         'localization': '',
         'association': '',
-        'status': ''
+        'status_bid': ''
     };
 
     $scope.get_page_type = function (url) {
@@ -230,7 +230,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
-        $scope.bid['status'] = 'ACCEPTE';
+        $scope.bid['status_bid'] = 'ACCEPTE';
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function () {
                 window.location.reload(true);

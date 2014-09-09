@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
         'USER': config.get('DATABASE', 'USER', 'b2rue'),
         'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
-        'HOST': config.get('DATABASE', 'HOST', 'localhost'),
+        'HOST': config.get('DATABASE', 'HOST', ''),
         'PORT': config.get('DATABASE', 'PORT', '5432'),
     }
 }

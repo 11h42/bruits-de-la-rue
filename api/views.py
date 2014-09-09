@@ -22,7 +22,7 @@ def get_bids(request):
 
 def clean_dict(dict):
     """
-    :param dict: 
+    :param dict:
     :return: The dict containing only fields with values.
     """
     cleaned_dict = {}
@@ -105,6 +105,7 @@ def set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid):
         bid_dict['localization'] = None
 
 
+#  todo check if the two bids are the same. If not, this is an update, not an accept
 def update_bid(request, bid_id):
     bid_dict = clean_dict(json.loads(request.body))
     matching_bid = Bid.objects.filter(id=bid_dict['id'])
@@ -113,10 +114,15 @@ def update_bid(request, bid_id):
         bid_dict_clean(bid_dict)
         bid_dict.pop('creator', None)
         bid = matching_bid[0]
-        if 'status' in bid_dict and bid_dict['status'] == StatusBids.ACCEPTED and bid.status == StatusBids.RUNNING:
+        if 'status_bid' in bid_dict and bid_dict[
+            'status_bid']['name'] == StatusBids.ACCEPTED and bid.status == StatusBids.RUNNING:
             return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
+                if 'status_bid' in bid_dict:
+                    print bid_dict['status_bid']
+                    bid_dict['status'] = bid_dict['status_bid']['name']
+                    bid_dict.pop('status_bid', None)
                 set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid)
                 matching_bid.update(**bid_dict)
                 return HttpResponse()

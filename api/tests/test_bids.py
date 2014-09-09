@@ -81,7 +81,7 @@ class TestBidApi(TestCase):
             'title': bid.title,
             'description': bid.description,
             'creator': bid.creator.id,
-            'status': StatusBids.ACCEPTED,
+            'status_bid': {'name': StatusBids.ACCEPTED},
             'purchaser': purchaser.id,
             'quantity': 120
 
@@ -102,7 +102,7 @@ class TestBidApi(TestCase):
             'title': bid.title,
             'description': bid.description,
             'creator': bid.creator.id,
-            'status': 'ACCEPTED',
+            'status_bid': {'name': StatusBids.ACCEPTED},
             'purchaser': purchaser.id,
             'quantity': -120
 
@@ -123,7 +123,7 @@ class TestBidApi(TestCase):
             'title': bid.title,
             'description': bid.description,
             'creator': bid.creator.id,
-            'status': StatusBids.ACCEPTED,
+            'status_bid': {'name': StatusBids.ACCEPTED},
             'purchaser': purchaser.id,
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
@@ -140,7 +140,7 @@ class TestBidApi(TestCase):
             'title': bid.title,
             'description': bid.description,
             'creator': bid.creator.username,
-            'status': StatusBids.ACCEPTED,
+            'status_bid': {'name': StatusBids.ACCEPTED},
             'purchaser': self.user.id,
             'quantity': 120
 

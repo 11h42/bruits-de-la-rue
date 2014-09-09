@@ -163,7 +163,7 @@ class Bid(models.Model):
             'type': self.type,
             'real_author': self.real_author,
             'localization': localization,
-            'status': self.status,
+            'status_bid': self.status,
             'association': association
         }
 

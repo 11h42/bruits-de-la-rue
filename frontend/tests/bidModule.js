@@ -81,7 +81,7 @@ describe('Bids Application', function () {
                 {'id': 2, 'name': 'SERVICE'}
             ];
 
-            var bid = {
+            $scope.bid = {
                 'title': '',
                 'description': '',
                 'type': 'SUPPLY',
@@ -92,7 +92,7 @@ describe('Bids Application', function () {
                 'real_author': 'abriand',
                 'localization': '',
                 'association': '',
-                'status': ''
+                'status_bid': ''
             };
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.when('GET', '/api/users/current/').respond('abriand');
