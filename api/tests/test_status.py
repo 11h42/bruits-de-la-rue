@@ -11,6 +11,7 @@ class TestStatus(TestCase):
         self.client.login(username=user.username, password="password")
 
     def test_get_status(self):
+        return_bid_status = []
 
         resonse = self.client.get('/api/bids/status/')
         self.assertEquals(200, resonse.status_code)

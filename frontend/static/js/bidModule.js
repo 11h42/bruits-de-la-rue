@@ -236,7 +236,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 window.location.reload(true);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Vous avez accepté cette annonce";
-            }).error(function (data) {
+            }).error(function (data, status, headers, config) {
                 if (data.code == 10217) {
                     $scope.successMessage = "";
                     $scope.errorMessage = data.message;
