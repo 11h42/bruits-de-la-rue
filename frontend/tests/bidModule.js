@@ -13,7 +13,6 @@ describe('Bids Application', function () {
         }));
 
         it('should be instanciate with default values', function () {
-            assert.isFalse(scope.hasError);
             assert.deepEqual(scope.bids, []);
         });
 
@@ -96,12 +95,10 @@ describe('Bids Application', function () {
             };
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.when('GET', '/api/users/current/').respond('abriand');
-            httpBackend.when('GET', '/api/users/current/address/').respond('abriand');
-            httpBackend.when('GET', '/api/users/current/associations/').respond('abriand');
-            httpBackend.when('GET', '/api/bids/status/').respond('abriand');
+            httpBackend.when('GET', '/api/users/current/address/').respond();
+            httpBackend.when('GET', '/api/users/current/associations/').respond();
+            httpBackend.when('GET', '/api/bids/status/').respond();
             httpBackend.flush();
-//            assert.deepEqual(scope.bid, bid);
-//            assert.deepEqual(scope.bid.category, categories);
         });
 
     });

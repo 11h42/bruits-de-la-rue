@@ -77,7 +77,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     }
 
 
-    $scope.createBid = function ($scope) {
+    $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
         } else {
