@@ -97,6 +97,7 @@ describe('Bids Application', function () {
             httpBackend.when('GET', '/api/users/current/').respond('abriand');
             httpBackend.when('GET', '/api/users/current/address/').respond('abriand');
             httpBackend.when('GET', '/api/users/current/associations/').respond('abriand');
+            httpBackend.when('GET', '/api/bids/status/').respond('abriand');
             httpBackend.flush();
 //            assert.deepEqual(scope.bid, bid);
 //            assert.deepEqual(scope.bid.category, categories);
