@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block body %}
+    <body data-ng-app="faqsModule" class="ng-cloak" data-ng-controller="faqsController">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
+                    </div>
+                    <div class="col-lg-12">
+                        <a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à la page d'accueil</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h1>FAQ</h1>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3" ng-show="faqs">
+                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            Précédant
+                        </button>
+                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
+                        <button ng-disabled="currentPage >= faqs.length/pageSize - 1"
+                                ng-click="currentPage=currentPage+1">
+                            Suivant
+                        </button>
+                    </div>
+                    <div ng-show="faqs" class="col-lg-6 pull-right">
+                        <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
+                        <input id="table_search" ng-model="searchText" type="text"/>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <ul class="list-group"
+                        data-ng-repeat="faq in faqs | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
+                        <li><b>Question :</b></li>
+                        <li><b>Réponse :</b></li>
+                    </ul>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6" ng-show="faqs">
+                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                            Précédant
+                        </button>
+                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
+                        <button ng-disabled="currentPage >= faqs.length/pageSize - 1"
+                                ng-click="currentPage=currentPage+1">
+                            Suivant
+                        </button>
+                    </div>
+                    <div class="alert alert-success text-center ng-cloak" ng-hide="faqs">Il semble qu'il n'y ai
+                        aucune
+                        FAQ.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/faqModule.js"></script>
+    <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+{% endblock %}

@@ -66,3 +66,9 @@ def display_associations(request):
     t = get_template('associations/associations.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
+
+def display_faq(request):
+    t = get_template('faq/faq.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
