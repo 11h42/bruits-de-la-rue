@@ -96,6 +96,15 @@ def bid_dict_clean(bid_dict):
     return bid_dict
 
 
+def set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid):
+    if 'association' not in bid_dict and bool(matching_bid[0].association):
+        bid_dict['association'] = None
+    if 'category' not in bid_dict and bool(matching_bid[0].category):
+        bid_dict['category'] = None
+    if 'localization' not in bid_dict and bool(matching_bid[0].localization):
+        bid_dict['localization'] = None
+
+
 def update_bid(request, bid_id):
     bid_dict = clean_dict(json.loads(request.body))
     matching_bid = Bid.objects.filter(id=bid_dict['id'])
@@ -108,12 +117,7 @@ def update_bid(request, bid_id):
             return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
-                if 'association' not in bid_dict and bool(matching_bid[0].association):
-                    bid_dict['association'] = None
-                if 'category' not in bid_dict and bool(matching_bid[0].category):
-                    bid_dict['category'] = None
-                if 'localization' not in bid_dict and bool(matching_bid[0].localization):
-                    bid_dict['localization'] = None
+                set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid)
                 matching_bid.update(**bid_dict)
                 return HttpResponse()
             else:
@@ -238,6 +242,8 @@ def handle_associations(request):
     return HttpMethodNotAllowed()
 
 
+@is_authenticated
+@catch_any_unexpected_exception
 def get_faq(request):
     faqs = Faq.objects.all()
     return_faq = []
