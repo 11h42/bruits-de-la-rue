@@ -252,6 +252,7 @@ def get_faq(request):
             return_faq.append(faq.serialize())
     return HttpResponse(json.dumps({'faqs': return_faq}), content_type='application/json')
 
+
 @is_authenticated
 @catch_any_unexpected_exception
 def get_status(request):
