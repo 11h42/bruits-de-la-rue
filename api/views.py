@@ -87,8 +87,6 @@ def handle_accept_bid(request, bid_dict, matching_bid):
 def bid_dict_clean(bid_dict):
     bid_dict.pop('current_user_is_staff', None)
     bid_dict.pop('current_user_id', None)
-    if 'status' in bid_dict:
-        bid_dict['status'] = bid_dict['status']['name']
     if 'localization' in bid_dict:
         bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
     if 'category' in bid_dict:

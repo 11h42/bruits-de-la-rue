@@ -221,7 +221,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
-        $scope.bid['status'] = 'Accepte';
+        $scope.bid['status'] = 'ACCEPTE';
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 window.location.reload(true);
