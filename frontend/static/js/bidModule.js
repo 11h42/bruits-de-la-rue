@@ -135,7 +135,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'category': '',
         'real_author': '',
         'localization': '',
-        'association': ''
+        'association': '',
+        'status': ''
     };
 
     $scope.get_page_type = function (url) {

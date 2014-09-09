@@ -91,7 +91,8 @@ describe('Bids Application', function () {
                 'category': categories,
                 'real_author': 'abriand',
                 'localization': '',
-                'association': ''
+                'association': '',
+                'status': ''
             };
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.when('GET', '/api/users/current/').respond('abriand');

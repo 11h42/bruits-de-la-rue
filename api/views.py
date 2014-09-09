@@ -87,6 +87,8 @@ def handle_accept_bid(request, bid_dict, matching_bid):
 def bid_dict_clean(bid_dict):
     bid_dict.pop('current_user_is_staff', None)
     bid_dict.pop('current_user_id', None)
+    if 'status' in bid_dict:
+        bid_dict['status'] = bid_dict['status']['name']
     if 'localization' in bid_dict:
         bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
     if 'category' in bid_dict:
@@ -113,7 +115,7 @@ def update_bid(request, bid_id):
         bid_dict_clean(bid_dict)
         bid_dict.pop('creator', None)
         bid = matching_bid[0]
-        if 'status' in bid_dict and bid_dict['status'] == StatusBids.ACCEPTED and bid.status != StatusBids.ACCEPTED:
+        if 'status' in bid_dict and bid_dict['status'] == StatusBids.ACCEPTED and bid.status == StatusBids.RUNNING:
             return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
@@ -257,5 +259,5 @@ def get_faq(request):
 def get_status(request):
     return_bid_status = []
     for e in StatusBids.TYPE_CHOICES:
-        return_bid_status.append({str(e[0]): str(e[0])})
+        return_bid_status.append({'name': str(e[0])})
     return HttpResponse(json.dumps(return_bid_status), content_type='application/json')
