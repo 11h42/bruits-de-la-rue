@@ -80,7 +80,7 @@ describe('Bids Application', function () {
                 {'id': 2, 'name': 'SERVICE'}
             ];
 
-            $scope.bid = {
+            bid = {
                 'title': '',
                 'description': '',
                 'type': 'SUPPLY',
@@ -95,9 +95,9 @@ describe('Bids Application', function () {
             };
             httpBackend.when('GET', '/api/categories/').respond({"categories": categories});
             httpBackend.when('GET', '/api/users/current/').respond('abriand');
-            httpBackend.when('GET', '/api/users/current/address/').respond();
-            httpBackend.when('GET', '/api/users/current/associations/').respond();
-            httpBackend.when('GET', '/api/bids/status/').respond();
+            httpBackend.when('GET', '/api/users/current/address/').respond('');
+            httpBackend.when('GET', '/api/users/current/associations/').respond('');
+            httpBackend.when('GET', '/api/bids/status/').respond('');
             httpBackend.flush();
         });
 

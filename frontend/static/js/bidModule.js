@@ -76,6 +76,19 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         return intRegex.test(n);
     }
 
+    $scope.bid = {
+        'title': '',
+        'description': '',
+        'type': 'SUPPLY',
+        'quantity': '',
+        'begin': '',
+        'end': '',
+        'category': '',
+        'real_author': '',
+        'localization': '',
+        'association': '',
+        'status_bid': ''
+    };
 
     $scope.createBid = function () {
         if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
@@ -131,19 +144,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.bid = {
-        'title': '',
-        'description': '',
-        'type': 'SUPPLY',
-        'quantity': '',
-        'begin': '',
-        'end': '',
-        'category': '',
-        'real_author': '',
-        'localization': '',
-        'association': '',
-        'status_bid': ''
-    };
 
     $scope.get_page_type = function (url) {
         if (isInt($scope.getBidId(url))) {
