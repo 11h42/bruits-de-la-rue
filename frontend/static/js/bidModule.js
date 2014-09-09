@@ -16,15 +16,16 @@ bidsModule.controller('bidsController', function ($scope, $http) {
 
     $scope.pageSize = 10;
     $scope.searchText = "";
-    $scope.hasError = false;
     $scope.bids = [];
     $scope.currentPage = 0;
     $scope.getBids = function () {
         $http.get('/api/bids/').
             success(function (data) {
                 $scope.bids = data.bids;
-            }).error(function (data, status, headers, config) {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            }).error(function () {
+                $scope.errorMessage = "Veuillez nous excuser," +
+                    " notre site rencontre des difficultés techniques." +
+                    " Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
     $scope.getBids();
@@ -37,7 +38,7 @@ bidsModule.controller('bidsController', function ($scope, $http) {
         window.location = '/annonces/' + element.bid.id + '/';
     };
 });
-bidsModule.controller('bidUser', function ($scope, $http, $location) {
+bidsModule.controller('bidUser', function ($scope, $http) {
     $scope.address = {
         'title': '',
         'recipient_name': '',
@@ -55,13 +56,14 @@ bidsModule.controller('bidUser', function ($scope, $http, $location) {
             $scope.errorMessage = "Les champs suivants sont requis : Titre, Destinataire, Adresse, Code Postal, Ville";
         } else {
             $http.post('/api/users/current/address/', $scope.address).
-                success(function (data, status, headers, config) {
+                success(function () {
                     $scope.errorMessage = '';
                     $scope.successMessage = 'Votre adresse à bien été ajoutée.';
                     $scope.updateAddress();
-                }).error(function (data, status, headers, config) {
+                }).error(function () {
 
-                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                        "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
 
                 });
         }
@@ -80,13 +82,15 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
         } else {
             $http.post('/api/bids/', $scope.bid).
-                success(function (data, status, headers, config) {
+                success(function (data) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
-                }).error(function (data, status, headers, config) {
+                }).error(function (data) {
                     if (data.code == '10215') {
                         $scope.errorMessage = data.message;
                     } else {
-                        $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                        $scope.errorMessage = "Veuillez nous excuser, notre site" +
+                            " rencontre des difficultés techniques. Nous vous invitions " +
+                            "à réessayer dans quelques minutes.";
                     }
 
                 });
@@ -110,7 +114,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.categories = data.categories;
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site" +
+                    " rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -121,7 +126,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 $scope.bid = data;
                 $scope.bid_quantity = $scope.bid['quantity'];
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site" +
+                    " rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -155,7 +161,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.bid['real_author'] = data;
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                    "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -164,7 +171,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.localization = data.address;
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                    "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -173,7 +181,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.associations = data.associations;
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                    "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -182,7 +191,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.status = data;
             }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                    "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
 
@@ -190,6 +200,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         var url = $location.absUrl();
 
         if ($scope.get_page_type(url) == "GET") {
+            console.log('Ye sui oune get');
             $scope.getBid();
 
         } else if ($scope.get_page_type(url) == "CREATE") {
@@ -216,14 +227,13 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.init();
 
-    $scope.hasError = false;
     $scope.user_id = "";
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
         $scope.bid['status'] = 'ACCEPTE';
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
-            success(function (data, status, headers, config) {
+            success(function () {
                 window.location.reload(true);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Vous avez accepté cette annonce";
@@ -236,22 +246,23 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                     $scope.errorMessage = data.message;
                 } else {
                     $scope.successMessage = "";
-                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                        "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
             });
     };
 
     $scope.deleteBid = function () {
         if (confirm("Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?")) {
-            //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
             $http.delete('/api/bids/' + $scope.bidId + '/').
-                success(function (data, status, headers, config) {
+                success(function () {
                     window.location = '/annonces/'
-                }).error(function (data, status, headers, config) {
+                }).error(function (data, status) {
                     if (status == 403) {
                         $scope.errorMessage = "Vous n'avez pas le droit de supprimer cette annonce"
                     } else {
-                        $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                        $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                            "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                     }
                 });
         }
@@ -260,13 +271,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.updateBid = function () {
 
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
-            success(function (data, status, headers, config) {
+            success(function () {
                 window.location = '/annonces/' + $scope.bidId;
-            }).error(function (data, status, headers, config) {
+            }).error(function (data) {
                 if (data.code == 10216) {
                     $scope.errorMessage = data.message;
                 } else {
-                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                    $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                        "rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
             });
     };
