@@ -8,5 +8,7 @@
   
   * gestion des categories dans l'admin : OK
   * gestion des associations dans l'admin
-  * status des annonces
-  * email 
+  * status des annonces : OK
+  * email
+
+  > Soucis : Lors de l'update, je n'arrive pas à préselectionner la valeur existante pour un select donné.
