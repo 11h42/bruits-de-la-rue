@@ -32,29 +32,18 @@ def clean_dict(dict):
     return cleaned_dict
 
 
-def set_bid_objects(bid_cleaned):
-    if 'localization' in bid_cleaned:
-        bid_cleaned['localization'] = Address.objects.get(
-            id=bid_cleaned['localization']['id'])
-    if 'association' in bid_cleaned:
-        bid_cleaned['association'] = Association.objects.get(id=bid_cleaned['association']['id'])
-    if 'category' in bid_cleaned:
-        bid_cleaned['category'], created = BidCategory.objects.get_or_create(
-            name=bid_cleaned['category']['name'])
-
-
-# Todo : Explode / Refactor ..
 def create_bid(request):
-    bid_cleaned = clean_dict(json.loads(request.body))
-    if bid_cleaned:
+    bid_dict = clean_dict(json.loads(request.body))
+    if bid_dict:
         bid_validator = BidValidator()
-        if bid_validator.bid_is_valid(bid_cleaned):
-            bid_cleaned['creator'] = request.user
-            set_bid_objects(bid_cleaned)
-            if 'begin' in bid_cleaned and 'end' in bid_cleaned:
-                if bid_cleaned['begin'] > bid_cleaned['end']:
+        if bid_validator.bid_is_valid(bid_dict):
+            bid_dict['creator'] = request.user
+            bid_dict_clean(bid_dict)
+            if 'begin' in bid_dict and 'end' in bid_dict:
+                if bid_dict['begin'] > bid_dict['end']:
                     return HttpBadRequest(10215, error_codes['10215'])
-        new_bid = Bid(**bid_cleaned)
+
+        new_bid = Bid(**bid_dict)
         new_bid.save()
         new_bid_id = new_bid.id
         return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
@@ -95,15 +84,15 @@ def handle_accept_bid(request, bid_dict, matching_bid):
     return HttpBadRequest(10217, error_codes['10217'])
 
 
-# todo pop in validator
 def bid_dict_clean(bid_dict):
-    bid_dict.pop('creator', None)
     bid_dict.pop('current_user_is_staff', None)
     bid_dict.pop('current_user_id', None)
     if 'localization' in bid_dict:
         bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
     if 'category' in bid_dict:
         bid_dict['category'] = BidCategory.objects.get(id=bid_dict['category']['id'])
+    if 'association' in bid_dict:
+        bid_dict['association'] = Association.objects.get(id=bid_dict['association']['id'])
     return bid_dict
 
 
@@ -113,6 +102,7 @@ def update_bid(request, bid_id):
     bid_validator = BidValidator()
     if matching_bid and bid_dict:
         bid_dict_clean(bid_dict)
+        bid_dict.pop('creator', None)
         bid = matching_bid[0]
         if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED' and bid.status != "ACCEPTED":
             return handle_accept_bid(request, bid_dict, bid)

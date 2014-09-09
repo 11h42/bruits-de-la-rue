@@ -43,5 +43,5 @@ class UsersTest(TestCase):
         self.assertEquals({u'associations': [{u'fax': u'0987654321', u'name': u'Association de jdupont',
                                               u'url_site': u'association-lambda.com',
                                               u'email': u'contact@association-lambda.com', u'phone': u'0123456789',
-                                              u'address': None, u'id': 1}]},
+                                              u'address': None, u'id': self.association.id}]},
                           json.loads(response.content))
