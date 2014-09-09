@@ -176,6 +176,15 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
+    $scope.updateStatus = function () {
+        $http.get('/api/bids/status/').
+            success(function (data) {
+                $scope.status = data;
+            }).error(function () {
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            });
+    };
+
     $scope.init = function () {
         var url = $location.absUrl();
 
@@ -186,6 +195,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.updateCategories();
             $scope.updateAddress();
             $scope.setRealAuthor();
+            $scope.updateStatus();
             $scope.updateAssociations();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer"
@@ -195,6 +205,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.updateCategories();
             $scope.updateAddress();
             $scope.updateAssociations();
+            $scope.updateStatus();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier"
@@ -209,7 +220,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
-        $scope.bid['status'] = 'ACCEPTED';
+        $scope.bid['status'] = 'Accepte';
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function (data, status, headers, config) {
                 window.location.reload(true);
@@ -219,10 +230,10 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 if (data.code == 10217) {
                     $scope.successMessage = "";
                     $scope.errorMessage = data.message;
-                }else if(data.code == 10218){
+                } else if (data.code == 10218) {
                     $scope.successMessage = "";
                     $scope.errorMessage = data.message;
-                }else {
+                } else {
                     $scope.successMessage = "";
                     $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
@@ -257,6 +268,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                     $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
                 }
             });
-    }
+    };
 
 });

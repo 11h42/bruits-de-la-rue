@@ -6,7 +6,7 @@
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div class="alert alert-success" role="alert" ng-show="successMessage">{$ successMessage $}</div>
-                <div class="alert alert-warning" role="alert" ng-show="bid.status == 'ACCEPTED' ">Cette annonce est à
+                <div class="alert alert-warning" role="alert" ng-show="bid.status == 'Accepte' ">Cette annonce est à
                     présent terminée
                 </div>
                 <div>
@@ -54,7 +54,7 @@
                             </blockquote>
                         </div>
                     </div>
-                    <div ng-show="bid.status == 'RUNNING'">
+                    <div ng-show="bid.status == 'En cours'">
                         <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default"
                                 type="button"><span
                                 class="glyphicon glyphicon-ok-sign"></span> Accepter cette

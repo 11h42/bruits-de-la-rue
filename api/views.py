@@ -8,11 +8,11 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory, Address, User, Association, Faq
+from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids
 
 
 def get_bids(request):
-    bids = Bid.objects.filter(status="RUNNING")
+    bids = Bid.objects.filter(status=StatusBids.RUNNING)
     return_bids = []
     if bids:
         for bid in bids:
@@ -66,19 +66,19 @@ def accept_bid_that_have_a_quantity(bid_dict, matching_bid, user):
         return HttpBadRequest(10218, error_codes['10218'])
     matching_bid.purchaser = user
     if matching_bid.quantity == 0:
-        matching_bid.status = "ACCEPTED"
+        matching_bid.status = StatusBids.ACCEPTED
     matching_bid.save()
     return HttpResponse()
 
 
 def handle_accept_bid(request, bid_dict, matching_bid):
     user = request.user
-    if user != matching_bid.creator and matching_bid.status == "RUNNING":
+    if user != matching_bid.creator and matching_bid.status == StatusBids.RUNNING:
         if 'quantity' in bid_dict:
             return accept_bid_that_have_a_quantity(bid_dict, matching_bid, user)
         else:
             matching_bid.purchaser = user
-            matching_bid.status = "ACCEPTED"
+            matching_bid.status = StatusBids.ACCEPTED
             matching_bid.save()
             return HttpResponse()
     return HttpBadRequest(10217, error_codes['10217'])
@@ -113,7 +113,7 @@ def update_bid(request, bid_id):
         bid_dict_clean(bid_dict)
         bid_dict.pop('creator', None)
         bid = matching_bid[0]
-        if 'status' in bid_dict and bid_dict['status'] == 'ACCEPTED' and bid.status != "ACCEPTED":
+        if 'status' in bid_dict and bid_dict['status'] == StatusBids.ACCEPTED and bid.status != StatusBids.ACCEPTED:
             return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
@@ -251,3 +251,11 @@ def get_faq(request):
         for faq in faqs:
             return_faq.append(faq.serialize())
     return HttpResponse(json.dumps({'faqs': return_faq}), content_type='application/json')
+
+@is_authenticated
+@catch_any_unexpected_exception
+def get_status(request):
+    return_bid_status = []
+    for e in StatusBids.TYPE_CHOICES:
+        return_bid_status.append({str(e[0]): str(e[0])})
+    return HttpResponse(json.dumps(return_bid_status), content_type='application/json')

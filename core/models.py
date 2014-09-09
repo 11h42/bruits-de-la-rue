@@ -107,9 +107,9 @@ class TypeBids(object):
 
 
 class StatusBids(object):
-    CLOSED = 'CLOSED'
-    ACCEPTED = 'ACCEPTED'
-    RUNNING = 'RUNNING'
+    CLOSED = u'Ferme'
+    ACCEPTED = u'Accepte'
+    RUNNING = u'En cours'
     TYPE_CHOICES = (
         (CLOSED, _('Closed')),
         (ACCEPTED, _('Accepted')),

@@ -1,6 +1,7 @@
 # coding=utf-8
 import factory
 from factory.django import DjangoModelFactory
+from core.models import StatusBids
 
 
 class AddressFactory(DjangoModelFactory):
@@ -72,7 +73,7 @@ class BidFactory(DjangoModelFactory):
     description = "Factory d'une annonce"
     title = "Annonce de test"
     type = "SUPPLY"
-    status = "RUNNING"
+    status = StatusBids.RUNNING
     real_author = "Jean Dupont"
     association = factory.SubFactory(AssociationFactory)
 

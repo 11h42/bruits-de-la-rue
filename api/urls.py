@@ -19,7 +19,11 @@ urlpatterns = patterns(
     url(r'^users/current/associations/$', views.get_current_user_associations, name="user-association"),
 
     url(r'^associations/$', views.handle_associations, name="associations"),
+
     url(r'^faq/$', views.get_faq, name="faq"),
+
+
+    url(r'^bids/status/$', views.get_status, name="status"),
 
     # url(r'^users/current/$', views.get_current_user, name="user-name"),
     # {'id':1234, "user_name":"gvincent"}
