@@ -108,6 +108,12 @@ def update_bid(request, bid_id):
             return handle_accept_bid(request, bid_dict, bid)
         if bid.creator == request.user or request.user.is_staff:
             if bid_validator.bid_is_valid(bid_dict):
+                if 'association' not in bid_dict and bool(matching_bid[0].association):
+                    bid_dict['association'] = None
+                if 'category' not in bid_dict and bool(matching_bid[0].category):
+                    bid_dict['category'] = None
+                if 'localization' not in bid_dict and bool(matching_bid[0].localization):
+                    bid_dict['localization'] = None
                 matching_bid.update(**bid_dict)
                 return HttpResponse()
             else:

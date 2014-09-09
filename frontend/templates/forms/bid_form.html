@@ -41,6 +41,7 @@
                 <label for="bid_category">Catégorie :</label>
                 <select id="bid_category" class="form-control" data-ng-model="bid.category"
                         ng-options="category.name for category in categories">
+                    <option value="">- -</option>
                 </select>
             </div>
         </div>
@@ -52,14 +53,20 @@
                         class="form-control"
                         data-ng-model="bid.localization"
                         ng-options="address.title for address in localization">
+                    <option value="">- -</option>
                 </select>
-                <button data-toggle="modal" data-target="#create_address" class="btn btn-default" type="button"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter une adresse</button>
+                <button data-toggle="modal" data-target="#create_address" class="btn btn-default" type="button"><span
+                        class="glyphicon glyphicon-plus-sign"></span> Ajouter une adresse
+                </button>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="bid_association">Association :</label>
-                <select data-ng-model="bid.association" id="bid_association" class="form-control" ng-options="association.name for association in associations"></select>
+                <select data-ng-model="bid.association" id="bid_association" class="form-control"
+                        ng-options="association.name for association in associations">
+                    <option value="">- -</option>
+                </select>
             </div>
         </div>
         {# todo : find why no value is posted in begin and date using the datetimepicker to fill the fields #}
