@@ -6,6 +6,10 @@ from core.tests import factories
 
 
 class TestFaq(TestCase):
+    def setUp(self):
+        user = factories.UserFactory()
+        self.client.login(username=user.username, password="password")
+
     def test_get_all_faq(self):
         faq = factories.FaqFactory()
         response = self.client.get('/api/faq/')
