@@ -1,4 +1,5 @@
-<div data-ng-controller="bidController" class="modal fade" id="accept_bid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div data-ng-controller="bidController" class="modal fade" id="accept_bid" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,7 +9,7 @@
                 <h4 class="modal-title" id="myModalLabel">Accepter l'annonce {$ bid.title $}</h4>
             </div>
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="panel-body" ng-show="bid_quantity">
                     Les champs marqués d'une étoile (<span class="text-danger">*</span>) sont obligatoires.
                 </div>
             </div>
@@ -22,16 +23,21 @@
                             <div ng-show="bid_quantity" class="col-lg-12 form-group">
                                 <label for="address_title">Quantité <span
                                         class="text-danger">*</span> : </label>
-                                <input  type="number" max="{$ bid_quantity $}" class="form-control" id="address_title"
+                                <input type="number" max="{$ bid_quantity $}" class="form-control" id="address_title"
                                        ng-model="bid.quantity"/>
                                 <pre>Maximum acceptable : {$ bid_quantity $}</pre>
                             </div>
-                            <div class="text-center" ng-hide="bid_quantity">Pour accepter cette annonce, cliquez sur Accepter ci-dessous</div>
+                            <div class="text-center" ng-hide="bid_quantity">Pour accepter cette annonce, cliquez sur
+                                Accepter ci-dessous
+                            </div>
                         </div>
                     </fieldset>
                     <div class="modal-footer">
-                        <button data-ng-controller="bidsController" type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        <input type="button" ng-click="acceptBid()" class="btn btn-primary" value="Accepter"/>
+                        <button data-ng-controller="bidsController" type="button" class="btn btn-default"
+                                data-dismiss="modal">Annuler
+                        </button>
+                        <input type="button" ng-click="acceptBid()" class="btn btn-primary"
+                               value="Accepter"/>
                     </div>
                 </form>
             </div>

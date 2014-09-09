@@ -45,6 +45,9 @@
 
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="">Bienvenu(e), {{ user.username }}</a></li>
+                            {% if user.is_staff %}
+                                <li><a href="/admin/">Administration</a></li>
+                            {% endif %}
                             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
                         </ul>
                     </div>

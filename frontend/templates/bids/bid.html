@@ -38,6 +38,9 @@
                                 <li><b>Déposé par :</b> {$ bid.creator $} <span
                                         ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
                                 </li>
+                                <li><b>Association responsable : </b>{$ bid.association.name $} <span
+                                        ng-hide="bid.association"> Non renseigné </span>
+                                </li>
                             </ul>
                         </div>
                     </div>
