@@ -9,7 +9,7 @@ from core.models import Bid, BidCategory, EmergencyLevels
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
-        fields = ['name', 'type', 'begin', 'end', 'status', 'quantity', 'real_author',
+        fields = ['name', 'type', 'begin', 'end', 'status_bid', 'quantity', 'real_author',
                   'emergency_level',
                   'description', 'bidCategory', 'photo', 'quantity_type', 'adress1', 'adress2', 'zipcode',
                   'town', 'country', 'photo']

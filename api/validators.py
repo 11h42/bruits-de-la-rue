@@ -26,3 +26,12 @@ class BidValidator(object):
         else:
             errors.append(u'Erreur: Veillez à bien remplir tous les champs')
         return len(errors) == 0
+
+    @staticmethod
+    def bid_are_the_same(user_bid, db_bid):
+        exclude_keys = {'status_bid'}
+        for key, value in user_bid.items():
+            if key not in exclude_keys:
+                if key in db_bid and db_bid[key] != value:
+                    return False
+        return True

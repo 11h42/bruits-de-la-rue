@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
-import datetime
 
 from django.test import TestCase
 
-from core.models import Bid, StatusBids, StatusBids
+from api import constants
+
+from core.models import Bid, StatusBids
 from core.tests.factories import BidFactory
 from core.tests import factories
 
@@ -54,16 +55,45 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
+    def test_post_a_bid_that_begin_before_today(self):
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description',
+                                        "type": "SUPPLY",
+                                        'real_author': 'Jean Dupont',
+                                        'begin': constants.YESTERDAY_ISO
+
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+        bids = Bid.objects.all()
+        self.assertEquals(400, response.status_code)
+
+    def test_post_a_bid_that_start_tomorrow_and_have_the_status_on_hold(self):
+        response = self.client.post('/api/bids/',
+                                    json.dumps({
+                                        "title": "Ma première annonce wouhouhou test 1234",
+                                        "description": 'Ceci est une description',
+                                        "type": "SUPPLY",
+                                        'real_author': 'Jean Dupont',
+                                        'begin': constants.TOMORROW_ISO,
+                                        'end': constants.AFTER_TOMORROW_ISO
+                                    }),
+                                    content_type="application/json; charset=utf-8")
+        bids = Bid.objects.all()
+        self.assertEquals(len(bids), 1)
+        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
+        self.assertEquals(StatusBids.ONHOLD, bids[0].status_bid)
+        self.assertEquals(201, response.status_code)
+
     def test_post_a_bid_with_all_authorized_fields(self):
-        today = datetime.datetime.today()
-        tomorrow = today + datetime.timedelta(days=1)
         category = factories.BidCategoryFactory()
         bid = {'title': 'My bid',
                'description': 'The bid description',
-               'type': 'OFFER',
+               'type': 'SUPPLY',
                'real_author': 'Jean Dupont',
-               'begin': today.isoformat(),
-               'end': tomorrow.isoformat(),
+               'begin': constants.TODAY_ISO,
+               'end': constants.TOMORROW_ISO,
                'category': {'id': category.id, 'name': category.name},
                'quantity': 2,
                'localization': self.user_address.serialize()}
@@ -75,7 +105,7 @@ class TestBidApi(TestCase):
     def test_accept_all_the_bid(self):
         creator = factories.UserFactory(username='bid creator')
         purchaser = self.user
-        bid = factories.BidFactory(creator=creator, status=StatusBids.RUNNING, quantity=120)
+        bid = factories.BidFactory(creator=creator, status_bid=StatusBids.RUNNING, quantity=120)
         bid_accept = {
             'id': bid.id,
             'title': bid.title,
@@ -90,13 +120,13 @@ class TestBidApi(TestCase):
         self.assertEquals(200, response.status_code)
 
         bid_accepted = Bid.objects.get(id=bid.id)
-        self.assertEquals(StatusBids.ACCEPTED, bid_accepted.status)
+        self.assertEquals(StatusBids.ACCEPTED, bid_accepted.status_bid)
         self.assertEquals(self.user, bid_accepted.purchaser)
 
     def test_accept_bid_with_negative_value(self):
         creator = factories.UserFactory(username='bid creator')
         purchaser = self.user
-        bid = factories.BidFactory(creator=creator, status=StatusBids.RUNNING, quantity=120)
+        bid = factories.BidFactory(creator=creator, status_bid=StatusBids.RUNNING, quantity=120)
         bid_accept = {
             'id': bid.id,
             'title': bid.title,
@@ -109,7 +139,7 @@ class TestBidApi(TestCase):
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
         bid_non_accepted = Bid.objects.get(id=bid.id)
-        self.assertEquals(StatusBids.RUNNING, bid_non_accepted.status)
+        self.assertEquals(StatusBids.RUNNING, bid_non_accepted.status_bid)
         self.assertEquals(bid.purchaser, None)
         self.assertEquals(120, bid_non_accepted.quantity)
         self.assertEquals(400, response.status_code)
@@ -117,20 +147,16 @@ class TestBidApi(TestCase):
     def test_accept_a_bid_that_have_no_quantity(self):
         creator = factories.UserFactory(username='bid creator')
         purchaser = self.user
-        bid = factories.BidFactory(creator=creator, status=StatusBids.RUNNING)
+        bid = factories.BidFactory(creator=creator, status_bid=StatusBids.RUNNING)
         bid_accept = {
             'id': bid.id,
-            'title': bid.title,
-            'description': bid.description,
-            'creator': bid.creator.id,
             'status_bid': {'name': StatusBids.ACCEPTED},
-            'purchaser': purchaser.id,
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(200, response.status_code)
 
         bid_accepted = Bid.objects.get(id=bid.id)
-        self.assertEquals(StatusBids.ACCEPTED, bid_accepted.status)
+        self.assertEquals(StatusBids.ACCEPTED, bid_accepted.status_bid)
         self.assertEquals(self.user, bid_accepted.purchaser)
 
     def test_cant_accept_bid_that_belong_to_the_user(self):
@@ -151,7 +177,7 @@ class TestBidApi(TestCase):
                           response.content)
 
         bid_non_modified = Bid.objects.get(id=bid.id)
-        self.assertEquals(StatusBids.RUNNING, bid_non_modified.status)
+        self.assertEquals(StatusBids.RUNNING, bid_non_modified.status_bid)
         self.assertEquals(None, bid_non_modified.purchaser)
 
     def test_delete_bid_owned(self):
@@ -177,7 +203,7 @@ class TestBidApi(TestCase):
         self.assertEquals(204, response.status_code)
 
     def test_update_bid(self):
-        bid = factories.BidFactory(creator=self.user, status=StatusBids.RUNNING)
+        bid = factories.BidFactory(creator=self.user, status_bid=StatusBids.RUNNING)
         bid_updated = {
             'id': bid.id,
             'title': 'Nouveau titre',
@@ -192,7 +218,7 @@ class TestBidApi(TestCase):
         self.assertEquals(bid_updated.title, 'Nouveau titre')
 
     def test_update_bid_passing_creator_does_not_change_creator(self):
-        bid = factories.BidFactory(creator=self.user, status=StatusBids.RUNNING)
+        bid = factories.BidFactory(creator=self.user, status_bid=StatusBids.RUNNING)
         fakeCreator = factories.UserFactory(username='fakeCreator')
         bid_updated = {
             'id': bid.id,
@@ -265,5 +291,6 @@ class TestBidsApi(TestCase):
         self.assertEquals(len(bids), 1)
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
+
 
 

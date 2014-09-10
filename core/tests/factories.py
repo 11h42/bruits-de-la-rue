@@ -67,13 +67,13 @@ class AssociationFactory(DjangoModelFactory):
 class BidFactory(DjangoModelFactory):
     class Meta:
         model = 'core.Bid'
-        django_get_or_create = ('creator', 'description', 'title', 'status', 'type', 'real_author')
+        django_get_or_create = ('creator', 'description', 'title', 'status_bid', 'type', 'real_author')
 
     creator = factory.SubFactory(UserFactory)
     description = "Factory d'une annonce"
     title = "Annonce de test"
     type = "SUPPLY"
-    status = StatusBids.RUNNING
+    status_bid = StatusBids.RUNNING
     real_author = "Jean Dupont"
     association = factory.SubFactory(AssociationFactory)
 
