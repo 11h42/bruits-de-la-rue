@@ -1,4 +1,7 @@
 # coding=utf-8
+from api import constants
+
+
 class BidValidator(object):
     @staticmethod
     def bid_is_valid(bid):
@@ -23,9 +26,13 @@ class BidValidator(object):
             if 'begin' in bid and 'end' in bid:
                 if bid['begin'] > bid['end']:
                     errors.append(u'Erreur : La date de début doit être strictement inférieur à la date de fin')
+
+            if 'begin' in bid:
+                if bid['begin'] < constants.TODAY_ISO:
+                    errors.append(u'Erreur : La date de début doit être supérieure ou égale à la date du jour')
         else:
             errors.append(u'Erreur: Veillez à bien remplir tous les champs')
-        return len(errors) == 0
+        return errors
 
     @staticmethod
     def bid_are_the_same(user_bid, db_bid):

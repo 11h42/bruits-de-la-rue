@@ -83,7 +83,6 @@ class TestBidApi(TestCase):
         bids = Bid.objects.all()
         self.assertEquals(len(bids), 1)
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
-        print bids[0].status_bid
         self.assertEquals(StatusBids.ONHOLD, bids[0].status_bid)
         self.assertEquals(201, response.status_code)
 
@@ -93,8 +92,6 @@ class TestBidApi(TestCase):
                'description': 'The bid description',
                'type': 'SUPPLY',
                'real_author': 'Jean Dupont',
-               'begin': constants.TODAY_ISO,
-               'end': constants.TOMORROW_ISO,
                'category': {'id': category.id, 'name': category.name},
                'quantity': 2,
                'localization': self.user_address.serialize()}
