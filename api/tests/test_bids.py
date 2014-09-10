@@ -117,7 +117,7 @@ class TestBidApi(TestCase):
             'quantity': 120
 
         }
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(200, response.status_code)
 
         bid_accepted = Bid.objects.get(id=bid.id)
@@ -138,7 +138,7 @@ class TestBidApi(TestCase):
             'quantity': -120
 
         }
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, json.dumps(bid_accept))
         bid_non_accepted = Bid.objects.get(id=bid.id)
         self.assertEquals(StatusBids.RUNNING, bid_non_accepted.status_bid)
         self.assertEquals(bid.purchaser, None)
@@ -153,7 +153,7 @@ class TestBidApi(TestCase):
             'id': bid.id,
             'status_bid': {'name': StatusBids.ACCEPTED},
         }
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(200, response.status_code)
 
         bid_accepted = Bid.objects.get(id=bid.id)
@@ -172,7 +172,7 @@ class TestBidApi(TestCase):
             'quantity': 120
 
         }
-        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_accept))
+        response = self.client.put('/api/bids/%s/accept/' % bid.id, json.dumps(bid_accept))
         self.assertEquals(400, response.status_code)
         self.assertEquals('{"message": "Vous ne pouvez accepter votre propre annonce", "code": 10217}',
                           response.content)
@@ -229,8 +229,10 @@ class TestBidApi(TestCase):
             'type': 'SUPPLY'
 
         }
-        self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
+        response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
         update_bid = Bid.objects.get(id=bid.id)
+        self.assertNotEqual(fakeCreator, update_bid.creator)
+        self.assertEquals(400, response.status_code)
 
 
 class TestBidsApi(TestCase):
