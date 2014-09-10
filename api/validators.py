@@ -29,7 +29,7 @@ class BidValidator(object):
 
     @staticmethod
     def bid_are_the_same(user_bid, db_bid):
-        exclude_keys = {'status_bid'}
+        exclude_keys = {'status_bid', 'quantity', 'purchaser'}
         for key, value in user_bid.items():
             if key not in exclude_keys:
                 if key in db_bid and db_bid[key] != value:

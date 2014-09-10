@@ -230,7 +230,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
-        $scope.bid['status_bid'] = 'ACCEPTE';
+        $scope.bid['status_bid'] = {'name': 'ACCEPTE'};
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function () {
                 window.location.reload(true);
@@ -268,14 +268,15 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
     $scope.updateBid = function () {
-
+        console.log($scope.bid);
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function () {
                 window.location = '/annonces/' + $scope.bidId;
             }).error(function (data) {
-                if (data.code == 10216) {
+                if (data.code == 10216 || data.code == 10217) {
                     $scope.errorMessage = data.message;
-                } else {
+                }
+                else {
                     $scope.errorMessage = "Veuillez nous excuser, notre site " +
                         "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
                 }

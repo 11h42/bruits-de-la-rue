@@ -83,6 +83,7 @@ class TestBidApi(TestCase):
         bids = Bid.objects.all()
         self.assertEquals(len(bids), 1)
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
+        print bids[0].status_bid
         self.assertEquals(StatusBids.ONHOLD, bids[0].status_bid)
         self.assertEquals(201, response.status_code)
 
