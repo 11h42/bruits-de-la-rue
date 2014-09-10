@@ -15,3 +15,12 @@ class BidTestCase(TestCase):
                         'real_author': 'Jean Dupont', 'localization': None, 'status_bid': {'name': StatusBids.RUNNING},
                         'association': bid.association.serialize()}
         self.assertEquals(bid.serialize(), expected_bid)
+
+    def test_bid_belong_to_user(self):
+        creator = factories.UserFactory()
+        bid = factories.BidFactory(creator=creator)
+
+        self.assertTrue(bid.belong_to_user(creator))
+
+        hacker = factories.UserFactory(username='hacker')
+        self.assertFalse(bid.belong_to_user(hacker))

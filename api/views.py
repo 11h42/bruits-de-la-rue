@@ -3,7 +3,6 @@ import json
 
 from django.http.response import HttpResponse, HttpResponseForbidden
 
-from api import constants
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
@@ -21,14 +20,6 @@ def get_bids(request):
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
-def clean_dict(dict):
-    cleaned_dict = {}
-    for key, value in dict.items():
-        if value:
-            cleaned_dict[key] = value
-    return cleaned_dict
-
-
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if bids:
@@ -38,6 +29,7 @@ def get_bid(request, bid_id):
         return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
+# todo refactor
 def set_bid_objects_fields(bid_sent):
     if 'category' in bid_sent:
         bid_sent['category'] = BidCategory.objects.get(id=bid_sent['category']['id'])
@@ -48,21 +40,18 @@ def set_bid_objects_fields(bid_sent):
 
 
 def create_bid(request):
-    bid_sent = clean_dict(json.loads(request.body))
-    bid_validator = BidValidator()
-    bid_errors = bid_validator.bid_is_valid(bid_sent)
-    if bid_sent:
-        if len(bid_errors) == 0:
-            bid_sent['creator'] = request.user
-            if 'begin' in bid_sent and bid_sent['begin'] > constants.TODAY_ISO:
-                bid_sent['status_bid'] = StatusBids.ONHOLD
-            set_bid_objects_fields(bid_sent)
-            new_bid = Bid(**bid_sent)
-            new_bid.save()
-            new_bid_id = new_bid.id
-            return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
-        else:
-            return HttpBadRequest(10666, bid_errors)
+    json_bid = json.loads(request.body)
+
+    bid_validator = BidValidator(json_bid)
+    if not bid_validator.is_valid():
+        return HttpBadRequest(bid_validator.error_code, bid_validator.error_message)
+
+    bid = bid_validator.get_bid_object(request.user)
+
+    new_bid = Bid(**bid)
+    new_bid.save()
+    new_bid_id = new_bid.id
+    return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
 
 
 @is_authenticated
@@ -70,7 +59,6 @@ def create_bid(request):
 def handle_bids(request):
     if request.method == "GET":
         return get_bids(request)
-
     if request.method == "POST":
         return create_bid(request)
     return HttpMethodNotAllowed()
@@ -88,13 +76,15 @@ def delete_bid(request, bid_id):
 
 
 def update_bid(request, bid_id):
-    bid = Bid.objects.filter(id=bid_id)
-    bid_sent = clean_dict(json.loads(request.body))
-    if bid and bid_sent:
-        if request.user == bid[0].creator or request.user.is_staff:
-            bid_validator = BidValidator()
-            if len(bid_validator.bid_is_valid(bid_sent)) == 0:
-                bid.update(**bid_sent)
+    bids = Bid.objects.filter(id=bid_id)
+    new_bid = json.loads(request.body)
+    if bids and new_bid:
+        bid_creator = bids[0].creator
+        if request.user == bid_creator or request.user.is_staff:
+            bid_validator = BidValidator(new_bid)
+            if bid_validator.is_valid():
+                updated_bid = bid_validator.get_bid_object(bid_creator)
+                bids.update(**updated_bid)
                 return HttpResponse()
         return HttpBadRequest(10216, error_codes['10216'])
     return HttpBadRequest(10666, error_codes['10666'])
@@ -136,7 +126,7 @@ def get_current_user_username(request):
 
 
 def create_new_address(request, user_id):
-    new_address_infos = clean_dict(json.loads(request.body))
+    new_address_infos = json.loads(request.body)
     user = User.objects.filter(id=user_id).select_related('address')
     if new_address_infos and user:
         new_address = Address(**new_address_infos)
@@ -215,31 +205,52 @@ def get_status(request):
     return HttpResponse(json.dumps(return_bid_status), content_type='application/json')
 
 
+class AcceptBidValidator():
+    def __init__(self, new_bid, bid_sent, user):
+        self.new_bid = new_bid
+        self.bid_sent = bid_sent
+        self.user = user
+        self.error_code = None
+        self.error_message = ''
+
+    def is_valid(self):
+        if self.new_bid.belong_to_user(self.user):
+            self.error_code = 10217
+            self.error_message = error_codes['10217']
+        if self.new_bid.status_bid != StatusBids.RUNNING:
+            self.error_code = 10220
+            self.error_message = error_codes['10220']
+
+        if 'quantity' in self.bid_sent:
+            new_quantity = self.bid_sent['quantity']
+            if new_quantity < 0 or new_quantity > self.new_bid.quantity:
+                self.error_code = 10218
+                self.error_message = error_codes['10218']
+        return len(self.error_message) == 0
+
+
 @is_authenticated
 @catch_any_unexpected_exception
 def accept_bid(request, bid_id):
-    bid = Bid.objects.filter(id=bid_id)
-    bid_sent = clean_dict(json.loads(request.body))
-    if bid and bid_sent:
-        bid_to_update = bid[0]
-        if request.user != bid_to_update.creator:
-            if bid_to_update.status_bid == StatusBids.RUNNING:
-                if 'quantity' in bid_sent:
-                    if 0 < bid_sent['quantity'] <= bid_to_update.quantity:
-                        bid_to_update.quantity = bid_to_update.quantity - bid_sent['quantity']
-                        bid_to_update.purchaser = request.user
-                        if bid_to_update.quantity == 0:
-                            bid_to_update.status_bid = StatusBids.ACCEPTED
-                    else:
-                        return HttpBadRequest(10218, error_codes['10218'])
+    bids = Bid.objects.filter(id=bid_id)[:1]
+    bid_sent = json.loads(request.body)
+    if bids and bid_sent:
+        new_bid = bids[0]
 
-                else:
-                    bid_to_update.status_bid = StatusBids.ACCEPTED
-                    bid_to_update.purchaser = request.user
-                bid_to_update.save()
-                return HttpResponse()
-            else:
-                return HttpBadRequest(10220, error_codes['10220'])
-        else:
-            return HttpBadRequest(10217, error_codes['10217'])
+        accept_bid_validator = AcceptBidValidator(new_bid, bid_sent, request.user)
+        if not accept_bid_validator.is_valid():
+            return HttpBadRequest(accept_bid_validator.error_code, accept_bid_validator.error_message)
+
+        new_bid.status_bid = StatusBids.ACCEPTED
+        new_bid.purchaser = request.user
+
+        if 'quantity' in bid_sent:
+            new_quantity = bid_sent['quantity']
+            new_bid.quantity = new_bid.quantity - new_quantity
+            if new_bid.quantity != 0:
+                new_bid.status_bid = StatusBids.RUNNING
+
+        new_bid.save()
+        return HttpResponse()
+
     return HttpBadRequest(10666, error_codes['10666'])

@@ -171,3 +171,6 @@ class Bid(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.title
+
+    def belong_to_user(self, user):
+        return self.creator == user
