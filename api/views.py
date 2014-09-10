@@ -59,7 +59,7 @@ def delete_bid(request, bid_id):
     return HttpBadRequest
 
 
-def handle_bid_update(request, bid_id):
+def bid_update(request, bid_id):
     bid = Bid.objects.filter(id=bid_id)
     bid_sent = clean_dict(json.loads(request.body))
     if bid and bid_sent:
@@ -78,7 +78,7 @@ def handle_bid(request, bid_id):
     if request.method == 'GET':
         return get_bid(request, bid_id)
     if request.method == 'PUT':
-        return handle_bid_update(request, bid_id)
+        return bid_update(request, bid_id)
     if request.method == 'DELETE':
         return delete_bid(request, bid_id)
     return HttpMethodNotAllowed()
