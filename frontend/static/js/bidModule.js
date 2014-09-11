@@ -279,7 +279,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function () {
                 window.location = '/annonces/' + $scope.bidId;
             }).error(function (data) {
-                if (data.code == 10216 || data.code == 10217) {
+                if (data.message) {
                     $scope.errorMessage = data.message;
                 }
                 else {
