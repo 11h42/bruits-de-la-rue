@@ -77,6 +77,7 @@ def delete_bid(request, bid_id):
 
 
 def update_bid(request, bid_id):
+
     bids = Bid.objects.filter(id=bid_id)
     new_bid = json.loads(request.body)
     if bids and new_bid:
@@ -88,6 +89,7 @@ def update_bid(request, bid_id):
                 bids.update(**updated_bid)
                 return HttpResponse()
         return HttpBadRequest(10666, bid_validator.error_message)
+
     return HttpBadRequest(10666, error_codes['10666'])
 
 
@@ -245,7 +247,7 @@ def accept_bid(request, bid_id):
         new_bid.status_bid = StatusBids.ACCEPTED
         new_bid.purchaser = request.user
 
-        if 'quantity' in bid_sent:
+        if 'quantity' in bid_sent and bid_sent['quantity']:
             new_quantity = bid_sent['quantity']
             new_bid.quantity = new_bid.quantity - new_quantity
             if new_bid.quantity != 0:
