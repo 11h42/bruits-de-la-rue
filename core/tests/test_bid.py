@@ -12,7 +12,7 @@ class BidTestCase(TestCase):
         bid = factories.BidFactory(creator=user)
         expected_bid = {'begin': None, 'quantity': None, 'end': None, 'id': bid.id, 'title': 'Annonce de test',
                         'creator': user.username, 'description': bid.description, 'category': None, 'type': 'SUPPLY',
-                        'real_author': 'Jean Dupont', 'localization': None, 'status_bid': {'name': StatusBids.RUNNING},
+                        'real_author': 'Jean Dupont', 'localization': None, 'status_bid': StatusBids.RUNNING,
                         'association': bid.association.serialize()}
         self.assertEquals(bid.serialize(), expected_bid)
 
