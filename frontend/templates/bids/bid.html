@@ -6,8 +6,9 @@
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div class="alert alert-success" role="alert" ng-show="successMessage">{$ successMessage $}</div>
-                <div class="alert alert-warning" role="alert" ng-show="bid.status =! 'EN COURS' ">Cette annonce est à
-                    présent {$ bid.status $}
+                <div class="alert alert-warning" role="alert" ng-hide="bid.status_bid.name == 'EN COURS'">Cette annonce
+                    n'est
+                    pas disponible car son état est: {$ bid.status_bid.name $}
                 </div>
                 <div>
                     <div class="row"><a href="/annonces/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à
@@ -25,7 +26,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <ul>
-                                <li><b>Status : </b> {$ bid.status_bid $}</li>
+                                <li><b>Status : </b> {$ bid.status_bid.name $}</li>
                                 <li><b>Catégorie :</b> <span ng-hide="bid.category">Non renseigné</span> {$
                                     bid.category.name $}
                                 </li>

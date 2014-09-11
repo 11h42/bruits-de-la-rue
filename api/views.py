@@ -12,42 +12,12 @@ from core.models import Bid, BidCategory, Address, User, Association, Faq, Statu
 
 
 def get_bids(request):
-    bids = Bid.objects.filter(status=StatusBids.RUNNING)
+    bids = Bid.objects.filter(status_bid=StatusBids.RUNNING)
     return_bids = []
     if bids:
         for bid in bids:
             return_bids.append(bid.serialize())
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
-
-
-def clean_dict(dict):
-    """
-    :param dict:
-    :return: The dict containing only fields with values.
-    """
-    cleaned_dict = {}
-    for key, value in dict.items():
-        if value:
-            cleaned_dict[key] = value
-    return cleaned_dict
-
-
-def create_bid(request):
-    bid_dict = clean_dict(json.loads(request.body))
-    if bid_dict:
-        bid_validator = BidValidator()
-        if bid_validator.bid_is_valid(bid_dict):
-            bid_dict['creator'] = request.user
-            bid_dict_clean(bid_dict)
-            if 'begin' in bid_dict and 'end' in bid_dict:
-                if bid_dict['begin'] > bid_dict['end']:
-                    return HttpBadRequest(10215, error_codes['10215'])
-
-        new_bid = Bid(**bid_dict)
-        new_bid.save()
-        new_bid_id = new_bid.id
-        return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
-    return HttpBadRequest(10900, error_codes['10900'])
 
 
 def get_bid(request, bid_id):
@@ -59,76 +29,30 @@ def get_bid(request, bid_id):
         return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
-def accept_bid_that_have_a_quantity(bid_dict, matching_bid, user):
-    if 0 < bid_dict['quantity'] <= matching_bid.quantity:
-        matching_bid.quantity = matching_bid.quantity - bid_dict['quantity']
-    else:
-        return HttpBadRequest(10218, error_codes['10218'])
-    matching_bid.purchaser = user
-    if matching_bid.quantity == 0:
-        matching_bid.status = StatusBids.ACCEPTED
-    matching_bid.save()
-    return HttpResponse()
+# todo refactor
+def set_bid_objects_fields(bid_sent):
+    if 'category' in bid_sent:
+        bid_sent['category'] = BidCategory.objects.get(id=bid_sent['category']['id'])
+    if 'localization' in bid_sent:
+        bid_sent['localization'] = Address.objects.get(id=bid_sent['localization']['id'])
+    if 'association' in bid_sent:
+        bid_sent['association'] = Association.objects.get(id=bid_sent['association']['id'])
 
 
-def handle_accept_bid(request, bid_dict, matching_bid):
-    user = request.user
-    if user != matching_bid.creator and matching_bid.status == StatusBids.RUNNING:
-        if 'quantity' in bid_dict:
-            return accept_bid_that_have_a_quantity(bid_dict, matching_bid, user)
-        else:
-            matching_bid.purchaser = user
-            matching_bid.status = StatusBids.ACCEPTED
-            matching_bid.save()
-            return HttpResponse()
-    return HttpBadRequest(10217, error_codes['10217'])
+def create_bid(request):
+    json_bid = json.loads(request.body)
 
+    bid_validator = BidValidator(json_bid)
 
-def bid_dict_clean(bid_dict):
-    bid_dict.pop('current_user_is_staff', None)
-    bid_dict.pop('current_user_id', None)
-    if 'localization' in bid_dict:
-        bid_dict['localization'] = Address.objects.get(id=bid_dict['localization']['id'])
-    if 'category' in bid_dict:
-        bid_dict['category'] = BidCategory.objects.get(id=bid_dict['category']['id'])
-    if 'association' in bid_dict:
-        bid_dict['association'] = Association.objects.get(id=bid_dict['association']['id'])
-    return bid_dict
+    if not bid_validator.is_valid():
+        return HttpBadRequest(bid_validator.error_code, bid_validator.error_message)
 
+    bid = bid_validator.get_bid_object(request.user)
 
-def set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid):
-    if 'association' not in bid_dict and bool(matching_bid[0].association):
-        bid_dict['association'] = None
-    if 'category' not in bid_dict and bool(matching_bid[0].category):
-        bid_dict['category'] = None
-    if 'localization' not in bid_dict and bool(matching_bid[0].localization):
-        bid_dict['localization'] = None
-
-
-#  todo check if the two bids are the same. If not, this is an update, not an accept
-def update_bid(request, bid_id):
-    bid_dict = clean_dict(json.loads(request.body))
-    matching_bid = Bid.objects.filter(id=bid_dict['id'])
-    bid_validator = BidValidator()
-    if matching_bid and bid_dict:
-        bid_dict_clean(bid_dict)
-        bid_dict.pop('creator', None)
-        bid = matching_bid[0]
-        if 'status_bid' in bid_dict and bid_dict[
-            'status_bid']['name'] == StatusBids.ACCEPTED and bid.status == StatusBids.RUNNING:
-            return handle_accept_bid(request, bid_dict, bid)
-        if bid.creator == request.user or request.user.is_staff:
-            if bid_validator.bid_is_valid(bid_dict):
-                if 'status_bid' in bid_dict:
-                    print bid_dict['status_bid']
-                    bid_dict['status'] = bid_dict['status_bid']['name']
-                    bid_dict.pop('status_bid', None)
-                set_none_null_select_fields_that_had_a_value(bid_dict, matching_bid)
-                matching_bid.update(**bid_dict)
-                return HttpResponse()
-            else:
-                return HttpBadRequest(10666, error_codes['10666'])
-    return HttpBadRequest(10216, error_codes['10216'])
+    new_bid = Bid(**bid)
+    new_bid.save()
+    new_bid_id = new_bid.id
+    return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
 
 
 @is_authenticated
@@ -136,7 +60,6 @@ def update_bid(request, bid_id):
 def handle_bids(request):
     if request.method == "GET":
         return get_bids(request)
-
     if request.method == "POST":
         return create_bid(request)
     return HttpMethodNotAllowed()
@@ -151,6 +74,23 @@ def delete_bid(request, bid_id):
             return HttpNoContent()
         return HttpResponseForbidden()
     return HttpBadRequest
+
+
+def update_bid(request, bid_id):
+
+    bids = Bid.objects.filter(id=bid_id)
+    new_bid = json.loads(request.body)
+    if bids and new_bid:
+        bid_creator = bids[0].creator
+        bid_validator = BidValidator(new_bid)
+        if request.user == bid_creator or request.user.is_staff:
+            if bid_validator.is_valid():
+                updated_bid = bid_validator.get_bid_object(bid_creator)
+                bids.update(**updated_bid)
+                return HttpResponse()
+        return HttpBadRequest(10666, bid_validator.error_message)
+
+    return HttpBadRequest(10666, error_codes['10666'])
 
 
 @is_authenticated
@@ -189,7 +129,7 @@ def get_current_user_username(request):
 
 
 def create_new_address(request, user_id):
-    new_address_infos = clean_dict(json.loads(request.body))
+    new_address_infos = json.loads(request.body)
     user = User.objects.filter(id=user_id).select_related('address')
     if new_address_infos and user:
         new_address = Address(**new_address_infos)
@@ -266,3 +206,54 @@ def get_status(request):
     for e in StatusBids.TYPE_CHOICES:
         return_bid_status.append({'name': str(e[0])})
     return HttpResponse(json.dumps(return_bid_status), content_type='application/json')
+
+
+class AcceptBidValidator():
+    def __init__(self, new_bid, bid_sent, user):
+        self.new_bid = new_bid
+        self.bid_sent = bid_sent
+        self.user = user
+        self.error_code = None
+        self.error_message = ''
+
+    def is_valid(self):
+        if self.new_bid.belong_to_user(self.user):
+            self.error_code = 10217
+            self.error_message = error_codes['10217']
+        if self.new_bid.status_bid != StatusBids.RUNNING:
+            self.error_code = 10220
+            self.error_message = error_codes['10220']
+
+        if 'quantity' in self.bid_sent and self.bid_sent['quantity']:
+            new_quantity = self.bid_sent['quantity']
+            if new_quantity < 0 or new_quantity > self.new_bid.quantity:
+                self.error_code = 10218
+                self.error_message = error_codes['10218']
+        return len(self.error_message) == 0
+
+
+@is_authenticated
+@catch_any_unexpected_exception
+def accept_bid(request, bid_id):
+    bids = Bid.objects.filter(id=bid_id)[:1]
+    bid_sent = json.loads(request.body)
+    if bids and bid_sent:
+        new_bid = bids[0]
+
+        accept_bid_validator = AcceptBidValidator(new_bid, bid_sent, request.user)
+        if not accept_bid_validator.is_valid():
+            return HttpBadRequest(accept_bid_validator.error_code, accept_bid_validator.error_message)
+
+        new_bid.status_bid = StatusBids.ACCEPTED
+        new_bid.purchaser = request.user
+
+        if 'quantity' in bid_sent and bid_sent['quantity']:
+            new_quantity = bid_sent['quantity']
+            new_bid.quantity = new_bid.quantity - new_quantity
+            if new_bid.quantity != 0:
+                new_bid.status_bid = StatusBids.RUNNING
+
+        new_bid.save()
+        return HttpResponse()
+
+    return HttpBadRequest(10666, error_codes['10666'])

@@ -107,6 +107,7 @@ class TypeBids(object):
 
 
 class StatusBids(object):
+    ONHOLD = u'EN ATTENTE'
     CLOSED = u'FERME'
     ACCEPTED = u'ACCEPTE'
     RUNNING = u'EN COURS'
@@ -114,6 +115,7 @@ class StatusBids(object):
         (CLOSED, _('Closed')),
         (ACCEPTED, _('Accepted')),
         (RUNNING, _('Running')),
+        (ONHOLD, _('On hold')),
     )
 
 
@@ -135,9 +137,9 @@ class Bid(models.Model):
                             default=TypeBids.SUPPLY,
                             max_length=20)
 
-    status = models.CharField(choices=StatusBids.TYPE_CHOICES,
-                              default=StatusBids.RUNNING,
-                              max_length=20)
+    status_bid = models.CharField(choices=StatusBids.TYPE_CHOICES,
+                                  default=StatusBids.RUNNING,
+                                  max_length=20)
 
     real_author = models.CharField(blank=True, null=True, max_length=255)
 
@@ -163,9 +165,12 @@ class Bid(models.Model):
             'type': self.type,
             'real_author': self.real_author,
             'localization': localization,
-            'status_bid': self.status,
+            'status_bid': self.status_bid,
             'association': association
         }
 
     def __unicode__(self):
         return u'%s' % self.title
+
+    def belong_to_user(self, user):
+        return self.creator == user

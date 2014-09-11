@@ -1,28 +1,49 @@
 # coding=utf-8
+from api import constants
+from core.models import BidCategory, Address, Association, StatusBids
+
+
 class BidValidator(object):
-    @staticmethod
-    def bid_is_valid(bid):
+    def __init__(self, json_bid):
+        self.bid = json_bid
+        self.error_message = ''
+        self.error_code = 10666
+
+    def get_bid_object(self, user):
+        self.bid['creator'] = user
+        if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO:
+            self.bid['status_bid'] = StatusBids.ONHOLD
+        if 'category' in self.bid and self.bid['category']:
+            self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
+        if 'localization' in self.bid and self.bid['localization']:
+            self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
+        if 'association' in self.bid and self.bid['association']:
+            self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])
+
+        return self.bid
+
+    def is_valid(self):
         """
-        return true if a given bid is valid
-        :param bid:
+        return true if a given self.bid is valid
+        :param self.bid:
         :return: True if all the rules are respected. False instead.
         """
         required_fields = ['title', 'description', 'type', 'real_author']
-        authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id', 'localization', 'status_bid',
-                                               'association']
-        errors = []
-        if bid:
-            for key, value in bid.items():
-                if key not in authorized_fields:
-                    errors.append(u'Le champs %s est invalide' % key)
-
-            for fields in required_fields:
-                if fields not in bid:
-                    errors.append(u'key %s is required' % fields)
-
-            if 'begin' in bid and 'end' in bid:
-                if bid['begin'] > bid['end']:
-                    errors.append(u'Erreur : La date de début doit être strictement inférieur à la date de fin')
-        else:
-            errors.append(u'Erreur: Veillez à bien remplir tous les champs')
-        return len(errors) == 0
+        authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id', 'localization',
+                                               'status_bid', 'association']
+        if not self.bid:
+            self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
+            return False
+        for key, value in self.bid.items():
+            if key not in authorized_fields:
+                self.error_message = u'Le champs %s est invalide' % key
+        for fields in required_fields:
+            if fields not in self.bid:
+                self.error_message = u'key %s is required' % fields
+        if 'begin' in self.bid and self.bid['begin'] and 'end' in self.bid and self.bid['end']:
+            if self.bid['begin'] > self.bid['end']:
+                self.error_message = u'Erreur : La date de début doit être strictement inférieur à la date de fin'
+        if 'begin' in self.bid and self.bid['begin']:
+            if self.bid['begin'] < constants.TODAY_ISO:
+                self.error_message = u'Erreur : La date de début doit être supérieure ou égale à la date du jour'
+        return len(self.error_message) == 0

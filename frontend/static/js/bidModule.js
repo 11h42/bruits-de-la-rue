@@ -91,9 +91,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
     $scope.createBid = function () {
-        if ($scope.bid.title.length == 0 || $scope.bid.description.length == 0) {
+        for (key in $scope.bid) {
+            if ($scope.bid[key] === '') {
+                delete $scope.bid[key];
+            }
+        }
+
+        if (!$scope.bid['title'] || !$scope.bid['description']) {
             $scope.errorMessage = "Le titre et la description d'une annonce doivent être renseignés";
         } else {
+
             $http.post('/api/bids/', $scope.bid).
                 success(function (data) {
                     window.location = '/annonces/' + data['bid_id'] + '/';
@@ -230,20 +237,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.bid_id = "";
 
     $scope.acceptBid = function () {
-        $scope.bid['status_bid'] = 'ACCEPTE';
-        $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
+        $http.put('/api/bids/' + $scope.bidId + '/accept/', $scope.bid).
             success(function () {
                 window.location.reload(true);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Vous avez accepté cette annonce";
             }).error(function (data, status, headers, config) {
-                if (data.code == 10217) {
+                if (data.message) {
                     $scope.successMessage = "";
                     $scope.errorMessage = data.message;
-                } else if (data.code == 10218) {
-                    $scope.successMessage = "";
-                    $scope.errorMessage = data.message;
-                } else {
+                }else {
                     $scope.successMessage = "";
                     $scope.errorMessage = "Veuillez nous excuser, notre site " +
                         "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
@@ -268,14 +271,18 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
     $scope.updateBid = function () {
+        delete $scope.bid['current_user_is_staff'];
+        delete $scope.bid['current_user_id'];
+        delete $scope.bid['creator'];
 
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function () {
                 window.location = '/annonces/' + $scope.bidId;
             }).error(function (data) {
-                if (data.code == 10216) {
+                if (data.code == 10216 || data.code == 10217) {
                     $scope.errorMessage = data.message;
-                } else {
+                }
+                else {
                     $scope.errorMessage = "Veuillez nous excuser, notre site " +
                         "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
                 }
