@@ -90,6 +90,7 @@ def update_bid(request, bid_id):
                 return HttpResponse()
         return HttpBadRequest(10666, bid_validator.error_message)
 
+
     return HttpBadRequest(10666, error_codes['10666'])
 
 

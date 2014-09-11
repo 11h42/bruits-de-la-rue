@@ -11,7 +11,7 @@ class BidValidator(object):
 
     def get_bid_object(self, user):
         self.bid['creator'] = user
-        if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO:
+        if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO and not 'status_bid' in self.bid:
             self.bid['status_bid'] = StatusBids.ONHOLD
         if 'category' in self.bid and self.bid['category']:
             self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
@@ -43,7 +43,4 @@ class BidValidator(object):
         if 'begin' in self.bid and self.bid['begin'] and 'end' in self.bid and self.bid['end']:
             if self.bid['begin'] > self.bid['end']:
                 self.error_message = u'Erreur : La date de début doit être strictement inférieur à la date de fin'
-        if 'begin' in self.bid and self.bid['begin']:
-            if self.bid['begin'] < constants.TODAY_ISO:
-                self.error_message = u'Erreur : La date de début doit être supérieure ou égale à la date du jour'
         return len(self.error_message) == 0
