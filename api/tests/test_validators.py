@@ -37,3 +37,18 @@ class TestValidators(TestCase):
             "quantity": "",
             "real_author": "titi"}
         ).is_valid())
+
+    def test_get_bid_object_sent_with_keys_none_value(self):
+        bid_validated = BidValidator({
+            'title': "Chaise",
+            'description': "Un siège, un dossier, 4 pieds",
+            'type': 'Offer',
+            'category': None,
+            'localization': None,
+            'association': None,
+            "begin": constants.TODAY_ISO,
+            "end": constants.TOMORROW_ISO,
+            "quantity": "",
+            "real_author": "titi"}
+        )
+        self.assertTrue(bid_validated.get_bid_object(self.creator))

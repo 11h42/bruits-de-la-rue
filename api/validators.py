@@ -10,14 +10,15 @@ class BidValidator(object):
         self.error_code = 10666
 
     def get_bid_object(self, user):
+        self.bid['creator'] = user
+
         if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO:
             self.bid['status_bid'] = StatusBids.ONHOLD
-        self.bid['creator'] = user
-        if 'category' in self.bid:
+        if 'category' in self.bid and self.bid['category']:
             self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
-        if 'localization' in self.bid:
+        if 'localization' in self.bid and self.bid['localization']:
             self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
-        if 'association' in self.bid:
+        if 'association' in self.bid and self.bid['association']:
             self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])
         return self.bid
 
