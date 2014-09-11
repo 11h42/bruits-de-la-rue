@@ -43,6 +43,7 @@ def create_bid(request):
     json_bid = json.loads(request.body)
 
     bid_validator = BidValidator(json_bid)
+
     if not bid_validator.is_valid():
         return HttpBadRequest(bid_validator.error_code, bid_validator.error_message)
 
@@ -221,7 +222,7 @@ class AcceptBidValidator():
             self.error_code = 10220
             self.error_message = error_codes['10220']
 
-        if 'quantity' in self.bid_sent:
+        if 'quantity' in self.bid_sent and self.bid_sent['quantity']:
             new_quantity = self.bid_sent['quantity']
             if new_quantity < 0 or new_quantity > self.new_bid.quantity:
                 self.error_code = 10218
