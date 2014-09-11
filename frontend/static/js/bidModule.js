@@ -59,7 +59,7 @@ bidsModule.controller('bidUser', function ($scope, $http) {
                 success(function () {
                     $scope.errorMessage = '';
                     $scope.successMessage = 'Votre adresse à bien été ajoutée.';
-                    $scope.updateAddress();
+                    $scope.getAdresses();
                 }).error(function () {
 
                     $scope.errorMessage = "Veuillez nous excuser, notre site " +
@@ -129,7 +129,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         return url_split[indexOfId];
     };
 
-    $scope.updateCategories = function () {
+    $scope.getCategories = function () {
         $http.get('/api/categories/').
             success(function (data) {
                 $scope.categories = data.categories;
@@ -145,6 +145,30 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.bid = data;
                 $scope.bid_quantity = $scope.bid['quantity'];
+
+                for(var i = 0; i<$scope.categories.length;i++ ){
+                    if ($scope.categories[i]['name'] == $scope.bid.category['name']){
+                         $scope.bid.category = $scope.categories[i];
+                    }
+                }
+
+                for(var j = 0; j<$scope.localization.length;j++ ){
+                    if ($scope.localization[j]['title'] == $scope.bid.localization['title']){
+                         $scope.bid.localization = $scope.localization[j];
+                    }
+                }
+
+                for(var k = 0; k<$scope.associations.length;k++ ){
+                    if ($scope.associations[k]['name'] == $scope.bid.association['name']){
+                         $scope.bid.association = $scope.associations[k];
+                    }
+                }
+                for(var l = 0; l<$scope.status.length;l++ ){
+                    if ($scope.status[l]['name'] == $scope.bid.status_bid){
+                         $scope.bid.status_bid = $scope.status[l];
+                    }
+                }
+
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site" +
                     " rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
@@ -173,7 +197,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.updateAddress = function () {
+    $scope.getAdresses = function () {
         $http.get('/api/users/current/address/').
             success(function (data) {
                 $scope.localization = data.address;
@@ -183,7 +207,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.updateAssociations = function () {
+    $scope.getAssociations = function () {
         $http.get('/api/users/current/associations/').
             success(function (data) {
                 $scope.associations = data.associations;
@@ -193,7 +217,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.updateStatus = function () {
+    $scope.getStatus = function () {
         $http.get('/api/bids/status/').
             success(function (data) {
                 $scope.status = data;
@@ -208,27 +232,24 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
         if ($scope.get_page_type(url) == "GET") {
             $scope.getBid();
-
         } else if ($scope.get_page_type(url) == "CREATE") {
-            $scope.updateCategories();
-            $scope.updateAddress();
+            $scope.getCategories();
+            $scope.getAdresses();
             $scope.setRealAuthor();
-            $scope.updateStatus();
-            $scope.updateAssociations();
+            $scope.getStatus();
+            $scope.getAssociations();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer"
-
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
-            $scope.updateCategories();
-            $scope.updateAddress();
-            $scope.updateAssociations();
-            $scope.updateStatus();
+            $scope.getCategories();
+            $scope.getAdresses();
+            $scope.getAssociations();
+            $scope.getStatus();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier"
         }
-
     };
 
     $scope.init();
