@@ -205,7 +205,7 @@ def get_faq(request):
 def get_status(request):
     return_bid_status = []
     for e in StatusBids.TYPE_CHOICES:
-        return_bid_status.append({'name': str(e[0])})
+        return_bid_status.append(e[0])
     return HttpResponse(json.dumps(return_bid_status), content_type='application/json')
 
 

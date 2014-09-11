@@ -16,5 +16,5 @@ class TestStatus(TestCase):
         resonse = self.client.get('/api/bids/status/')
         self.assertEquals(200, resonse.status_code)
         self.assertEquals(
-            [{u'name': u'FERME'}, {u'name': u'ACCEPTE'}, {u'name': u'EN COURS'}, {u'name': u'EN ATTENTE'}],
+            [u'FERME', u'ACCEPTE', u'EN COURS', u'EN ATTENTE'],
             json.loads(resonse.content))
