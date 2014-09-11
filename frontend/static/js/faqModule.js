@@ -17,9 +17,8 @@ faqsModule.controller('faqsController', function ($scope, $http) {
     $scope.pageSize = 10;
     $scope.searchText = "";
     $scope.hasError = false;
-    $scope.associations = [];
     $scope.currentPage = 0;
-    $scope.getAssociations = function () {
+    $scope.getFaqs = function () {
         $http.get('/api/faq/').
             success(function (data) {
                 $scope.faqs = data.faqs;
@@ -27,9 +26,9 @@ faqsModule.controller('faqsController', function ($scope, $http) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
     };
-    $scope.getAssociations();
+    $scope.getFaqs();
 
     $scope.numberOfPages = function () {
-        return Math.ceil($scope.bids.length / $scope.pageSize);
+        return Math.ceil($scope.faqs.length / $scope.pageSize);
     };
 });

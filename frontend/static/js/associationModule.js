@@ -30,6 +30,6 @@ associationsModule.controller('associationsController', function ($scope, $http)
     $scope.getAssociations();
 
     $scope.numberOfPages = function () {
-        return Math.ceil($scope.bids.length / $scope.pageSize);
+        return Math.ceil($scope.associations.length / $scope.pageSize);
     };
 });

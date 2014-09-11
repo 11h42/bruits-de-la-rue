@@ -210,7 +210,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             });
     };
 
-    $scope.getAssociations = function () {
+    $scope.getCurrentUserAssociations = function () {
         $http.get('/api/users/current/associations/').
             success(function (data) {
                 $scope.associations = data.associations;
@@ -240,14 +240,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getAdresses();
             $scope.setRealAuthor();
             $scope.getStatus();
-            $scope.getAssociations();
+            $scope.getCurrentUserAssociations();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer"
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.getCategories();
             $scope.getAdresses();
-            $scope.getAssociations();
+            $scope.getCurrentUserAssociations();
             $scope.getStatus();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
