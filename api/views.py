@@ -80,13 +80,13 @@ def update_bid(request, bid_id):
     new_bid = json.loads(request.body)
     if bids and new_bid:
         bid_creator = bids[0].creator
+        bid_validator = BidValidator(new_bid)
         if request.user == bid_creator or request.user.is_staff:
-            bid_validator = BidValidator(new_bid)
             if bid_validator.is_valid():
                 updated_bid = bid_validator.get_bid_object(bid_creator)
                 bids.update(**updated_bid)
                 return HttpResponse()
-        return HttpBadRequest(10216, error_codes['10216'])
+        return HttpBadRequest(10666, bid_validator.error_message)
     return HttpBadRequest(10666, error_codes['10666'])
 
 
