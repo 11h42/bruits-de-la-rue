@@ -140,35 +140,38 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
 
+    function setSelects() {
+        for (var i = 0; i < $scope.categories.length; i++) {
+            if ($scope.categories[i]['name'] == $scope.bid.category['name']) {
+                $scope.bid.category = $scope.categories[i];
+            }
+        }
+
+        for (var j = 0; j < $scope.localization.length; j++) {
+            if ($scope.localization[j]['title'] == $scope.bid.localization['title']) {
+                $scope.bid.localization = $scope.localization[j];
+            }
+        }
+
+        for (var k = 0; k < $scope.associations.length; k++) {
+            if ($scope.associations[k]['name'] == $scope.bid.association['name']) {
+                $scope.bid.association = $scope.associations[k];
+            }
+        }
+        for (var l = 0; l < $scope.status.length; l++) {
+            if ($scope.status[l]['name'] == $scope.bid.status_bid) {
+                $scope.bid.status_bid = $scope.status[l];
+            }
+        }
+    }
+
     $scope.getBid = function () {
         $http.get('/api/bids/' + $scope.bidId + '/').
             success(function (data) {
                 $scope.bid = data;
                 $scope.bid_quantity = $scope.bid['quantity'];
 
-                for(var i = 0; i<$scope.categories.length;i++ ){
-                    if ($scope.categories[i]['name'] == $scope.bid.category['name']){
-                         $scope.bid.category = $scope.categories[i];
-                    }
-                }
-
-                for(var j = 0; j<$scope.localization.length;j++ ){
-                    if ($scope.localization[j]['title'] == $scope.bid.localization['title']){
-                         $scope.bid.localization = $scope.localization[j];
-                    }
-                }
-
-                for(var k = 0; k<$scope.associations.length;k++ ){
-                    if ($scope.associations[k]['name'] == $scope.bid.association['name']){
-                         $scope.bid.association = $scope.associations[k];
-                    }
-                }
-                for(var l = 0; l<$scope.status.length;l++ ){
-                    if ($scope.status[l]['name'] == $scope.bid.status_bid){
-                         $scope.bid.status_bid = $scope.status[l];
-                    }
-                }
-
+                setSelects();
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site" +
                     " rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
