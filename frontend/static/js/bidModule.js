@@ -269,6 +269,10 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
 
     $scope.updateBid = function () {
         console.log($scope.bid);
+        delete $scope.bid['current_user_is_staff'];
+        delete $scope.bid['current_user_id'];
+        delete $scope.bid['creator'];
+
         $http.put('/api/bids/' + $scope.bidId + '/', $scope.bid).
             success(function () {
                 window.location = '/annonces/' + $scope.bidId;
