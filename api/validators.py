@@ -34,21 +34,16 @@ class BidValidator(object):
         if not self.bid:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False
-
         for key, value in self.bid.items():
             if key not in authorized_fields:
                 self.error_message = u'Le champs %s est invalide' % key
-
         for fields in required_fields:
             if fields not in self.bid:
                 self.error_message = u'key %s is required' % fields
-
-        if 'begin' in self.bid and 'end' in self.bid and self.bid['end']:
+        if 'begin' in self.bid and self.bid['begin'] and 'end' in self.bid and self.bid['end']:
             if self.bid['begin'] > self.bid['end']:
                 self.error_message = u'Erreur : La date de début doit être strictement inférieur à la date de fin'
-
-        if 'begin' in self.bid:
+        if 'begin' in self.bid and self.bid['begin']:
             if self.bid['begin'] < constants.TODAY_ISO:
                 self.error_message = u'Erreur : La date de début doit être supérieure ou égale à la date du jour'
-
         return len(self.error_message) == 0
