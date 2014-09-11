@@ -196,7 +196,6 @@ class TestBidApi(TestCase):
             'real_author': 'toto'
         }
         response = self.client.put('/api/bids/%s/' % bid.id, json.dumps(bid_updated))
-        print response
         self.assertEquals(200, response.status_code)
         bid_updated = Bid.objects.get(id=bid.id)
         self.assertEquals(bid_updated.title, 'Nouveau titre')

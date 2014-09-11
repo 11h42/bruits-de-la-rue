@@ -19,59 +19,11 @@ body {
     border: none;
 }
 
-/*#right_panel_emergencies {*/
-    /*padding-top: 49px;*/
-    /*position: absolute;*/
-    /*top: 15px;*/
-    /*right: 0;*/
-    /*z-index: 904;*/
-    /*background-color: #F5F5F5;*/
-    /*width: 10%;*/
-    /*height: 100%;*/
-    /*padding-right: 3px;*/
-    /*border: solid #CCC 1px;*/
-
-/*}*/
-
-/*#right_panel_emergencies > nav {*/
-
-/*}*/
-
-/*#right_panel_emergencies > nav > ul {*/
-    /*padding-left: 0;*/
-
-/*}*/
-
-/*ul > li {*/
-    /*list-style-type: none;*/
-/*}*/
-
-/*#right_panel_emergencies > nav > ul > li {*/
-    /*color: #323232;*/
-    /*font-size: 1.2em;*/
-    /*-moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);*/
-    /*-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);*/
-    /*box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);*/
-/*}*/
-
 footer {
     position: absolute;
     bottom: 0;
     text-align: center;
 }
-
-/*#emergency_panel_title {*/
-    /*font-size: 1.8em;*/
-/*}*/
-
-/*.emergency_title {*/
-    /*font-size: 1em;*/
-
-/*}*/
-
-/*.emergency_description {*/
-    /*font-size: 0.8em;*/
-/*}*/
 
 body {
     background-color: #fdfdfd;
@@ -86,4 +38,13 @@ body {
 
 .alert{
     font-weight: bold;
+}
+
+.bid_button{
+    padding-bottom: 5px;
+
+}
+
+.bid_button > .btn{
+    width: 100%;
 }

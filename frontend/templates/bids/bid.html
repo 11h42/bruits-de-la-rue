@@ -16,79 +16,95 @@
                             Revenir à la liste des annonces
                         </a>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h4 class="text-center">{$ bid.title $}</h4>
-                        </div>
-                    </div>
                     <hr/>
                     <div class="row">
-                        <div class="col-lg-2 col-md-2">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjcwIiB5PSI3MCIgc3R5bGU9ImZpbGw6I2FhYTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjE0MHgxNDA8L3RleHQ+PC9zdmc+"
-                                 alt="..." class="img-thumbnail">
+                        <div class="col-lg-3 col-md-3">
+                            <div class="row">
+                                <img src="http://fakeimg.pl/250x250/">
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <b>Catégorie :</b> <span ng-hide="bid.category">Non précisé</span> {$
+                                bid.category.name $}
+                            </div>
+                            <div class="row">
+                                <b>Quantité :</b> <span
+                                    ng-hide="bid.quantity || bid.quantity == 0">Non précisé</span> {$
+                                bid.quantity $}
+                            </div>
+                            <div class="row">
+                                <p><b>Localisation : </b><span ng-hide="bid.localization">Non précisé</span></p>
+                                <ul class="list-unstyled" ng-show="bid.localization">
+                                    <li><b>{$ bid.localization.title $}</b></li>
+                                    <li>{$ bid.localization.recipient_name $}</li>
+                                    <li>{$ bid.localization.address1 $}</li>
+                                    <li ng-show="bid.localization.address2">{$ bid.localization.address2 $}</li>
+                                    <li>{$ bid.localization.zipcode $} - {$ bid.localization.town $}</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="col-lg-4 col-md-4">
-                            <ul>
-                                <li><b>Status : </b> {$ bid.status_bid $}</li>
-                                <li><b>Catégorie :</b> <span ng-hide="bid.category">Non renseigné</span> {$
-                                    bid.category.name $}
-                                </li>
-                                <li><b>Quantité :</b> <span
-                                        ng-hide="bid.quantity || bid.quantity == 0">Non renseigné</span> {$
-                                    bid.quantity $}
-                                </li>
-                                <li><b>Début de l'annonce :</b> <span ng-hide="bid.begin">Non renseigné</span> {$
-                                    bid.begin | date:'dd MMM yy HH:mm' $}
-                                </li>
-                                <li><b>Déposé par :</b> {$ bid.creator $} <span
-                                        ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
-                                </li>
-                                <li><b>Association responsable : </b>{$ bid.association.name $} <span
-                                        ng-hide="bid.association"> Non renseigné </span>
-                                </li>
-                            </ul>
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <h4 class="text-center"><b>{$ bid.title $}</b></h4>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-lg-4"><b>Status : </b> {$ bid.status_bid | capitalize $}</div>
+                                <div class="col-lg-4"><b>Début :</b> <span
+                                        ng-hide="bid.begin">Non précisé</span>
+                                    {$ bid.begin | fromNow $}
+                                </div>
+                                <div class="col-lg-4"><b>Fin :</b> <span ng-hide="bid.end">Non précisé</span>
+                                    {$ bid.end | fromNow $}
+                                </div>
+                                <br/>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <blockquote>
+                                    <p>{$ bid.description $}</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="row bid_button">
+                                <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default btn-sm"
+                                        type="button">
+                                    <span class="glyphicon glyphicon-ok"></span> Accepter cette annonce
+                                </button>
+                            </div>
+                            <div class="row bid_button">
+                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
+                                   class="btn btn-info btn-sm" ng-href="/annonces/{$ bid.id $}/modifier">
+                                    <span class="glyphicon glyphicon-edit"></span> Modifier cette annonce
+                                </a>
+                            </div>
+                            <div class="row bid_button">
+                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
+                                   class="btn btn-danger btn-sm" ng-click="deleteBid()">
+                                    <span class="glyphicon glyphicon-trash"></span> Supprimer cette annonce
+                                </a>
+                            </div>
+                            <div class="row">
+                                <b>Déposé par :</b> {$ bid.creator $} <span
+                                    ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
+                            </div>
+                            <div class="row"><b>Association : </b>{$ bid.association.name $} <span
+                                    ng-hide="bid.association"> Non précisé </span></div>
                         </div>
                     </div>
                     <br/>
 
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <p><b>Localisation</b></p>
-                            <ul class="list-unstyled">
-                                <li><b>{$ bid.localization.title $}</b></li>
-                                <li>{$ bid.localization.recipient_name $}</li>
-                                <li>{$ bid.localization.address1 $}</li>
-                                <li ng-show="bid.localization.address2">{$ bid.localization.address2 $}</li>
-                                <li>{$ bid.localization.zipcode $} - {$ bid.localization.town $}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <p><b>Description</b></p>
-                            <blockquote>
-                                <p>{$ bid.description $}</p>
-                            </blockquote>
-                        </div>
-                    </div>
-                    <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default"
-                            type="button"><span
-                            class="glyphicon glyphicon-ok-sign"></span> Accepter cette
-                        annonce
-                    </button>
-                    <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
-                       class="btn btn-info"
-                       ng-href="/annonces/{$ bid.id $}/modifier">Modifier cette annonce</a>
-                    <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
-                       class="btn btn-danger"
-                       ng-click="deleteBid()">Supprimer cette annonce</a>
-
                 </div>
-                {% include 'modales/accept_bid.html' %}
-            </div>
-            {% include 'disqus.html' %}
 
+
+            </div>
+            {% include 'modales/accept_bid.html' %}
         </div>
+        {% include 'disqus.html' %}
     </div>
 
 

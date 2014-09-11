@@ -53,8 +53,16 @@
                         data-ng-repeat="bid in bids | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.quantity $}</td>
-                        <td>{$ bid.begin $}</td>
-                        <td>{$ bid.end $}</td>
+                        <td>
+                            <span ng-show="bid.begin">
+                                {$ bid.begin  | fromNow $} (Le {$ bid.begin  | date:'dd-MM-yyyy HH:MM:ss' $})
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-show="bid.end">
+                                {$ bid.end  | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})
+                            </span>
+                        </td>
                     </tr>
                 </table>
                 <div class="row">

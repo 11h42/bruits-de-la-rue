@@ -12,6 +12,38 @@ bidsModule.filter('startFrom', function () {
     }
 });
 
+bidsModule.filter('fromNow', function () {
+    return function (dateString) {
+        moment.locale('fr', {
+            relativeTime: {
+                future: "dans %s",
+                past: "il y a %s",
+                s: "secondes",
+                m: "une minute",
+                mm: "%d minutes",
+                h: "une heure",
+                hh: "%d heures",
+                d: "un jour",
+                dd: "%d jours",
+                M: "a mois",
+                MM: "%d mois",
+                y: "a année",
+                yy: "%d années"
+            }
+        });
+        return moment(dateString).fromNow()
+    };
+});
+
+bidsModule.filter('capitalize', function () {
+    return function (input) {
+        if (!input) {
+            return input;
+        }
+        return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+    };
+});
+
 bidsModule.controller('bidsController', function ($scope, $http) {
 
     $scope.pageSize = 10;
