@@ -48,3 +48,12 @@ body {
 .bid_button > .btn{
     width: 100%;
 }
+
+.answer{
+    font-size: 0.8em;
+}
+
+.question{
+    color: #4ea0d0;
+    font-weight: bold;
+}

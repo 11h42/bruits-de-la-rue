@@ -16,7 +16,7 @@ faqsModule.controller('faqsController', function ($scope, $http) {
 
     $scope.pageSize = 10;
     $scope.searchText = "";
-    $scope.hasError = false;
+    $scope.faqs = [];
     $scope.currentPage = 0;
     $scope.getFaqs = function () {
         $http.get('/api/faq/').

@@ -20,17 +20,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-3" ng-show="associations">
-                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                            Précédant
-                        </button>
-                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
-                        <button ng-disabled="currentPage >= associations.length/pageSize - 1"
-                                ng-click="currentPage=currentPage+1">
-                            Suivant
-                        </button>
-                    </div>
-                    <div ng-show="associations" class="col-lg-6 pull-right">
+                    <div ng-show="associations" class="col-lg-4 pull-right">
                         <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
                         <input id="table_search" ng-model="searchText" type="text"/>
                     </div>
@@ -63,11 +53,11 @@
                     </tr>
                 </table>
                 <div class="row">
-                    <div class="col-lg-6" ng-show="associations">
+                    <div class="col-lg-3 col-lg-offset-9" ng-show="associations">
                         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                             Précédant
                         </button>
-                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
+                        <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
                         <button ng-disabled="currentPage >= associations.length/pageSize - 1"
                                 ng-click="currentPage=currentPage+1">
                             Suivant

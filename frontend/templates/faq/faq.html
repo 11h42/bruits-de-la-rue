@@ -20,36 +20,29 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-3" ng-show="faqs">
-                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                            Précédant
-                        </button>
-                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
-                        <button ng-disabled="currentPage >= faqs.length/pageSize - 1"
-                                ng-click="currentPage=currentPage+1">
-                            Suivant
-                        </button>
-                    </div>
-                    <div ng-show="faqs" class="col-lg-6 pull-right">
+                    <div ng-show="faqs" class="col-lg-4 pull-right">
                         <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
                         <input id="table_search" ng-model="searchText" type="text"/>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <ul class="list-group"
-                        data-ng-repeat="faq in faqs | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
-                        <li><b>Question :</b></li>
-                        <li><b>Réponse :</b></li>
-                    </ul>
-                </div>
-
+                <hr/>
                 <div class="row">
-                    <div class="col-lg-6" ng-show="faqs">
-                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                    <div class="col-lg-12">
+                        <div data-ng-repeat="faq in faqs | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
+                            <h4 class="question text-center">{$ faq.question $}</h4>
+                            <blockquote><p class="text-justify answer"> {$ faq.answer $}</p></blockquote>
+                            <p class="text-center">-</p>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-lg-3 col-lg-offset-9" ng-show="faqs">
+                        <button class="btn btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                             Précédant
                         </button>
-                        Page {$ currentPage+1 $}/{$ numberOfPages() $}
-                        <button ng-disabled="currentPage >= faqs.length/pageSize - 1"
+                        <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
+                        <button class="btn btn-sm" ng-disabled="currentPage >= faqs.length/pageSize - 1"
                                 ng-click="currentPage=currentPage+1">
                             Suivant
                         </button>
