@@ -61,13 +61,13 @@ def update_bid(request, bid_id):
     c = RequestContext(request)
     return HttpResponse(t.render(c))
 
-
+@login_required()
 def display_associations(request):
     t = get_template('associations/associations.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
 
-
+@login_required()
 def display_faq(request):
     t = get_template('faq/faq.html')
     c = RequestContext(request)
