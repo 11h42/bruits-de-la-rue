@@ -40,8 +40,8 @@
             <div class="form-group">
                 <label for="bid_category">Catégorie :</label>
                 <select id="bid_category" class="form-control" data-ng-model="bid.category"
-                        ng-options="category.name for category in categories">
-                    <option value="">- -</option>
+                        ng-options="category as category.name for category in categories">
+                    <option value="">--</option>
                 </select>
             </div>
         </div>
