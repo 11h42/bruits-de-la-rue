@@ -7,43 +7,52 @@
     <style type="text/css">
         #login {
             margin: auto;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            width: 600px;
-            height: 480px
+            padding-top: 10px;
+            max-width: 600px;
+            max-height: 480px
         }
-
+        #header{
+            margin: auto;
+        }
         #form-signin {
             margin-top: 40px
         }
     </style>
 {% endblock %}
-{% block header %}<h1 class="text-center">Bienvenu(e) sur l'application Bruit de Rue</h1>{% endblock %}
+{% block header %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 id="header" class="text-center">Bienvenu(e) sur l'application Bruit de Rue</h1>
+            </div>
+        </div>
+    </div>{% endblock %}
 {% block content %}
-    <div id="login">
-        <form id="form-signin" method="POST" action="/login/">
-            {% csrf_token %}
-            <legend>Pour accéder aux annonces, merci de vous identifier</legend>
-            <div class="form-group">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" class="form-control" id="username"
-                       name="username" placeholder="{% trans "Entrez votre nom d'utilisateur" %}" autofocus>
+    <div class="container">
+        <div class="row">
+            <div id="login">
+                <form id="form-signin" method="POST" action="/login/">
+                    {% csrf_token %}
+                    <legend>Pour accéder aux annonces, merci de vous identifier</legend>
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username"
+                               name="username" placeholder="{% trans "Entrez votre nom d'utilisateur" %}" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" class="form-control" id="password"
+                               name="password" placeholder="Entrez votre mot de passe">
+                    </div>
+                    {% if has_error %}
+                        <div class="alert alert-danger">
+                            Votre nom d'utilisateur ou votre mot de passe ne correspondent pas ! Veuillez reessayer.
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success">Connexion</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" class="form-control" id="password"
-                       name="password" placeholder="Entrez votre mot de passe">
-            </div>
-            {% if has_error %}
-                <div class="alert alert-danger">
-                    Votre nom d'utilisateur ou votre mot de passe ne correspondent pas ! Veuillez reessayer.
-                </div>
-            {% endif %}
-            <button type="submit" class="btn btn-success">Connexion</button>
-        </form>
+        </div>
     </div>
 {% endblock %}
 {% block footer %}{% endblock %}
