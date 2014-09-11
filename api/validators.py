@@ -20,6 +20,8 @@ class BidValidator(object):
             self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
         if 'association' in self.bid and self.bid['association']:
             self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])
+        if 'status_bid' in self.bid and self.bid['status_bid']:
+            self.bid['status_bid'] = self.bid['status_bid']['name']
         return self.bid
 
     def is_valid(self):
