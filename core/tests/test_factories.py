@@ -20,10 +20,10 @@ class TestFactories(TestCase):
         self.assertTrue(is_authenticated)
 
     def test_create_super_user(self):
-        user = factories.UserFactory(username='superman', is_staff=True)
+        user = factories.UserFactory(username='superman', is_superuser=True)
         self.assertTrue(isinstance(user, User))
         self.assertEquals(user.email, 'test@akema.fr')
-        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
 
     def test_bid_factory(self):
         creator = factories.UserFactory(username='creator')

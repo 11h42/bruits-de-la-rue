@@ -334,7 +334,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
     $scope.updateBid = function () {
-        delete $scope.bid['current_user_is_staff'];
+        delete $scope.bid['current_user_is_superuser'];
         delete $scope.bid['current_user_id'];
         delete $scope.bid['creator'];
         console.log($scope.bid);

@@ -54,10 +54,10 @@
                                 <div class="col-lg-4"><b>Status : </b> {$ bid.status_bid | capitalize $}</div>
                                 <div class="col-lg-4"><b>Début :</b> <span
                                         ng-hide="bid.begin">Non précisé</span>
-                                    {$ bid.begin | fromNow $}
+                                    <span ng-show="bid.begin">{$ bid.begin | fromNow $}</span>
                                 </div>
                                 <div class="col-lg-4"><b>Fin :</b> <span ng-hide="bid.end">Non précisé</span>
-                                    {$ bid.end | fromNow $}
+                                    <span ng-show="bid.end">{$ bid.end | fromNow $}</span>
                                 </div>
                                 <br/>
                             </div>
@@ -77,13 +77,13 @@
                                 </button>
                             </div>
                             <div class="row bid_button">
-                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
+                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_superuser"
                                    class="btn btn-info btn-sm" ng-href="/annonces/{$ bid.id $}/modifier">
                                     <span class="glyphicon glyphicon-edit"></span> Modifier cette annonce
                                 </a>
                             </div>
                             <div class="row bid_button">
-                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_staff"
+                                <a ng-show="bid.current_user_id == bid.creator || bid.current_user_is_superuser"
                                    class="btn btn-danger btn-sm" ng-click="deleteBid()">
                                     <span class="glyphicon glyphicon-trash"></span> Supprimer cette annonce
                                 </a>

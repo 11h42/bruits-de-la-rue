@@ -25,7 +25,7 @@ def get_bid(request, bid_id):
     if bids:
         serialize = bids[0].serialize()
         serialize['current_user_id'] = request.user.id
-        serialize['current_user_is_staff'] = request.user.is_staff
+        serialize['current_user_is_superuser'] = request.user.is_superuser
         return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
@@ -69,7 +69,7 @@ def delete_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if bids:
         bid = bids[0]
-        if bid.creator == request.user or request.user.is_staff:
+        if bid.creator == request.user or request.user.is_superuser:
             bid.delete()
             return HttpNoContent()
         return HttpResponseForbidden()

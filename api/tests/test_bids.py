@@ -38,7 +38,7 @@ class TestBidApi(TestCase):
         self.assertEquals(returned_bid['title'], 'Annonce de test')
         self.assertEquals(returned_bid['type'], 'SUPPLY')
         self.assertEquals(returned_bid['current_user_id'], self.user.id)
-        self.assertEquals(returned_bid['current_user_is_staff'], self.user.is_staff)
+        self.assertEquals(returned_bid['current_user_is_superuser'], self.user.is_superuser)
         self.assertEquals(200, response.status_code)
 
     def test_post_a_bid_with_all_required_fields(self):
@@ -178,7 +178,7 @@ class TestBidApi(TestCase):
 
     def test_delete_bid_not_owned_with_superuser_account(self):
         self.client.logout()
-        superuser = factories.UserFactory(username="Superman", is_staff=True)
+        superuser = factories.UserFactory(username="Superman", is_superuser=True)
         login = self.client.login(username=superuser.username, password='password')
         self.assertTrue(login)
         bid = factories.BidFactory(creator=self.user)
