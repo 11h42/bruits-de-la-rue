@@ -161,6 +161,7 @@ class Bid(models.Model):
         category = self.category.serialize() if self.category else None
         localization = self.localization.serialize() if self.localization else None
         association = self.association.serialize() if self.association else None
+        photo = self.photo.id if self.photo else None
         return {
             'id': self.id,
             'title': self.title,
@@ -174,7 +175,8 @@ class Bid(models.Model):
             'real_author': self.real_author,
             'localization': localization,
             'status_bid': self.status_bid,
-            'association': association
+            'association': association,
+            'photo': photo
         }
 
     def __unicode__(self):

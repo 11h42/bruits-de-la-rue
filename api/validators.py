@@ -1,6 +1,6 @@
 # coding=utf-8
 from api import constants
-from core.models import BidCategory, Address, Association, StatusBids
+from core.models import BidCategory, Address, Association, StatusBids, Photo
 
 
 class BidValidator(object):
@@ -19,6 +19,8 @@ class BidValidator(object):
             self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
         if 'association' in self.bid and self.bid['association']:
             self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])
+        if 'photo' in self.bid and self.bid['photo']:
+            self.bid['photo'] = Photo.objects.get(id=self.bid['photo'])
 
         return self.bid
 
@@ -30,7 +32,7 @@ class BidValidator(object):
         """
         required_fields = ['title', 'description', 'type', 'real_author']
         authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id', 'localization',
-                                               'status_bid', 'association']
+                                               'status_bid', 'association', 'photo']
         if not self.bid:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False

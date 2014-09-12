@@ -119,9 +119,21 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'real_author': '',
         'localization': '',
         'association': '',
-        'status_bid': ''
+        'status_bid': '',
+        'photo': ''
     };
 
+    $scope.get_bid_photo_url = function () {
+        if ($scope.bid.photo) {
+            $http.get('/api/images/' + $scope.bid.photo + '/').
+                success(function (data) {
+                    $scope.bid_photo_url = data.url
+                }).error(function () {
+                    $scope.errorMessage = "Veuillez nous excuser, notre site" +
+                        " rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
+                });
+        }
+    };
     $scope.createBid = function () {
         for (key in $scope.bid) {
             if ($scope.bid[key] === '') {
@@ -209,7 +221,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             success(function (data) {
                 $scope.bid = data;
                 $scope.bid_quantity = $scope.bid['quantity'];
-
+                $scope.get_bid_photo_url();
                 setSelects();
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site" +
@@ -281,7 +293,27 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getStatus();
             $scope.getCurrentUserAssociations();
             $scope.form_title = "Création d'une annonce";
-            $scope.submit_button_name = "Créer"
+            $scope.submit_button_name = "Créer";
+            $(function () {
+
+                $('#bid_image').fileupload({
+                    dataType: 'json',
+                    add: function (e, data) {
+                        data.submit();
+                    },
+                    done: function (e, data) {
+                        $scope.bid.photo = data.result.id;
+                        $scope.get_bid_photo_url()
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#progress').find('.bar').css(
+                            'width',
+                                progress + '%'
+                        );
+                    }
+                });
+            });
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.getCategories();
@@ -290,7 +322,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getStatus();
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
-            $scope.submit_button_name = "Modifier"
+            $scope.submit_button_name = "Modifier";
+
         }
     };
 

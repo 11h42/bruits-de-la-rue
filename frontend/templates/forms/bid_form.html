@@ -33,8 +33,11 @@
             <label for="bid_image">Photo</label>
             <input id="bid_image" type="file" name="bid_image" data-url="/api/images/">
 
-            <div id="progress">
+            <div ng-hide="bid_photo_url" id="progress">
                 <div class="bar" style="width: 0%;"></div>
+            </div>
+            <div ng-show="bid_photo_url">
+                <img ng-src="{$ bid_photo_url $}" alt="Photo de l'annonce"/>
             </div>
         </div>
         <div class="col-lg-12">

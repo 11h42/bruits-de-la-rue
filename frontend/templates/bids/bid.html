@@ -20,7 +20,9 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-3">
                             <div class="row">
-                                <img src="http://fakeimg.pl/250x250/">
+                                <img ng-hide="bid_photo_url" src="http://fakeimg.pl/250x250/">
+
+                                <img ng-show="bid_photo_url" ng-src="{$ bid_photo_url $}" alt="Photo de l'annonce"/>
                             </div>
                             <br/>
 
