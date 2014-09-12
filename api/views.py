@@ -8,7 +8,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
-from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids
+from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids, Photo
 
 
 def get_bids(request):
@@ -77,7 +77,6 @@ def delete_bid(request, bid_id):
 
 
 def update_bid(request, bid_id):
-
     bids = Bid.objects.filter(id=bid_id)
     new_bid = json.loads(request.body)
     if bids and new_bid:
@@ -89,7 +88,6 @@ def update_bid(request, bid_id):
                 bids.update(**updated_bid)
                 return HttpResponse()
         return HttpBadRequest(10666, bid_validator.error_message)
-
 
     return HttpBadRequest(10666, error_codes['10666'])
 
@@ -258,3 +256,35 @@ def accept_bid(request, bid_id):
         return HttpResponse()
 
     return HttpBadRequest(10666, error_codes['10666'])
+
+
+@is_authenticated
+# @catch_any_unexpected_exception
+def handle_photos(request):
+    if request.method == "POST":
+        return post_photo(request)
+    return HttpMethodNotAllowed()
+
+
+def post_photo(request):
+    if request.FILES is None:
+        return HttpBadRequest(10221, error_codes['10221'])
+    uploaded_photo = request.FILES[u'bid_image']
+    photo = Photo()
+    photo.photo = uploaded_photo
+    photo.save()
+    return HttpResponse(json.dumps({'id': str(photo.pk)}), mimetype='application/json')
+
+
+def get_photo(request, photo_id):
+    photo = Photo.objects.filter(id=photo_id)
+    if photo:
+        return HttpResponse(json.dumps({'url': str(photo[0].photo.url)}), mimetype='application/json')
+
+
+@is_authenticated
+# @catch_any_unexpected_exception
+def handle_photo(request, photo_id):
+    if request.method == "GET":
+        return get_photo(request, photo_id)
+    return HttpMethodNotAllowed()

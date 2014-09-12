@@ -10,7 +10,7 @@
                         Les champs marqués d'une étoile (<span class="text-danger">*</span>) sont obligatoires.
                     </div>
                 </div>
-                <form ng-submit="createBid()" role="form">
+                <form ng-submit="createBid()" role="form" enctype="multipart/form-data">
                     {% include "forms/bid_form.html" %}
                 </form>
             </div>
@@ -22,4 +22,31 @@
     <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
     <script type="text/javascript"
             src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+
+    <script>
+        $(function () {
+            $('#bid_image').fileupload({
+                dataType: 'json',
+                add: function (e, data) {
+                    data.submit();
+                },
+                done: function (e, data) {
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress').find('.bar').css(
+                            'width',
+                                    progress + '%'
+                    );
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

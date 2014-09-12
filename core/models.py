@@ -119,6 +119,13 @@ class StatusBids(object):
     )
 
 
+class Photo(models.Model):
+    photo = models.FileField(upload_to="photos/")
+
+    def __unicode__(self):
+        return self.id
+
+
 class Bid(models.Model):
     creator = models.ForeignKey(User, related_name='creators')
     purchaser = models.ForeignKey(User, related_name='purchasers', null=True, blank=True)
@@ -144,6 +151,7 @@ class Bid(models.Model):
     real_author = models.CharField(blank=True, null=True, max_length=255)
 
     association = models.ForeignKey(Association, blank=True, null=True)
+    photo = models.ForeignKey(Photo, null=True, blank=True)
 
     def serialize(self):
         # creator = self.creator.username if self.creator else None

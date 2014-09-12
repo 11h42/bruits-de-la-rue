@@ -64,3 +64,8 @@ body {
 .search-bar {
     padding-top: 5%;
 }
+
+.bar {
+    height: 18px;
+    background: green;
+}

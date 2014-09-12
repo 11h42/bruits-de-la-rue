@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url
 from django.contrib import admin
 
 from api import views
+from b2rue import settings
 
 
 admin.autodiscover()
@@ -23,7 +24,8 @@ urlpatterns = patterns(
 
     url(r'^faq/$', views.get_faq, name="faq"),
 
-
+    url(r'^images/$', views.handle_photos, name="post_photo"),
+    url(r'^images/(?P<photo_id>\d+)/$', views.handle_photo, name="post_photo"),
     url(r'^bids/status/$', views.get_status, name="status"),
 
     # url(r'^users/current/$', views.get_current_user, name="user-name"),
