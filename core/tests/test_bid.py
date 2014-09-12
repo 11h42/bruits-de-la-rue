@@ -13,7 +13,7 @@ class BidTestCase(TestCase):
         expected_bid = {'begin': None, 'quantity': None, 'end': None, 'id': bid.id, 'title': 'Annonce de test',
                         'creator': user.username, 'description': bid.description, 'category': None, 'type': 'SUPPLY',
                         'real_author': 'Jean Dupont', 'localization': None, 'status_bid': StatusBids.RUNNING,
-                        'association': bid.association.serialize()}
+                        'association': bid.association.serialize(), 'photo': None}
         self.assertEquals(bid.serialize(), expected_bid)
 
     def test_bid_belong_to_user(self):
