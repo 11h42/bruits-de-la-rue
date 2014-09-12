@@ -36,24 +36,31 @@ body {
     }
 }
 
-.alert{
+.alert {
     font-weight: bold;
 }
 
-.bid_button{
+.bid_button {
     padding-bottom: 5px;
 
 }
 
-.bid_button > .btn{
+.bid_button > .btn {
     width: 100%;
 }
 
-.answer{
-    font-size: 0.8em;
+.answer {
+    color: #6f6f6f;
+    font-size: 1em;
+    margin: 0 0 21px;
+    padding: 10.5px 21px;
 }
 
-.question{
+.question {
     color: #4ea0d0;
     font-weight: bold;
+}
+
+.search-bar {
+    padding-top: 5%;
 }

@@ -16,28 +16,40 @@
                 </div>
 
                 <div class="row">
-                    <h1>FAQ</h1>
-                </div>
+                    <div class="col-lg-3">
+                        <h1>FAQ</h1>
+                    </div>
+                    <div class="col-lg-5"></div>
+                    <div ng-show="faqs" class="col-lg-4">
+                        <form class="form-horizontal search-bar" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="table_search">
+                                    <b><span class="glyphicon glyphicon-search"></span> Rechercher</b>
+                                </label>
 
-                <div class="row">
-                    <div ng-show="faqs" class="col-lg-4 pull-right">
-                        <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
-                        <input id="table_search" ng-model="searchText" type="text"/>
+                                <div class="col-sm-8">
+                                    <input placeholder="Entrez une question" class="form-control" id="table_search" ng-model="searchText.question" type="text"/>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <hr/>
                 <div class="row">
                     <div class="col-lg-12">
-                        <div data-ng-repeat="faq in faqs | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
+                        <div data-ng-repeat="faq in filterFaqs = (faqs | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize ">
                             <h4 class="question text-center">{$ faq.question $}</h4>
-                            <blockquote><p class="text-justify answer"> {$ faq.answer $}</p></blockquote>
+
+                            <p class="text-justify answer"> {$ faq.answer $}</p>
+
                             <p class="text-center">-</p>
                         </div>
+                        <p class="answer" ng-hide="filterFaqs.length">Aucune question pour la recherche "{$ searchText.question $}"</p>
                     </div>
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-lg-3 col-lg-offset-9" ng-show="faqs">
+                    <div class="col-lg-12 center-block" ng-show="faqs">
                         <button class="btn btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                             Précédant
                         </button>

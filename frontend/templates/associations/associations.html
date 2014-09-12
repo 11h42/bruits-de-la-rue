@@ -16,13 +16,23 @@
                 </div>
 
                 <div class="row">
-                    <h1>Associations</h1>
-                </div>
+                    <div class="col-lg-3">
+                        <h1>Associations</h1>
+                    </div>
 
-                <div class="row">
-                    <div ng-show="associations" class="col-lg-4 pull-right">
-                        <label for="table_search"><span class="glyphicon glyphicon-search"></span> Rechercher</label>
-                        <input id="table_search" ng-model="searchText" type="text"/>
+                    <div class="col-lg-5"></div>
+                    <div ng-show="associations" class="col-lg-4">
+                        <form class="form-horizontal search-bar" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="table_search">
+                                    <b><span class="glyphicon glyphicon-search"></span> Rechercher</b>
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="table_search" ng-model="searchText" type="text"/>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -37,33 +47,39 @@
                         <th>Email</th>
                     </tr>
                     </thead>
-                    <tr data-ng-repeat="association in associations | startFrom:currentPage*pageSize | limitTo:pageSize | filter:searchText ">
+                    <tr data-ng-repeat="association in filterAssociations = (associations | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td>{$ association.name $}</td>
-                        <td><ul class="list-unstyled">
-                            <li>{$ association.address.title $}</li>
-                            <li>{$ association.address.recipient_name $}</li>
-                            <li>{$ association.address.address1 $}</li>
-                            <li ng-show="association.address.address2">{$ association.address.address2 $}</li>
-                            <li>{$ association.address.zipcode $} - {$ association.address.town $}</li>
-                        </ul></td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <li>{$ association.address.title $}</li>
+                                <li>{$ association.address.recipient_name $}</li>
+                                <li>{$ association.address.address1 $}</li>
+                                <li ng-show="association.address.address2">{$ association.address.address2 $}</li>
+                                <li>{$ association.address.zipcode $} - {$ association.address.town $}</li>
+                            </ul>
+                        </td>
                         <td>{$ association.phone $}</td>
                         <td>{$ association.fax $}</td>
                         <td>{$ association.url_site $}</td>
                         <td>{$ association.email $}</td>
                     </tr>
+                    <tr ng-hide="filterAssociations.length">
+                        <td colspan="6">Pas de résultat pour la recherche "{$ searchText $}"</td>
+                    </tr>
                 </table>
                 <div class="row">
-                    <div class="col-lg-3 col-lg-offset-9" ng-show="associations">
-                        <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                    <div class="col-lg-12" ng-show="associations">
+                        <button  class="btn btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                             Précédant
                         </button>
                         <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
-                        <button ng-disabled="currentPage >= associations.length/pageSize - 1"
+                        <button  class="btn btn-sm" ng-disabled="currentPage >= associations.length/pageSize - 1"
                                 ng-click="currentPage=currentPage+1">
                             Suivant
                         </button>
                     </div>
-                    <div class="alert alert-success text-center ng-cloak" ng-hide="associations">Il semble qu'il n'y ai aucune
+                    <div class="alert alert-success text-center ng-cloak" ng-hide="associations">Il semble qu'il n'y ai
+                        aucune
                         association.
                     </div>
                 </div>
