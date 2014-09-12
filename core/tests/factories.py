@@ -1,6 +1,8 @@
 # coding=utf-8
+
 import factory
 from factory.django import DjangoModelFactory
+
 from core.models import StatusBids
 
 
@@ -88,7 +90,7 @@ class BidCategoryFactory(DjangoModelFactory):
 
 class FaqFactory(DjangoModelFactory):
     class Meta:
-        model ='core.Faq'
+        model = 'core.Faq'
         django_get_or_create = ('question', 'answer')
 
     question = 'Factored question'

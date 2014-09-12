@@ -259,7 +259,7 @@ def accept_bid(request, bid_id):
 
 
 @is_authenticated
-# @catch_any_unexpected_exception
+@catch_any_unexpected_exception
 def handle_photos(request):
     if request.method == "POST":
         return post_photo(request)
@@ -283,7 +283,7 @@ def get_photo(request, photo_id):
 
 
 @is_authenticated
-# @catch_any_unexpected_exception
+@catch_any_unexpected_exception
 def handle_photo(request, photo_id):
     if request.method == "GET":
         return get_photo(request, photo_id)
