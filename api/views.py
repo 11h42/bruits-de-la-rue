@@ -282,9 +282,23 @@ def get_photo(request, photo_id):
         return HttpResponse(json.dumps({'url': str(photo[0].photo.url)}), mimetype='application/json')
 
 
+def delete_photo(request, photo_id):
+    photos = Photo.objects.filter(id=photo_id)[:1]
+    if photos:
+        bids = Bid.objects.filter(photo=photos[0])
+        if bids:
+            bids[0].photo = None
+            bids[0].save()
+            # if request.user == photo.author:
+        photos[0].delete()
+        return HttpResponse()
+
+
 @is_authenticated
 @catch_any_unexpected_exception
 def handle_photo(request, photo_id):
     if request.method == "GET":
         return get_photo(request, photo_id)
+    if request.method == "DELETE":
+        return delete_photo(request, photo_id)
     return HttpMethodNotAllowed()

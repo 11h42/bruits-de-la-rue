@@ -134,6 +134,24 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 });
         }
     };
+
+    $scope.deletePhoto = function () {
+        if ($scope.bid.photo) {
+            $http.delete('/api/images/' + $scope.bid.photo + '/').
+                success(function (data) {
+                    $scope.successMessage = 'La photo de cette annonce à bien été supprimée.';
+                    $scope.bid_photo_url = null;
+                    $scope.bid.photo = null;
+                }).error(function (data) {
+                    if (data.message) {
+                        $scope.errorMessage = data.message;
+                    } else {
+                        $scope.errorMessage = "Veuillez nous excuser, notre site" +
+                            " rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
+                    }
+                })
+        }
+    };
     $scope.createBid = function () {
         for (key in $scope.bid) {
             if ($scope.bid[key] === '') {
@@ -323,6 +341,26 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getBid();
             $scope.form_title = "Modification d'une annonce";
             $scope.submit_button_name = "Modifier";
+            $(function () {
+
+                $('#bid_image').fileupload({
+                    dataType: 'json',
+                    add: function (e, data) {
+                        data.submit();
+                    },
+                    done: function (e, data) {
+                        $scope.bid.photo = data.result.id;
+                        $scope.get_bid_photo_url()
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#progress').find('.bar').css(
+                            'width',
+                                progress + '%'
+                        );
+                    }
+                });
+            });
 
         }
     };
