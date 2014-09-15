@@ -2,7 +2,6 @@
 import os
 
 from django.core.files import File
-
 import factory
 from factory.django import DjangoModelFactory
 
@@ -19,14 +18,6 @@ class AddressFactory(DjangoModelFactory):
     address1 = '3 chemin de marticot'
     zipcode = '33610'
     town = 'Cestas'
-
-
-# Seems like factory boy doesn't succeed to factory a file with the class Meta: declaration ?
-class PhotoFactory(DjangoModelFactory):
-    FACTORY_FOR = Photo
-
-    photo = File(
-        open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'inputs', '5x5.png')))
 
 
 class UserFactory(DjangoModelFactory):
@@ -54,6 +45,15 @@ class UserFactory(DjangoModelFactory):
         if extracted:
             for item in extracted:
                 self.associations.add(item)
+
+
+# Seems like factory boy doesn't succeed to factory a file with the class Meta: declaration ?
+class PhotoFactory(DjangoModelFactory):
+    FACTORY_FOR = Photo
+
+    photo = File(
+        open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'inputs', '5x5.png')))
+    owner = factory.SubFactory(UserFactory)
 
 
 class AssociationFactory(DjangoModelFactory):

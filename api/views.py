@@ -268,10 +268,10 @@ def handle_photos(request):
 
 def post_photo(request):
     if request.FILES is None:
-        print 'itit'
         return HttpBadRequest(10221, error_codes['10221'])
     uploaded_photo = request.FILES[u'bid_image']
     photo = Photo()
+    photo.owner = request.user
     photo.photo = uploaded_photo
     photo.save()
     return HttpResponse(json.dumps({'id': str(photo.pk)}), mimetype='application/json')
@@ -285,14 +285,16 @@ def get_photo(request, photo_id):
 
 def delete_photo(request, photo_id):
     photos = Photo.objects.filter(id=photo_id)[:1]
-    if photos:
-        bids = Bid.objects.filter(photo=photos[0])
-        if bids:
-            bids[0].photo = None
-            bids[0].save()
-            # if request.user == photo.author:
-        photos[0].delete()
-        return HttpResponse()
+    if not photos:
+        return HttpBadRequest(10666, error_codes['10666'])
+    if request.user != photos[0].owner and not request.user.is_superuser:
+        return HttpBadRequest(10222, error_codes['10222'])
+    bids = Bid.objects.filter(photo=photos[0])
+    if bids:
+        bids[0].photo = None
+        bids[0].save()
+    photos[0].delete()
+    return HttpResponse()
 
 
 @is_authenticated

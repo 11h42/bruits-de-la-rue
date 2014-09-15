@@ -121,6 +121,7 @@ class StatusBids(object):
 
 class Photo(models.Model):
     photo = models.FileField(upload_to="photos/")
+    owner = models.ForeignKey(User)
 
     def __unicode__(self):
         return self.id
