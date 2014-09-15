@@ -268,6 +268,7 @@ def handle_photos(request):
 
 def post_photo(request):
     if request.FILES is None:
+        print 'itit'
         return HttpBadRequest(10221, error_codes['10221'])
     uploaded_photo = request.FILES[u'bid_image']
     photo = Photo()

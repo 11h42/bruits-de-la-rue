@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from core.models import User, BidCategory
+from core.models import User, BidCategory, Photo
 from core.tests import factories
 
 
@@ -52,3 +52,8 @@ class TestFactories(TestCase):
         faq = factories.FaqFactory(question="How do I create a faq ?", answer="With a factory !")
         self.assertEquals("How do I create a faq ?", faq.question)
         self.assertEquals("With a factory !", faq.answer)
+
+    def test_create_photo(self):
+        factories.PhotoFactory()
+        photo_in_db = Photo.objects.all()
+        self.assertTrue(photo_in_db)
