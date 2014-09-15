@@ -311,6 +311,7 @@ def send_email(request):
         user_email_to = User.objects.get(username=mail_infos['user_to_mail']).email
         send_mail(mail_infos['subject'], mail_infos['content'], request.user.email,
                   [user_email_to], fail_silently=False)
+        return HttpResponse()
     except Exception, e:
         print(e)
-    return HttpResponse()
+        return HttpBadRequest(10666, error_codes['10666'])
