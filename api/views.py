@@ -22,11 +22,12 @@ def get_bids(request):
 
 def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
-    if bids:
-        serialize = bids[0].serialize()
-        serialize['current_user_id'] = request.user.id
-        serialize['current_user_is_superuser'] = request.user.is_superuser
-        return HttpResponse(json.dumps(serialize), content_type='application/json')
+    if not bids:
+        return HttpResponse({}, content_type='application/json')
+    serialize = bids[0].serialize()
+    serialize['current_user_id'] = request.user.id
+    serialize['current_user_is_superuser'] = request.user.is_superuser
+    return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
 # todo refactor
