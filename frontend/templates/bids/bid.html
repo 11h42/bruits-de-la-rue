@@ -40,8 +40,7 @@
                             </div>
                             <div class="row">
                                 <b>Quantité :</b> <span
-                                    ng-hide="bid.quantity || bid.quantity == 0">Non précisé</span> {$
-                                bid.quantity $}
+                                    ng-hide=" bid_quantity  || bid_quantity == 0">Non précisé</span> {$ bid_quantity $}
                             </div>
                             <div class="row">
                                 <p><b>Localisation : </b><span ng-hide="bid.localization">Non précisé</span></p>
@@ -80,10 +79,17 @@
                             </div>
                         </div>
                         <div class="col-lg-2">
+
                             <div class="row bid_button">
                                 <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default btn-sm"
                                         type="button">
                                     <span class="glyphicon glyphicon-ok"></span> Accepter cette annonce
+                                </button>
+                            </div>
+                            <div class="row bid_button">
+                                <button data-toggle="modal" data-target="#send_mail" class="btn btn-primary btn-sm"
+                                        type="button">
+                                    <span class="glyphicon glyphicon-envelope"></span> Contacter l'auteur
                                 </button>
                             </div>
                             <div class="row bid_button">
@@ -112,6 +118,7 @@
 
 
                 {% include 'modales/accept_bid.html' %}
+                {% include 'modales/send_mail.html' %}
             </div>
         </div>
         {% include 'disqus.html' %}

@@ -120,7 +120,15 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
         'localization': '',
         'association': '',
         'status_bid': '',
-        'photo': ''
+        'photo': '',
+        'creator': ''
+    };
+
+    $scope.mail = {
+        'subject': '',
+        'content': '',
+        'user_to_mail': '',
+        'send_copy': false
     };
 
     $scope.get_bid_photo_url = function () {
@@ -262,11 +270,27 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     $scope.setRealAuthor = function () {
         $http.get('/api/users/current/').
             success(function (data) {
-                $scope.bid['real_author'] = data;
+                $scope.bid['real_author'] = data['user']['username'];
             }).error(function () {
                 $scope.errorMessage = "Veuillez nous excuser, notre site " +
                     "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
             });
+    };
+    $scope.sendMail = function () {
+        if ($scope.mail.subject.length == 0
+            || $scope.mail.content.length == 0) {
+            $scope.errorMessage = "Les champs suivants sont requis : Sujet, Message";
+        } else {
+            $scope.mail.user_to_mail = $scope.bid.creator;
+            $http.post('/api/mails/', $scope.mail).
+                success(function () {
+                    $scope.errorMessage = '';
+                    $scope.successMessage = 'Votre email à bien été envoyé.';
+                }).error(function () {
+                    $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                        "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
+                });
+        }
     };
 
     $scope.getAdresses = function () {

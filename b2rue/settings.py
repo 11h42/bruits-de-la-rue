@@ -143,3 +143,13 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
     SOUTH_TESTS_MIGRATE = False
     SKIP_SOUTH_TESTS = True
     TESTS_IN_PROGRESS = True
+
+EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST', 'mail.akema.fr')
+
+# Port for sending e-mail.
+EMAIL_PORT = 25
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER', '')
+EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD', '')
+EMAIL_USE_TLS = False

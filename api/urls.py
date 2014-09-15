@@ -28,6 +28,8 @@ urlpatterns = patterns(
     url(r'^images/(?P<photo_id>\d+)/$', views.handle_photo, name="post_photo"),
     url(r'^bids/status/$', views.get_status, name="status"),
 
+    url(r'^mails/$', views.send_email, name="send_email")
+
     # url(r'^users/current/$', views.get_current_user, name="user-name"),
     # {'id':1234, "user_name":"gvincent"}
 

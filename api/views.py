@@ -1,6 +1,8 @@
 # coding=utf-8
 import json
 
+from django.core.mail import send_mail
+
 from django.http.response import HttpResponse, HttpResponseForbidden
 
 from api.decorators import b2rue_authenticated as is_authenticated
@@ -297,3 +299,18 @@ def handle_photo(request, photo_id):
     if request.method == "DELETE":
         return delete_photo(request, photo_id)
     return HttpMethodNotAllowed()
+
+
+@is_authenticated
+@catch_any_unexpected_exception
+def send_email(request):
+    mail_infos = json.loads(request.body)
+    if not 'user_to_mail' in mail_infos or not 'content' in mail_infos or not 'subject' in mail_infos:
+        return HttpBadRequest(10666, error_codes['10666'])
+    try:
+        user_email_to = User.objects.get(username=mail_infos['user_to_mail']).email
+        send_mail(mail_infos['subject'], mail_infos['content'], request.user.email,
+                  [user_email_to], fail_silently=False)
+    except Exception, e:
+        print(e)
+    return HttpResponse()
