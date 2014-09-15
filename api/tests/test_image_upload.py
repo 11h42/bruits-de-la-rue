@@ -5,7 +5,6 @@ from django.core.files import File
 from django.test.testcases import TestCase
 
 from core.models import Photo
-
 from core.tests import factories
 
 
@@ -17,8 +16,8 @@ class TestImageNoLogged(TestCase):
 
 class TestImageLogged(TestCase):
     def setUp(self):
-        user = factories.UserFactory()
-        self.client.login(username=user.username, password="password")
+        self.user = factories.UserFactory()
+        self.client.login(username=self.user.username, password="password")
         self.file = File(
             open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'inputs', '5x5.png')))
 
@@ -39,3 +38,9 @@ class TestImageLogged(TestCase):
         response = self.client.delete('/api/images/%s/' % photo.id)
         self.assertFalse(Photo.objects.all())
         self.assertEquals(200, response.status_code)
+
+    def test_delete_photo_not_owned(self):
+        photo = factories.PhotoFactory(owner=factories.UserFactory(username="Owner"))
+        response = self.client.delete('/api/images/%s/' % photo.id)
+        self.assertEquals(403, response.status_code)
+        self.assertTrue(Photo.objects.get(id=photo.id))

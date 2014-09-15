@@ -30,16 +30,6 @@ def get_bid(request, bid_id):
     return HttpResponse(json.dumps(serialize), content_type='application/json')
 
 
-# todo refactor
-def set_bid_objects_fields(bid_sent):
-    if 'category' in bid_sent:
-        bid_sent['category'] = BidCategory.objects.get(id=bid_sent['category']['id'])
-    if 'localization' in bid_sent:
-        bid_sent['localization'] = Address.objects.get(id=bid_sent['localization']['id'])
-    if 'association' in bid_sent:
-        bid_sent['association'] = Association.objects.get(id=bid_sent['association']['id'])
-
-
 def create_bid(request):
     json_bid = json.loads(request.body)
 
@@ -289,7 +279,7 @@ def delete_photo(request, photo_id):
     if not photos:
         return HttpBadRequest(10666, error_codes['10666'])
     if request.user != photos[0].owner and not request.user.is_superuser:
-        return HttpBadRequest(10222, error_codes['10222'])
+        return HttpResponseForbidden()
     bids = Bid.objects.filter(photo=photos[0])
     if bids:
         bids[0].photo = None
