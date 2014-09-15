@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Address(models.Model):
-    title = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255)
     recipient_name = models.CharField(max_length=255)
     address1 = models.CharField(max_length=255)
     address2 = models.CharField(max_length=255, null=True, blank=True)
