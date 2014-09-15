@@ -34,10 +34,11 @@
         <div class="col-lg-6">
             <label for="bid_image">Photo</label>
             <input id="bid_image" type="file" name="bid_image" data-url="/api/images/">
-
             <div ng-hide="bid_photo_url" id="progress">
                 <div class="bar" style="width: 0%;"></div>
             </div>
+        </div>
+        <div class="col-lg-6">
             <div ng-show="bid_photo_url">
                 <img ng-src="{$ bid_photo_url $}" alt="Photo de l'annonce"/>
                 <a class="btn btn-danger btn-xs" ng-click="deletePhoto()"><span
