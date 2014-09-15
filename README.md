@@ -10,3 +10,4 @@
   * gestion des associations dans l'admin
   * status des annonces : OK
   * email
+  * URLs (voir commentaires dans le urls.py de l'api)
