@@ -114,8 +114,9 @@ def handle_categories(request):
 
 @is_authenticated
 @catch_any_unexpected_exception
-def get_current_user_username(request):
-    return HttpResponse(request.user.username, content_type='application/json')
+def get_current_user(request):
+    user = User.objects.get(id=request.user.id)
+    return HttpResponse(json.dumps({'user': user.serialize()}), content_type='application/json')
 
 
 def create_new_address(request, user_id):

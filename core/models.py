@@ -79,6 +79,15 @@ class User(AbstractUser, DatedModel):
     class Meta:
         verbose_name = "Utilisateur"
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'is_superuser': self.is_superuser,
+            'is_staff': self.is_staff,
+        }
+
 
 class BidCategory(models.Model):
     name = models.CharField(unique=True, max_length=255)

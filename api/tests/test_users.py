@@ -16,7 +16,7 @@ class UsersTest(TestCase):
 
     def test_get_current_user_username(self):
         response = self.client.get('/api/users/current/')
-        self.assertEquals(response.content, self.user.username)
+        self.assertEquals(json.dumps({'user': self.user.serialize()}), response.content)
 
     def test_get_current_user_address(self):
         self.maxDiff = None

@@ -16,7 +16,7 @@ urlpatterns = patterns(
     url(r'^categories/$', views.handle_categories, name="handle-categories"),
 
 
-    url(r'^users/current/$', views.get_current_user_username, name="user-name"),
+    url(r'^users/current/$', views.get_current_user, name="user-name"),
     url(r'^users/current/address/$', views.handle_address, name="user-address"), #todo addresses
     url(r'^users/current/associations/$', views.get_current_user_associations, name="user-association"),
 
