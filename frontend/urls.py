@@ -13,8 +13,10 @@ urlpatterns = patterns(
     url(r'^$', index, name='index'),
     url(r'^login/$', views.display_login, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}, name='logout'),
+    url(r'^compte/motdepasse/$', views.manage_password, name="account_manage_password"),
+    url(r'^compte/motdepasse/done/$', views.manage_password_done, name="account_manage_password_done"),
 
-    #Annonces
+    # Annonces
     url(r'^annonces/$', views.display_bids, name='display-bids'),
     url(r'^annonces/creer/$', views.create_bid, name='create-bids'),
     url(r'^annonces/(?P<bid_id>\d+)/$', views.display_bid, name='display-bid'),

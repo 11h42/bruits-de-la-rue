@@ -1,10 +1,14 @@
 # coding=utf-8
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
+
 from django.template.loader import get_template
+
+from frontend.forms import FrPasswordChangeForm
 
 
 @login_required()
@@ -61,14 +65,40 @@ def update_bid(request, bid_id):
     c = RequestContext(request)
     return HttpResponse(t.render(c))
 
+
 @login_required()
 def display_associations(request):
     t = get_template('associations/associations.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
 
+
 @login_required()
 def display_faq(request):
     t = get_template('faq/faq.html')
     c = RequestContext(request)
+    return HttpResponse(t.render(c))
+
+
+@login_required()
+def manage_password_done(request):
+    messages.success(request, 'Votre mot de passe à bien été mis à jour')
+    return HttpResponseRedirect(reverse("frontend:account_manage_password"))
+
+
+@login_required()
+def manage_password(request):
+    password_changed = False
+    if request.method == "POST":
+        form = FrPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            password_changed = True
+    else:
+        form = FrPasswordChangeForm(user=request.user)
+    t = get_template('users/manage_password.html')
+    c = RequestContext(request, {
+        'form': form,
+        'password_changed': password_changed
+    })
     return HttpResponse(t.render(c))
