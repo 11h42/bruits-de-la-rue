@@ -33,7 +33,7 @@ faqsModule.controller('faqsController', function ($scope, $http) {
     };
 
     $scope.deleteFaq = function (faq_id) {
-        if (confirm("Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?")) {
+        if (confirm("Vous allez supprimer cette FAQ. Cette action est irréversible. Continuer ?")) {
             $http.delete('/api/faq/' + faq_id + '/').success(function () {
                 $scope.successMessage = "La FAQ à bien été supprimée";
                 $scope.getFaqs();
