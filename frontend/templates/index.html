@@ -1,30 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{#    <aside class="hidden-sm hidden-xs hidden-md hidden-print" id="right_panel_emergencies">#}
-{#    <h5 id="emergency_panel_title" class="text-center text-capitalize">Urgences</h5>#}
-{#        <nav>#}
-{#            <ul>#}
-{#                <li>#}
-{#                    <span class="emergency_title">Aliments</span>#}
-{#                    <br>#}
-{#                    <span class="emergency_description">Légumes en vrac</span>#}
-{#                </li><li>#}
-{#                    <span class="emergency_title">Aliments</span>#}
-{#                    <br>#}
-{#                    <span class="emergency_description">Légumes en vrac</span>#}
-{#                </li><li>#}
-{#                    <span class="emergency_title">Aliments</span>#}
-{#                    <br>#}
-{#                    <span class="emergency_description">Légumes en vrac</span>#}
-{#                </li><li>#}
-{#                    <span class="emergency_title">Aliments</span>#}
-{#                    <br>#}
-{#                    <span class="emergency_description">Légumes en vrac</span>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </nav>#}
-{#    </aside>#}
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-6 col-lg-6 thumbnail">
@@ -34,5 +10,35 @@
                 <a class="btn btn-primary btn-centered" href="/annonces/">Je recherche</a>
             </div>
         </div>
+        <div class="row">
+            <div data-ng-app="bidsModule">
+                <div data-ng-controller="indexController" class="col-lg-12">
+                    <table ng-show="bids" class="table table-responsive table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th colspan="4"><h3 class="text-center">Annonces les plus urgentes</h3></th>
+                        </tr>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Fin</th>
+                            <th>Association</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
+                            data-ng-repeat="bid in bids">
+                            <td>{$ bid.title $}</td>
+                            <td>{$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})</td>
+                            <td>{$ bid.association $}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/bidModule.js"></script>
+    <script type="text/javascript" src="/static/bower_components/moment/min/moment-with-locales.min.js"></script>
 {% endblock %}

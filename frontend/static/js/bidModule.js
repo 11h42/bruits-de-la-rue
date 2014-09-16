@@ -14,23 +14,7 @@ bidsModule.filter('startFrom', function () {
 
 bidsModule.filter('fromNow', function () {
     return function (dateString) {
-        moment.locale('fr', {
-            relativeTime: {
-                future: "dans %s",
-                past: "il y a %s",
-                s: "secondes",
-                m: "une minute",
-                mm: "%d minutes",
-                h: "une heure",
-                hh: "%d heures",
-                d: "un jour",
-                dd: "%d jours",
-                M: "a mois",
-                MM: "%d mois",
-                y: "a année",
-                yy: "%d années"
-            }
-        });
+        moment.locale('fr', { });
         return moment(dateString).fromNow()
     };
 });
@@ -44,32 +28,69 @@ bidsModule.filter('capitalize', function () {
     };
 });
 
-bidsModule.controller('bidsController', function ($scope, $http) {
+bidsModule.controller('bidsController', function ($scope, $http, BidsService) {
 
     $scope.pageSize = 10;
     $scope.searchText = "";
     $scope.bids = [];
     $scope.currentPage = 0;
-    $scope.getBids = function () {
-        $http.get('/api/bids/').
-            success(function (data) {
-                $scope.bids = data.bids;
-            }).error(function () {
-                $scope.errorMessage = "Veuillez nous excuser," +
-                    " notre site rencontre des difficultés techniques." +
-                    " Nous vous invitons à réessayer dans quelques minutes.";
-            });
-    };
-    $scope.getBids();
+
+    BidsService.getBids('end', 1000, function (bids, errorMessage) {
+        if (errorMessage) {
+            $scope.errorMessage = errorMessage;
+            return;
+        }
+        $scope.bids = bids
+    });
 
     $scope.numberOfPages = function () {
         return Math.ceil($scope.bids.length / $scope.pageSize);
     };
 
-    $scope.showBid = function (element) {
-        window.location = '/annonces/' + element.bid.id + '/';
+    $scope.showBid = function (table_row) {
+        BidsService.showBid(table_row)
     };
 });
+
+bidsModule.controller('indexController', function ($scope, $http, BidsService) {
+
+    BidsService.getBids('end', 20, function (bids, errorMessage) {
+        if (errorMessage) {
+            $scope.errorMessage = errorMessage;
+            return;
+        }
+        $scope.bids = bids
+    });
+
+    $scope.showBid = function (table_row) {
+        BidsService.showBid(table_row)
+    };
+});
+
+bidsModule.factory('BidsService', ['$http', function ($http) {
+    return{
+        getBids: function (order_by, limit, callback) {
+            var bids = [];
+            var errorMessage;
+            $http.get('/api/bids/?order_by=' + order_by + '&limit=' + limit).
+                success(function (data) {
+                    bids = data.bids;
+                    callback(bids);
+                }).error(function () {
+                    errorMessage = "Veuillez nous excuser," +
+                        " notre site rencontre des difficultés techniques." +
+                        " Nous vous invitons à réessayer dans quelques minutes.";
+                    callback(bids, errorMessage);
+                });
+        },
+
+        showBid: function (table_row) {
+            window.location = '/annonces/' + table_row.bid.id + '/';
+        }
+    };
+}])
+;
+
 bidsModule.controller('bidUser', function ($scope, $http) {
     $scope.address = {
         'title': '',
@@ -448,3 +469,4 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
 });
+

@@ -13,8 +13,17 @@ from b2rue.settings import DEFAULT_FROM_EMAIL
 from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids, Photo
 
 
+def set_query_parameters(request):
+    authorized_order_by = ['end', 'begin', 'title']
+    order_by = request.GET.get('order_by') if request.GET.get('order_by') and request.GET.get(
+        'order_by') in authorized_order_by else 'end'
+    limit = request.GET.get('limit') if request.GET.get('limit') else 1000
+    return limit, order_by
+
+
 def get_bids(request):
-    bids = Bid.objects.filter(status_bid=StatusBids.RUNNING)
+    limit, order_by = set_query_parameters(request)
+    bids = Bid.objects.filter(status_bid=StatusBids.RUNNING).order_by(order_by)[:limit]
     return_bids = []
     if bids:
         for bid in bids:
@@ -321,4 +330,3 @@ def send_email(request):
     except Exception as e:
         print e
         return HttpBadRequest(10666, error_codes['10666'])
-
