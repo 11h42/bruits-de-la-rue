@@ -144,12 +144,15 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
     SKIP_SOUTH_TESTS = True
     TESTS_IN_PROGRESS = True
 
+DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL', 'project@akema.fr')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
 EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST', 'mail.akema.fr')
 
 # Port for sending e-mail.
-EMAIL_PORT = 25
+EMAIL_PORT = 587
 
 # Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER', '')
 EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD', '')
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True

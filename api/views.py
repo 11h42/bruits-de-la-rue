@@ -2,7 +2,6 @@
 import json
 
 from django.core.mail import send_mail
-
 from django.http.response import HttpResponse, HttpResponseForbidden
 
 from api.decorators import b2rue_authenticated as is_authenticated
@@ -10,6 +9,7 @@ from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
 from api.validators import BidValidator
+from b2rue.settings import DEFAULT_FROM_EMAIL
 from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids, Photo
 
 
@@ -309,9 +309,7 @@ def send_email(request):
         return HttpBadRequest(10666, error_codes['10666'])
     try:
         user_email_to = User.objects.get(username=mail_infos['user_to_mail']).email
-        send_mail(mail_infos['subject'], mail_infos['content'], request.user.email,
-                  [user_email_to], fail_silently=False)
+        send_mail(mail_infos['subject'], mail_infos['content'], DEFAULT_FROM_EMAIL, [user_email_to])
         return HttpResponse()
-    except Exception, e:
-        print(e)
+    except Exception as e:
         return HttpBadRequest(10666, error_codes['10666'])
