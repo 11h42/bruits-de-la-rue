@@ -18,6 +18,7 @@ faqsModule.controller('faqsController', function ($scope, $http) {
     $scope.searchText = "";
     $scope.faqs = [];
     $scope.currentPage = 0;
+
     $scope.getFaqs = function () {
         $http.get('/api/faq/').
             success(function (data) {
@@ -27,11 +28,26 @@ faqsModule.controller('faqsController', function ($scope, $http) {
             });
     };
     $scope.getFaqs();
-
     $scope.numberOfPages = function () {
         return Math.ceil($scope.faqs.length / $scope.pageSize);
     };
-});
+
+    $scope.deleteFaq = function (faq_id) {
+        if (confirm("Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?")) {
+            $http.delete('/api/faq/' + faq_id + '/').success(function () {
+                $scope.successMessage = "La FAQ à bien été supprimée";
+                $scope.getFaqs();
+            }).error(function (data) {
+                if (data.message) {
+                    $scope.errorMessage = data.message
+                } else {
+                    $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+                }
+            })
+        }
+    }
+})
+;
 
 faqsModule.controller('createFaqController', function ($scope, $http) {
     $scope.faq = {

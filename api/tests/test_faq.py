@@ -16,14 +16,20 @@ class TestFaq(TestCase):
         factories.FaqFactory()
         response = self.client.get('/api/faq/')
         self.assertEquals(200, response.status_code)
-        self.assertEquals({u'faqs': [{u'answer': u'Factored answer', u'question': u'Factored question'}]},
+        self.assertEquals({u'faqs': [{u'id': 2, u'answer': u'Factored answer', u'question': u'Factored question'}]},
                           json.loads(response.content))
 
-    def test_add_faq_with_no_staff_account(self):
+    def test_add_faq_without_staff_account(self):
         faq = {'question': 'Combien font 2 + 2 ?',
                'answer': '4'}
         response = self.client.post('/api/faq/', json.dumps(faq), content_type="application/json; charset=utf-8")
         self.assertEquals(403, response.status_code)
+
+    def test_delete_faq_without_staff_account(self):
+        faq = factories.FaqFactory()
+        response = self.client.delete('/api/faq/%s/' % faq.id)
+        self.assertEquals(403, response.status_code)
+        self.assertTrue(bool(Faq.objects.all()))
 
 
 class TestFaqWithStaffUser(TestCase):
@@ -31,10 +37,16 @@ class TestFaqWithStaffUser(TestCase):
         self.user = factories.UserFactory(is_staff=True)
         self.client.login(username=self.user.username, password="password")
 
-    def test_add_faq_with_no_staff_account(self):
+    def test_add_faq(self):
         faq = {'question': 'Combien font 2 + 2 ?',
                'answer': '4'}
         response = self.client.post('/api/faq/', json.dumps(faq), content_type="application/json; charset=utf-8")
         self.assertEquals(201, response.status_code)
         faq_created = Faq.objects.all()
         self.assertTrue(faq_created)
+
+    def test_delete_faq(self):
+        faq = factories.FaqFactory()
+        response = self.client.delete('/api/faq/%s/' % faq.id)
+        self.assertEquals(200, response.status_code)
+        self.assertFalse(bool(Faq.objects.all()))

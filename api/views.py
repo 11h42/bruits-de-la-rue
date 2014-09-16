@@ -350,3 +350,20 @@ def send_email(request):
     except Exception as e:
         print e
         return HttpBadRequest(10666, error_codes['10666'])
+
+
+def delete_faq(request, faq_id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+    faq = Faq.objects.filter(id=faq_id)[:1]
+    if not faq:
+        return HttpBadRequest(10666, error_codes['10666'])
+    faq[0].delete()
+    return HttpResponse()
+
+@is_authenticated
+@catch_any_unexpected_exception
+def handle_faq(request, faq_id):
+    if request.method == 'DELETE':
+        return delete_faq(request, faq_id)
+    return HttpMethodNotAllowed()

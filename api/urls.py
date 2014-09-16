@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(r'^associations/$', views.handle_associations, name="associations"),
 
     url(r'^faq/$', views.handle_faqs, name="faq"),  #todo plurialize
+    url(r'^faq/(?P<faq_id>\d+)/$', views.handle_faq, name="faq"),  #todo plurialize
 
     url(r'^images/$', views.handle_photos, name="post_photo"),  #todo : /photos
     url(r'^images/(?P<photo_id>\d+)/$', views.handle_photo, name="post_photo"),

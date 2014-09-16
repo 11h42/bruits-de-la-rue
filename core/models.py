@@ -67,6 +67,7 @@ class Faq(DatedModel):
 
     def serialize(self):
         return {
+            'id': self.id,
             'question': self.question,
             'answer': self.answer
         }
