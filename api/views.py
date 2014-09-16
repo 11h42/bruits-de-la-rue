@@ -1,7 +1,7 @@
 # coding=utf-8
 import json
 
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.http.response import HttpResponse, HttpResponseForbidden
 
 from api.decorators import b2rue_authenticated as is_authenticated
@@ -308,8 +308,17 @@ def send_email(request):
     if not 'user_to_mail' in mail_infos or not 'content' in mail_infos or not 'subject' in mail_infos:
         return HttpBadRequest(10666, error_codes['10666'])
     try:
-        user_email_to = User.objects.get(username=mail_infos['user_to_mail']).email
-        send_mail(mail_infos['subject'], mail_infos['content'], DEFAULT_FROM_EMAIL, [user_email_to])
+        user_to = User.objects.get(username=mail_infos['user_to_mail'])
+        EmailMessage(mail_infos['subject'], mail_infos['content'], DEFAULT_FROM_EMAIL,
+                     [user_to.email], headers={'Reply-To': request.user.email}).send()
+        if 'send_copy' in mail_infos and mail_infos['send_copy']:
+            text_info_copy_mail = u"Voici une copie de l'email que vous avez envoyé à %s " \
+                                  u"via l'application Bruit de la Rue : \n" % user_to.username
+            EmailMessage(mail_infos['subject'], text_info_copy_mail + mail_infos['content'], DEFAULT_FROM_EMAIL,
+                         [request.user.email]).send()
+
         return HttpResponse()
     except Exception as e:
+        print e
         return HttpBadRequest(10666, error_codes['10666'])
+
