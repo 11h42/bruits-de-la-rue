@@ -13,10 +13,10 @@ class TestFaq(TestCase):
         self.client.login(username=user.username, password="password")
 
     def test_get_all_faq(self):
-        factories.FaqFactory()
+        faq = factories.FaqFactory()
         response = self.client.get('/api/faq/')
         self.assertEquals(200, response.status_code)
-        self.assertEquals({u'faqs': [{u'id': 2, u'answer': u'Factored answer', u'question': u'Factored question'}]},
+        self.assertEquals({u'faqs': [{u'id': faq.id, u'answer': u'Factored answer', u'question': u'Factored question'}]},
                           json.loads(response.content))
 
     def test_add_faq_without_staff_account(self):
