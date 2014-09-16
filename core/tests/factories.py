@@ -23,12 +23,13 @@ class AddressFactory(DjangoModelFactory):
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = 'core.User'
-        django_get_or_create = ('username', 'email')
+        django_get_or_create = ('username', 'email', 'is_staff')
 
     username = 'test'
     email = 'test@akema.fr'
     password = factory.PostGenerationMethodCall('set_password',
                                                 'password')
+    is_staff = False
 
     @factory.post_generation
     def address(self, create, extracted, **kwargs):

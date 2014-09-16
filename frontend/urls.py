@@ -26,5 +26,6 @@ urlpatterns = patterns(
     url(r'^associations/$', views.display_associations, name='update-bid'),
 
     #FAQ
-    url(r'^faq/$', views.display_faq, name='faq')
+    url(r'^faq/$', views.display_faq, name='faq'),
+    url(r'^faq/creer/$', views.create_faq, name='create-faq')
 )

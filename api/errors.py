@@ -15,7 +15,8 @@ error_codes = {
     "10219": "La date de début de votre annonce ne peut être antérieure à la date du jour",
     "10220": "Vous ne pouvez pas accepter cette annonce",
     "10221": "Aucune image n'a été détectée",
-    "10222": "Vous n'avez pas le droit de supprimer cette image"
+    "10222": "Vous n'avez pas le droit de supprimer cette image",
+    "10223": "Vous n'avez pas le droit d'effectuer cette action"
 }
 
 

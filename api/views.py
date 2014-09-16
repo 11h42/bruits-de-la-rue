@@ -190,9 +190,29 @@ def handle_associations(request):
     return HttpMethodNotAllowed()
 
 
+def create_faq(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    faq = json.loads(request.body)
+    if not faq:
+        return HttpBadRequest(10666, error_codes['10666'])
+    new_faq = Faq(**faq)
+    new_faq.save()
+    return HttpCreated()
+
+
 @is_authenticated
 @catch_any_unexpected_exception
-def get_faq(request):
+def handle_faqs(request):
+    if request.method == 'POST':
+        return create_faq(request)
+    if request.method == 'GET':
+        return get_faqs(request)
+    return HttpMethodNotAllowed()
+
+
+def get_faqs(request):
     faqs = Faq.objects.all()
     return_faq = []
     if faqs:

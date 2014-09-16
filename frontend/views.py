@@ -102,3 +102,9 @@ def manage_password(request):
         'password_changed': password_changed
     })
     return HttpResponse(t.render(c))
+
+
+def create_faq(request):
+    t = get_template('faq/create_faq.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
