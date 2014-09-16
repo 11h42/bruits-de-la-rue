@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block content %}
+
+    <div class="container" data-ng-app="bidsModule">
+        <div class="row" data-ng-controller="bidController">
+            <div class="col-lg-12">
+                <form action="/associations/ajouter/" method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Ajoutez une association:</legend>
+                        {{ association_form.name | bootstrap }}
+
+                        {{ association_form.address | bootstrap }}
+                        <button data-toggle="modal" data-target="#create_address" class="btn btn-default btn-sm"
+                                type="button"><span
+                                class="glyphicon glyphicon-plus-sign"></span> Ajouter une adresse
+                        </button>
+                        <br/><br/>
+                        {{ association_form.phone |bootstrap }}
+                        {{ association_form.fax |bootstrap }}
+                        {{ association_form.url_site |bootstrap }}
+                        {{ association_form.email |bootstrap }}
+                    </fieldset>
+                    <br/>
+                    <input class="btn btn-primary" type="submit" value="Ajouter une association"/>
+                </form>
+            </div>
+            {% include 'modales/add_address.html' %}
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/bidModule.js"></script>
+{% endblock %}

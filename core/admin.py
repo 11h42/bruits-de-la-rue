@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import Group
 
-from core.models import User, BidCategory, Association, Faq
+from core.models import User, BidCategory, Association, Faq, Address
 
 
 admin.site.unregister(Group)
@@ -79,6 +79,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(BidCategory)
 admin.site.register(Association)
+admin.site.register(Address)
 admin.site.register(Faq)
 
 LogEntry.objects.all().delete()

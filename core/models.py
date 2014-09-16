@@ -26,6 +26,9 @@ class Address(models.Model):
     def __unicode__(self):
         return u'%s' % self.title
 
+    class Meta:
+        verbose_name = "Adresse"
+
 
 class Association(models.Model):
     name = models.CharField(max_length=255)

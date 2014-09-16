@@ -41,7 +41,10 @@
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
                                 <li id="annonce_navbar_button"><a href="/annonces/">Annonces</a></li>
-                                <li id="associations_navbar_button"><a href="/associations/">Associations</a></li>
+                                {% if user.is_staff %}
+                                    <li id="associations_navbar_button"><a href="/associations/">Associations</a></li>
+                                {% endif %}
+
                                 <li id="faq_navbar_button"><a href="/faq/">FAQ</a></li>
                             </ul>
 

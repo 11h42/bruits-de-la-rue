@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'frontend',
     'south',
     'api',
+    'bootstrapform'
 )
 
 MIDDLEWARE_CLASSES = (

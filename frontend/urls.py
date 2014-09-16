@@ -14,7 +14,6 @@ urlpatterns = patterns(
     url(r'^login/$', views.display_login, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}, name='logout'),
     url(r'^compte/motdepasse/$', views.manage_password, name="account_manage_password"),
-    url(r'^compte/motdepasse/done/$', views.manage_password_done, name="account_manage_password_done"),
 
     # Annonces
     url(r'^annonces/$', views.display_bids, name='display-bids'),
@@ -23,7 +22,8 @@ urlpatterns = patterns(
     url(r'^annonces/(?P<bid_id>\d+)/modifier/$', views.update_bid, name='update-bid'),
 
     #Associations
-    url(r'^associations/$', views.display_associations, name='update-bid'),
+    url(r'^associations/$', views.display_associations, name='display-association'),
+    url(r'^associations/ajouter/$', views.add_association, name='add-association'),
 
     #FAQ
     url(r'^faq/$', views.display_faq, name='faq'),
