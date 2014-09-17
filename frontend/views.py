@@ -3,13 +3,13 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.forms import ModelForm
+from django.forms import ModelForm, widgets
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.template.loader import get_template
 
 from frontend.forms import FrPasswordChangeForm
-from core.models import Association, Address
+from core.models import Association, User
 
 
 @login_required()
@@ -84,16 +84,20 @@ class AssociationForm(ModelForm):
             'phone': "Téléphone",
             'fax': "Fax",
             'url_site': "Site internet",
+            'administrator': 'Gestionnaire'
+        }
+        widgets = {
+            'administrator': widgets.Select(choices=User.objects.all())
         }
 
 
-class AddressForm(ModelForm):
-    class Meta:
-        model = Address
-        fields = '__all__'
-        labels = {
-            'title': 'titre',
-        }
+# class AddressForm(ModelForm):
+# class Meta:
+#         model = Address
+#         fields = '__all__'
+#         labels = {
+#             'title': 'titre',
+#         }
 
 
 @staff_member_required
@@ -138,6 +142,7 @@ def manage_password(request):
     return HttpResponse(t.render(c))
 
 
+@login_required()
 def create_faq(request):
     t = get_template('faq/create_faq.html')
     c = RequestContext(request)
