@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+
 from django.utils.translation import gettext_lazy as _
 
 
@@ -28,30 +29,6 @@ class Address(models.Model):
 
     class Meta:
         verbose_name = "Adresse"
-
-
-class Association(models.Model):
-    name = models.CharField(max_length=255)
-    address = models.ForeignKey(Address, blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True, null=True)
-    fax = models.CharField(max_length=15, blank=True, null=True)
-    url_site = models.CharField(max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-
-    def serialize(self):
-        address = self.address.serialize() if self.address else None
-        return {
-            'id': self.id,
-            'name': self.name,
-            'address': address,
-            'phone': self.phone,
-            'fax': self.fax,
-            'url_site': self.url_site,
-            'email': self.email
-        }
-
-    def __unicode__(self):
-        return u'%s' % self.name
 
 
 class DatedModel(models.Model):
@@ -91,6 +68,31 @@ class User(AbstractUser, DatedModel):
             'is_superuser': self.is_superuser,
             'is_staff': self.is_staff,
         }
+
+
+class Association(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.ForeignKey(Address, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    fax = models.CharField(max_length=15, blank=True, null=True)
+    url_site = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    administrator = models.ForeignKey(User, blank=True, null=True)
+
+    def serialize(self):
+        address = self.address.serialize() if self.address else None
+        return {
+            'id': self.id,
+            'name': self.name,
+            'address': address,
+            'phone': self.phone,
+            'fax': self.fax,
+            'url_site': self.url_site,
+            'email': self.email
+        }
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 
 class BidCategory(models.Model):
