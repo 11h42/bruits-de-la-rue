@@ -9,9 +9,9 @@ class UsersTest(TestCase):
     def setUp(self):
         self.address = factories.AddressFactory()
         self.address2 = factories.AddressFactory.create(title='Maison')
-        self.association = factories.AssociationFactory(name="Association de jdupont")
-        self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2],
-                                                 associations=[self.association])
+        self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
+        self.association = factories.AssociationFactory(name="Association de jdupont", members=[self.user],
+                                                        administrator=self.user)
         self.client.login(username=self.user.username, password="password")
 
     def test_get_current_user_username(self):

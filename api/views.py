@@ -163,14 +163,18 @@ def get_current_user_address(request):
 
 # TODO : Refactor to be under handle_associations
 @is_authenticated
-@catch_any_unexpected_exception
+# @catch_any_unexpected_exception
 def get_current_user_associations(request):
-    associations = Association.objects.filter(user=request.user)
-    return_associations = []
-    if associations:
-        for a in associations:
-            return_associations.append(a.serialize())
-    return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
+    associations = Association.objects.select_related('members__username').get(username=request.user)
+    user_associations = User.objects.select_related('association__members').get(id=request.user.id)
+    print user_associations.__dict__
+    return HttpResponse()
+    #
+    # return_associations = []
+    # if associations:
+    #     for a in associations:
+    #         return_associations.append(a.serialize())
+    # return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
 
 
 def get_associations(request):
