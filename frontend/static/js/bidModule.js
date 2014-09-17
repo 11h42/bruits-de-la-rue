@@ -90,7 +90,26 @@ bidsModule.factory('BidsService', ['$http', function ($http) {
     };
 }]);
 
-bidsModule.controller('addressesController', function ($scope, $http) {
+bidsModule.factory('getAddressesService', ['$http', function ($http) {
+    return function (localization, errorMessage, bid) {
+        $http.get('/api/users/current/address/').
+            success(function (data) {
+                localization = data.address;
+            }).error(function () {
+                errorMessage = "Veuillez nous excuser, notre site " +
+                    "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
+            });
+        if (localization) {
+            for (var j = 0; j < localization.length; j++) {
+                if (localization[j]['title'] == bid.localization['title']) {
+                    bid.localization = localization[j];
+                }
+            }
+        }
+    }
+}]);
+
+bidsModule.factory('createAddressService', ['$scope', '$http', function ($scope, $http) {
     $scope.address = {
         'title': '',
         'recipient_name': '',
@@ -111,7 +130,6 @@ bidsModule.controller('addressesController', function ($scope, $http) {
                 success(function () {
                     $scope.errorMessage = '';
                     $scope.successMessage = 'Votre adresse à bien été ajoutée.';
-                    $scope.getAdresses();
                 }).error(function () {
 
                     $scope.errorMessage = "Veuillez nous excuser, notre site " +
@@ -120,9 +138,9 @@ bidsModule.controller('addressesController', function ($scope, $http) {
                 });
         }
     };
-});
+}]);
 
-bidsModule.controller('bidController', function ($scope, $http, $location) {
+bidsModule.controller('bidControllerOld', function ($scope, $http, $location) {
     function isInt(n) {
         var intRegex = /^\d+$/;
         return intRegex.test(n);
@@ -356,26 +374,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
             $scope.getCurrentUserAssociations();
             $scope.form_title = "Création d'une annonce";
             $scope.submit_button_name = "Créer";
-            $(function () {
 
-                $('#bid_image').fileupload({
-                    dataType: 'json',
-                    add: function (e, data) {
-                        data.submit();
-                    },
-                    done: function (e, data) {
-                        $scope.bid.photo = data.result.id;
-                        $scope.get_bid_photo_url()
-                    },
-                    progressall: function (e, data) {
-                        var progress = parseInt(data.loaded / data.total * 100, 10);
-                        $('#progress').find('.bar').css(
-                            'width',
-                                progress + '%'
-                        );
-                    }
-                });
-            });
         }
         else if ($scope.get_page_type(url) == "UPDATE") {
             $scope.getCategories();
@@ -466,5 +465,154 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
                 }
             });
     };
+
+});
+
+
+var defaultErrorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques.";
+
+bidsModule.factory('AddressService', ['$http', function ($http) {
+    return {
+        getAddresses: function (callback) {
+            $http.get('/api/addresses/').success(function (data) {
+                callback(data.addresses)
+            }).error(function () {
+                callback([], defaultErrorMessage);
+            });
+        },
+        createAddress: function (address, callback) {
+            $http.post('/api/addresses/', address).success(function () {
+                callback()
+            }).error(function () {
+                callback('Le code postal doit être un nombre')
+            });
+        }
+    }
+}]);
+
+bidsModule.factory('BidService', ['$http', function ($http) {
+    return{
+        getBids: function (order_by, limit, callback) {
+            $http.get('/api/bids/?order_by=' + order_by + '&limit=' + limit).success(function (data) {
+                callback(data.bids);
+            }).error(function () {
+                callback([], defaultErrorMessage);
+            });
+        },
+
+        showBid: function (bidId) {
+            window.location = '/annonces/' + bidId + '/';
+        },
+
+        getStatus: function (callback) {
+            $http.get('/api/bids/status/').success(function (data) {
+                callback(data.status);
+            }).error(function () {
+                callback([], defaultErrorMessage);
+            });
+        }
+    }
+}]);
+
+bidsModule.factory('photoService', ['$http', function ($http) {
+    return{
+        deletePhoto: function (photoId, callback) {
+            $http.delete('/api/images/' + photoId + '/').success(function () {
+                callback()
+            }).error(function () {
+                callback("La photo n'a pas pu être supprimée")
+            })
+        },
+        getPhotoUrl: function (photoId, callback) {
+            $http.get('/api/images/' + photoId + '/').success(function (data) {
+                callback(data)
+            }).error(function () {
+                callback(data, 'Impossible de récupérer la photo')
+            });
+        }
+    }
+}]);
+
+
+bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService) {
+
+    $scope.form_title = 'Créer une annonce';
+
+    $scope.bid = {
+        'title': '',
+        'description': '',
+        'type': 'SUPPLY',
+        'quantity': '',
+        'begin': moment(),
+        'end': '',
+        'category': '',
+        'real_author': '',
+        'localization': '',
+        'association': '',
+        'status_bid': '',
+        'photo': '',
+        'creator': ''
+    };
+
+    BidService.getBids('END', 1000, function (bids) {
+        $scope.bids = bids;
+    });
+
+    BidService.getStatus(function (status) {
+        $scope.status = status;
+    });
+
+
+    $scope.address = {
+        'title': '',
+        'recipient_name': '',
+        'address1': '',
+        'address2': '',
+        'zipcode': '',
+        'town': ''
+    };
+
+    AddressService.getAddresses(function (addresses) {
+        $scope.addresses = addresses;
+    });
+
+
+    $scope.createAddress = function () {
+        AddressService.createAddress($scope.address, function (errorMessage) {
+            if (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            } else {
+                $('#create_address').modal('hide');
+                $scope.errorMessage = '';
+            }
+        })
+
+    };
+
+
+    $(function fileupload() {
+
+        $('#bid_image').fileupload({
+            dataType: 'json',
+            add: function (e, data) {
+                data.submit();
+            },
+            done: function (e, data) {
+                var photoId = data.result.id
+                $scope.bid.photo = photoId;
+                photoService.getPhotoUrl(photoId, function (data) {
+                    $scope.bid_photo_url = data.url
+                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress').find('.bar').css(
+                    'width',
+                        progress + '%'
+                );
+            }
+        });
+    });
+
 
 });

@@ -1,19 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div class="container">
-        <div data-ng-app="bidsModule">
-            <div data-ng-controller="bidController">
-                <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        Les champs marqués d'une étoile (<span class="text-danger">*</span>) sont obligatoires.
-                    </div>
+    <div class="container" data-ng-app="bidsModule">
+        <div data-ng-controller="bidController">
+            <div class="row">
+                <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">
+                    {$ errorMessage $}
                 </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 alert alert-info">
+                    Les champs marqués d'une étoile (<span class="text-danger">*</span>) sont obligatoires.
+                </div>
+            </div>
+            <div class="row">
+                {$ bid $}
+                <br/>
+                {$ address $}
+            </div>
+            <div class="row">
                 <form ng-submit="createBid()" role="form" enctype="multipart/form-data">
                     {% include "forms/bid_form.html" %}
                 </form>
             </div>
+
+            {% include 'modales/add_address.html' %}
+
         </div>
     </div>
 {% endblock %}
@@ -25,6 +38,4 @@
     <script type="text/javascript"
             src="/static/bower_components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
-
-
 {% endblock %}

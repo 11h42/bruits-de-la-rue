@@ -7,9 +7,8 @@
                         class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Ajouter une nouvelle adresse</h4>
             </div>
-            <div data-ng-controller="addressesController" class="modal-body">
+            <div class="modal-body">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
-                <div class="alert alert-success" role="alert" ng-show="successMessage">{$ successMessage $}</div>
                 <form role="form" name="address_form" class="address_form">
                     <fieldset>
                         <div class="row">
@@ -60,7 +59,7 @@
                     </fieldset>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        <input type="button" ng-click="createUserAddress()" class="btn btn-primary" value="Enregistrer"/>
+                        <input type="button" ng-click="createAddress()" class="btn btn-primary" value="Enregistrer"/>
                     </div>
                 </form>
             </div>

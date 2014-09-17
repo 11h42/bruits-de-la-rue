@@ -19,6 +19,18 @@ class TestAuthApi(TestCase):
         self.assertEquals(401, response.status_code)
 
 
+class TestAddressesApi(TestCase):
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.login(username=self.user.username, password="password")
+
+    def test_post_a_bid_with_all_required_fields(self):
+        response = self.client.post('/api/addresses/',
+                                    json.dumps({'zipcode': 12345}),
+                                    content_type="application/json; charset=utf-8")
+        self.assertEquals(400, response.status_code)
+
+
 class TestBidApi(TestCase):
     def setUp(self):
         self.user_address = factories.AddressFactory(title="Adresse de test")
@@ -39,6 +51,7 @@ class TestBidApi(TestCase):
         self.assertEquals(returned_bid['current_user_id'], self.user.id)
         self.assertEquals(returned_bid['current_user_is_superuser'], self.user.is_superuser)
         self.assertEquals(200, response.status_code)
+
 
     def test_post_a_bid_with_all_required_fields(self):
         response = self.client.post('/api/bids/',

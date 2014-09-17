@@ -146,19 +146,19 @@ def create_new_address(request, user_id):
 @catch_any_unexpected_exception
 def handle_address(request):
     if request.method == "GET":
-        return get_current_user_address(request)
+        return get_addresses(request)
     if request.method == "POST":
         return create_new_address(request, request.user.id)
     return HttpMethodNotAllowed()
 
 
-def get_current_user_address(request):
+def get_addresses(request):
     address = Address.objects.filter(user=request.user)
     return_address = []
     if address:
         for a in address:
             return_address.append(a.serialize())
-    return HttpResponse(json.dumps({'address': return_address}), content_type='application/json')
+    return HttpResponse(json.dumps({'addresses': return_address}), content_type='application/json')
 
 
 # TODO : Refactor to be under handle_associations
@@ -226,7 +226,7 @@ def get_status(request):
     return_bid_status = []
     for e in StatusBids.TYPE_CHOICES:
         return_bid_status.append(e[0])
-    return HttpResponse(json.dumps(return_bid_status), content_type='application/json')
+    return HttpResponse(json.dumps({'status': return_bid_status}), content_type='application/json')
 
 
 class AcceptBidValidator():
