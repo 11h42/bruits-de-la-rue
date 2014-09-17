@@ -88,10 +88,9 @@ bidsModule.factory('BidsService', ['$http', function ($http) {
             window.location = '/annonces/' + table_row.bid.id + '/';
         }
     };
-}])
-;
+}]);
 
-bidsModule.controller('bidUser', function ($scope, $http) {
+bidsModule.controller('addressesController', function ($scope, $http) {
     $scope.address = {
         'title': '',
         'recipient_name': '',
@@ -469,4 +468,3 @@ bidsModule.controller('bidController', function ($scope, $http, $location) {
     };
 
 });
-
