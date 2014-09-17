@@ -54,7 +54,6 @@ class Faq(DatedModel):
 
 
 class User(AbstractUser, DatedModel):
-    associations = models.ManyToManyField('Association', blank=True, null=True)
     address = models.ManyToManyField('Address', blank=True, null=True)
 
     class Meta:
@@ -77,7 +76,8 @@ class Association(models.Model):
     fax = models.CharField(max_length=15, blank=True, null=True)
     url_site = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    administrator = models.ForeignKey(User, blank=True, null=True)
+    administrator = models.ForeignKey(User, blank=True, null=True, related_name='Administrator')
+    members = models.ManyToManyField(User, blank=True, null=True, related_name='Members')
 
     def serialize(self):
         address = self.address.serialize() if self.address else None
