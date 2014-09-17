@@ -52,7 +52,7 @@
                     </tr>
                     </thead>
 
-                    <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
+                    <tr class="cursor-pointer" id="{$ bid.id $}" ng-click="showBid(this);"
                         data-ng-repeat="bid in filterBids = (bids | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td>{$ bid.title $}</td>
                         <td>{$ bid.quantity $}</td>

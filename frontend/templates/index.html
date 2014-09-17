@@ -25,10 +25,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr style="cursor: pointer;" id="{$ bid.id $}" ng-click="showBid(this);"
+                        <tr class="cursor-pointer" id="{$ bid.id $}" ng-click="showBid(this);"
                             data-ng-repeat="bid in bids">
                             <td>{$ bid.title $}</td>
-                            <td>{$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})</td>
+                            <td ng-show="bid.end">{$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})</td>
                             <td>{$ bid.association $}</td>
                         </tr>
                         </tbody>

@@ -69,3 +69,7 @@ body {
     height: 18px;
     background: green;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}
