@@ -76,8 +76,8 @@ class Association(models.Model):
     fax = models.CharField(max_length=15, blank=True, null=True)
     url_site = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    administrator = models.ForeignKey(User, blank=True, null=True, related_name='Administrator')
-    members = models.ManyToManyField(User, blank=True, null=True, related_name='Members')
+    administrator = models.ForeignKey(User, blank=True, null=True, related_name='administrator_of')
+    members = models.ManyToManyField(User, blank=True, null=True, related_name='members_of')
 
     def serialize(self):
         address = self.address.serialize() if self.address else None
