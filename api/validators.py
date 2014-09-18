@@ -13,6 +13,8 @@ class BidValidator(object):
         self.bid['creator'] = user
         if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO and not 'status_bid' in self.bid:
             self.bid['status_bid'] = StatusBids.ONHOLD
+        if not 'status_bid' in self.bid:
+            self.bid['status_bid'] = StatusBids.RUNNING
         if 'category' in self.bid and self.bid['category']:
             self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
         if 'localization' in self.bid and self.bid['localization']:
