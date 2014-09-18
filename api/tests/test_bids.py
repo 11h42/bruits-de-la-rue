@@ -52,7 +52,6 @@ class TestBidApi(TestCase):
         self.assertEquals(returned_bid['current_user_is_superuser'], self.user.is_superuser)
         self.assertEquals(200, response.status_code)
 
-
     def test_post_a_bid_with_all_required_fields(self):
         response = self.client.post('/api/bids/',
                                     json.dumps({

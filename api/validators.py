@@ -16,6 +16,7 @@ class BidValidator(object):
         if 'category' in self.bid and self.bid['category']:
             self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
         if 'localization' in self.bid and self.bid['localization']:
+            print("NO !!")
             self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
         if 'association' in self.bid and self.bid['association']:
             self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])
@@ -32,7 +33,7 @@ class BidValidator(object):
         """
         required_fields = ['title', 'description', 'type', 'real_author']
         authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id', 'localization',
-                                               'status_bid', 'association', 'photo']
+                                               'status_bid', 'association', 'photo', 'creator']
         if not self.bid:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False
