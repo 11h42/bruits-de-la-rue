@@ -124,8 +124,18 @@ def handle_categories(request):
 
 @is_authenticated
 @catch_any_unexpected_exception
-def get_current_user(request):
-    user = User.objects.get(id=request.user.id)
+def handle_user(request, user_id):
+    if request.method == 'GET':
+        return get_user(request, user_id)
+    return HttpMethodNotAllowed()
+
+
+def get_user(request, user_id):
+    if request.GET.get('filter_by') == 'current_user':
+        user = User.objects.get(id=request.user.id)
+    else:
+        user = User.objects.get(id=user_id)
+
     return HttpResponse(json.dumps({'user': user.serialize()}), content_type='application/json')
 
 

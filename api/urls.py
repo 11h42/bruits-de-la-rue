@@ -15,8 +15,7 @@ urlpatterns = patterns(
     url(r'^categories/$', views.handle_categories, name="handle-categories"),
 
 
-    url(r'^users/current/$', views.get_current_user, name="user-name"),
-    url(r'^users/current/address/$', views.handle_address, name="user-address"),  # todo delete me
+    url(r'^users/(?P<user_id>\d+)/$', views.handle_user, name="user"),
     url(r'^addresses/$', views.handle_address, name="user-address"),
 
     url(r'^associations/$', views.handle_associations, name="associations"),

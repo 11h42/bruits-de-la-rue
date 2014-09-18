@@ -10,19 +10,12 @@ class UsersTest(TestCase):
         self.address = factories.AddressFactory()
         self.address2 = factories.AddressFactory.create(title='Maison')
         self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
+        self.user2 = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
         self.association = factories.AssociationFactory(name="Association de jdupont", members=[self.user],
                                                         administrator=self.user)
         self.association_without_members = factories.AssociationFactory(name="Association sans membres")
         self.client.login(username=self.user.username, password="password")
 
-    def test_get_current_user_username(self):
-        response = self.client.get('/api/users/current/')
-        self.assertEquals(json.dumps({'user': self.user.serialize()}), response.content)
-
-    def test_get_current_user_address(self):
-        self.maxDiff = None
-        response = self.client.get('/api/users/current/address/')
-        self.assertEquals(200, response.status_code)
 
     def test_create_new_address(self):
         address = {
@@ -33,7 +26,7 @@ class UsersTest(TestCase):
             'zipcode': '33610',
             'town': 'CESTAS'
         }
-        response = self.client.post('/api/users/current/address/', json.dumps(address),
+        response = self.client.post('/api/addresses/?filter_by=current_user', json.dumps(address),
                                     content_type="application/json; charset=utf-8")
         self.assertEquals(201, response.status_code)
 
@@ -46,3 +39,11 @@ class UsersTest(TestCase):
                                               u'email': u'contact@association-lambda.com', u'phone': u'0123456789',
                                               u'address': None, u'id': self.association.id}]},
                           json.loads(response.content))
+
+    def test_get_user(self):
+        response = self.client.get('/api/users/' + str(self.user2.id) + '/')
+        self.assertEquals(json.dumps({'user': self.user2.serialize()}), response.content)
+
+    def test_get_current_user(self):
+        response = self.client.get('/api/users/0/?filter_by=current_user')
+        self.assertEquals(json.dumps({'user': self.user.serialize()}), response.content)
