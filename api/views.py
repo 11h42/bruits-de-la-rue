@@ -129,14 +129,14 @@ def get_current_user(request):
     return HttpResponse(json.dumps({'user': user.serialize()}), content_type='application/json')
 
 
-def create_new_address(request, user_id):
+def create_address(request, user_id):
     new_address_infos = json.loads(request.body)
     user = User.objects.filter(id=user_id).select_related('address')
     if new_address_infos and user:
         new_address = Address(**new_address_infos)
         new_address.save()
         user[0].address.add(new_address)
-        return HttpCreated()
+        return HttpCreated(json.dumps({'address': new_address.serialize()}), content_type='application/json')
 
     return HttpBadRequest(10900, error_codes['10900'])
 
@@ -147,7 +147,7 @@ def handle_address(request):
     if request.method == "GET":
         return get_addresses(request)
     if request.method == "POST":
-        return create_new_address(request, request.user.id)
+        return create_address(request, request.user.id)
     return HttpMethodNotAllowed()
 
 

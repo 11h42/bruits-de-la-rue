@@ -463,10 +463,10 @@ bidsModule.factory('AddressService', ['$http', function ($http) {
             });
         },
         createAddress: function (address, callback) {
-            $http.post('/api/addresses/', address).success(function () {
-                callback()
+            $http.post('/api/addresses/', address).success(function (data) {
+                callback(data.address);
             }).error(function () {
-                callback('Le code postal doit être un nombre')
+                callback(data, 'Le code postal doit être un nombre')
             });
         }
     }
@@ -586,12 +586,13 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
 
 
     $scope.createAddress = function () {
-        AddressService.createAddress($scope.address, function (errorMessage) {
+        AddressService.createAddress($scope.address, function (address, errorMessage) {
             if (errorMessage) {
                 $scope.errorMessage = errorMessage;
             } else {
                 $('#create_address').modal('hide');
                 $scope.errorMessage = '';
+                $scope.bid.localization = address;
             }
         })
 
