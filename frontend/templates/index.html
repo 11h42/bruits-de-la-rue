@@ -25,7 +25,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="cursor-pointer" id="{$ bid.id $}" ng-click="showBid(this);"
+                        <tr class="cursor-pointer" id="{$ bid.id $}" ng-click="showBid(bid.id);"
                             data-ng-repeat="bid in bids">
                             <td>{$ bid.title $}</td>
                             <td ng-show="bid.end">{$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})</td>
