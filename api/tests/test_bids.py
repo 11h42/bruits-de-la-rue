@@ -52,8 +52,6 @@ class TestBidApi(TestCase):
         self.assertEquals(returned_bid['bid']['id'], bid.id)
         self.assertEquals(returned_bid['bid']['title'], 'Annonce de test')
         self.assertEquals(returned_bid['bid']['type'], 'SUPPLY')
-        self.assertEquals(returned_bid['bid']['current_user_id'], self.user.id)
-        self.assertEquals(returned_bid['bid']['current_user_is_superuser'], self.user.is_superuser)
         self.assertEquals(200, response.status_code)
 
     def test_post_a_bid_with_all_required_fields(self):
