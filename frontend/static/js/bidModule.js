@@ -489,15 +489,23 @@ bidsModule.factory('BidService', ['$http', function ($http) {
             $http.get('/api/bids/' + bidId + '/').success(function (data) {
                 callback(data.bid);
             }).error(function () {
-                callback(data, defaultErrorMessage)
+                callback(data, defaultErrorMessage);
             })
         },
         deleteBid: function (bidId, callback) {
             $http.delete('/api/bids/' + bidId + '/').success(function (data) {
                 callback(data);
             }).error(function () {
-                callback(data, defaultErrorMessage)
+                callback(data, defaultErrorMessage);
             })
+        },
+        createBid: function (bid, callback) {
+            $http.post('/api/bids/', bid).
+                success(function (data) {
+                    callback(data.bid_id);
+                }).error(function () {
+                    callback({}, defaultErrorMessage);
+                });
         }
 
     }
@@ -675,12 +683,13 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
     });
 
     $scope.createBid = function () {
-        $http.post('/api/bids/', $scope.bid).
-            success(function (data) {
-                window.location = '/annonces/' + data['bid_id'] + '/';
-            }).error(function () {
-                $scope.errorMessage = 'Une erreur est survenue lors de la création d\'une annonce';
-            });
+        BidService.createBid($scope.bid, function (bid_id, errorMessage) {
+            if (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            } else {
+                window.location = '/annonces/' + bid_id + '/';
+            }
+        })
     };
 
     $scope.deleteBid = function () {
