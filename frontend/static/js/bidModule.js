@@ -568,8 +568,15 @@ bidsModule.factory('UserFactory', ['$http', function ($http) {
     }
 }]);
 bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService, MailService, UserFactory) {
+    $scope.pageSize = 10;
+    $scope.searchText = "";
+    $scope.bids = [];
+    $scope.currentPage = 0;
+    $scope.numberOfPages = function () {
+        return Math.ceil($scope.bids.length / $scope.pageSize);
+    };
 
-    $scope.form_title = 'Créer une annonce';
+    $scope.form_title = 'Créer une annonce'; // TODO GOOD TITLE IF ITS AN UPDATE OR A CREATE
 
     $scope.bid = {
         'title': null,
