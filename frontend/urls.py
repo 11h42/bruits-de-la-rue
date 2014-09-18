@@ -24,6 +24,7 @@ urlpatterns = patterns(
     #Associations
     url(r'^associations/$', views.display_associations, name='display-association'),
     url(r'^associations/ajouter/$', views.add_association, name='add-association'),
+    url(r'^associations/(?P<association_id>\d+)/$', views.display_association, name='add-association'),
 
     #FAQ
     url(r'^faq/$', views.display_faq, name='faq'),

@@ -44,7 +44,7 @@
                         <th>Email</th>
                     </tr>
                     </thead>
-                    <tr data-ng-repeat="association in filterAssociations = (associations | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
+                    <tr ng-click="showAssociation(association.id)" class="cursor-pointer" data-ng-repeat="association in filterAssociations = (associations | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td>{$ association.name $}</td>
                         <td>
                             <ul class="list-unstyled">

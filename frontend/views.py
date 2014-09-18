@@ -138,3 +138,9 @@ def create_faq(request):
     t = get_template('faq/create_faq.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
+@staff_member_required
+def display_association(request, association_id):
+    t = get_template('associations/association.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))

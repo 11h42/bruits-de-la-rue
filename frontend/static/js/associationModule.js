@@ -19,17 +19,18 @@ associationsModule.controller('associationsController', function ($scope, $http)
     $scope.hasError = false;
     $scope.associations = [];
     $scope.currentPage = 0;
-    $scope.getAssociations = function () {
-        $http.get('/api/associations/').
-            success(function (data) {
-                $scope.associations = data.associations;
-            }).error(function (data, status, headers, config) {
-                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
-            });
-    };
-    $scope.getAssociations();
 
     $scope.numberOfPages = function () {
         return Math.ceil($scope.associations.length / $scope.pageSize);
+    };
+
+    $http.get('/api/associations/').
+        success(function (data) {
+            $scope.associations = data.associations;
+        }).error(function (data, status, headers, config) {
+            $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+        });
+    $scope.showAssociation = function (association_id) {
+        window.location = '/associations/' + association_id + '/';
     };
 });
