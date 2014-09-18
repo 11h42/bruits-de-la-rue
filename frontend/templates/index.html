@@ -16,7 +16,7 @@
                     <table ng-show="bids" class="table table-responsive table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th colspan="4"><h3 class="text-center">Annonces les plus urgentes</h3></th>
+                            <th colspan="3"><h3 class="text-center">Annonces les plus urgentes</h3></th>
                         </tr>
                         <tr>
                             <th>Titre</th>
@@ -28,7 +28,11 @@
                         <tr class="cursor-pointer" id="{$ bid.id $}" ng-click="showBid(bid.id);"
                             data-ng-repeat="bid in bids">
                             <td>{$ bid.title $}</td>
-                            <td ng-show="bid.end">{$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})</td>
+                            <td>
+                                <span ng-show="bid.end">
+                                    {$ bid.end | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})
+                                </span>
+                            </td>
                             <td>{$ bid.association $}</td>
                         </tr>
                         </tbody>
