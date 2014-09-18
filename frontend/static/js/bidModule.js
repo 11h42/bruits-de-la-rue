@@ -491,7 +491,15 @@ bidsModule.factory('BidService', ['$http', function ($http) {
             }).error(function () {
                 callback(data, defaultErrorMessage)
             })
+        },
+        deleteBid: function (bidId, callback) {
+            $http.delete('/api/bids/' + bidId + '/').success(function (data) {
+                callback(data);
+            }).error(function () {
+                callback(data, defaultErrorMessage)
+            })
         }
+
     }
 }]);
 
@@ -674,4 +682,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
                 $scope.errorMessage = 'Une erreur est survenue lors de la création d\'une annonce';
             });
     };
+
+    $scope.deleteBid = function () {
+        if (confirm('Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?')) {
+            BidService.deleteBid($scope.bid.id, function (bid, errorMessage) {
+                if (errorMessage) {
+                    $scope.errorMessage = errorMessage;
+                } else {
+                    window.location = '/annonces/';
+                }
+            })
+        }
+    }
 });
