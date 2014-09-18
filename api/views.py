@@ -50,7 +50,6 @@ def create_bid(request):
         return HttpBadRequest(bid_validator.error_code, bid_validator.error_message)
 
     bid = bid_validator.get_bid_object(request.user)
-
     new_bid = Bid(**bid)
     new_bid.save()
     new_bid_id = new_bid.id
@@ -161,23 +160,15 @@ def get_addresses(request):
     return HttpResponse(json.dumps({'addresses': return_address}), content_type='application/json')
 
 
-# TODO : Refactor to be under handle_associations
-@is_authenticated
-@catch_any_unexpected_exception
-def get_current_user_associations(request):
-    user = User.objects.get(id=request.user.id)
-    return_associations = []
-    for association in user.members_of.all():
-        return_associations.append(association.serialize())
-    return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
-
-
 def get_associations(request):
-    associations = Association.objects.all()
+    if request.GET.get('filter_by') == 'current_user':
+        user = User.objects.get(id=request.user.id)
+        associations = user.members_of.all()
+    else:
+        associations = Association.objects.all()
     return_associations = []
-    if associations:
-        for a in associations:
-            return_associations.append(a.serialize())
+    for a in associations:
+        return_associations.append(a.serialize())
     return HttpResponse(json.dumps({'associations': return_associations}), content_type='application/json')
 
 
@@ -359,6 +350,7 @@ def delete_faq(request, faq_id):
         return HttpBadRequest(10666, error_codes['10666'])
     faq[0].delete()
     return HttpResponse()
+
 
 @is_authenticated
 @catch_any_unexpected_exception

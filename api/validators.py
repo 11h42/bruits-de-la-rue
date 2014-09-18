@@ -16,7 +16,6 @@ class BidValidator(object):
         if 'category' in self.bid and self.bid['category']:
             self.bid['category'] = BidCategory.objects.get(id=self.bid['category']['id'])
         if 'localization' in self.bid and self.bid['localization']:
-            print("NO !!")
             self.bid['localization'] = Address.objects.get(id=self.bid['localization']['id'])
         if 'association' in self.bid and self.bid['association']:
             self.bid['association'] = Association.objects.get(id=self.bid['association']['id'])

@@ -91,15 +91,6 @@ class AssociationForm(ModelForm):
         }
 
 
-# class AddressForm(ModelForm):
-# class Meta:
-#         model = Address
-#         fields = '__all__'
-#         labels = {
-#             'title': 'titre',
-#         }
-
-
 @staff_member_required
 def add_association(request):
     if request.POST:

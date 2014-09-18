@@ -517,36 +517,48 @@ bidsModule.factory('photoService', ['$http', function ($http) {
 
 bidsModule.factory('categoryService', ['$http', function ($http) {
     return function (callback) {
-        $http.get('/api/categories/').
-            success(function (data) {
-                callback(data.categories);
-            }).error(function () {
-                callback(data, 'Impossible de récupérer les catégories')
-            });
+        $http.get('/api/categories/').success(function (data) {
+            callback(data.categories);
+        }).error(function () {
+            callback(data, 'Impossible de récupérer les catégories')
+        });
     };
 }]);
 
-bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService) {
+bidsModule.factory('associationsService', ['$http', function ($http) {
+    return function (callback) {
+        $http.get("/api/associations/?filter_by=current_user").success(function (data) {
+            callback(data.associations);
+        }).error(function () {
+            callback(data, 'Impossible de récupérer les catégories')
+        });
+    }
+}]);
+bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService) {
 
     $scope.form_title = 'Créer une annonce';
 
     $scope.bid = {
-        'title': '',
-        'description': '',
+        'title': null,
+        'description': null,
         'type': 'SUPPLY',
-        'quantity': '',
+        'quantity': null,
         'begin': moment(),
-        'end': '',
-        'category': '',
-        'real_author': '',
-        'localization': '',
-        'association': '',
-        'status_bid': '',
-        'photo': '',
-        'creator': ''
+        'end': null,
+        'category': null,
+        'real_author': null,
+        'localization': null,
+        'association': null,
+        'status_bid': null,
+        'photo': null,
+        'creator': null
     };
 
-    BidService.getBids('END', 1000, function (bids) {
+    associationsService(function (associations) {
+        $scope.associations = associations
+    });
+
+    BidService.getBids('end', 1000, function (bids) {
         $scope.bids = bids;
     });
 
@@ -615,7 +627,7 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
             success(function (data) {
                 window.location = '/annonces/' + data['bid_id'] + '/';
             }).error(function () {
-                $scope.errorMessage = 'Une erreur inconnue est survenue';
+                $scope.errorMessage = 'Une erreur est survenue lors de la création d\'une annonce';
             });
     }
 

@@ -12,6 +12,7 @@ class UsersTest(TestCase):
         self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
         self.association = factories.AssociationFactory(name="Association de jdupont", members=[self.user],
                                                         administrator=self.user)
+        self.association_without_members = factories.AssociationFactory(name="Association sans membres")
         self.client.login(username=self.user.username, password="password")
 
     def test_get_current_user_username(self):
@@ -37,7 +38,7 @@ class UsersTest(TestCase):
         self.assertEquals(201, response.status_code)
 
     def test_get_current_user_associations(self):
-        response = self.client.get('/api/users/current/associations/')
+        response = self.client.get('/api/associations/?filter_by=current_user')
         self.assertEquals(200, response.status_code)
         self.assertTrue(response.content)
         self.assertEquals({u'associations': [{u'fax': u'0987654321', u'name': u'Association de jdupont',
