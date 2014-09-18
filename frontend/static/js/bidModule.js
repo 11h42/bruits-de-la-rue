@@ -186,8 +186,6 @@ bidsModule.factory('createAddressService', ['$scope', '$http', function ($scope,
 //    }
 //};
 //
-;
-;
 //$scope.getBidId = function (url) {
 //    var url_split = url.split('/');
 //    var indexOfId = url_split.indexOf('annonces') + 1;
@@ -735,5 +733,23 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
                 }
             })
         }
-    }
+    };
+
+    $scope.acceptBid = function () {
+        $http.put('/api/bids/' + $scope.bid.id + '/accept/', $scope.bid).
+            success(function () {
+                window.location.reload(true);
+                $scope.errorMessage = "";
+                $scope.successMessage = "Vous avez accepté cette annonce";
+            }).error(function (data, status, headers, config) {
+                if (data.message) {
+                    $scope.successMessage = "";
+                    $scope.errorMessage = data.message;
+                } else {
+                    $scope.successMessage = "";
+                    $scope.errorMessage = "Veuillez nous excuser, notre site " +
+                        "rencontre des difficultés techniques. Nous vous invitons à réessayer dans quelques minutes.";
+                }
+            });
+    };
 });

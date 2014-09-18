@@ -75,7 +75,7 @@
                         class="form-control"
                         data-ng-model="bid.localization"
                         ng-options="address.title for address in addresses">
-                    <option value="">{$address.title$}</option>
+                    <option value="">{$ address.title $}</option>
                 </select>
                 <button data-toggle="modal" data-target="#create_address" class="btn btn-default"
                         type="button"><span
@@ -107,7 +107,8 @@
         <div class="col-lg-6">
             <label for="real_author">Auteur réel <span
                     class="text-danger">*</span></label>
-            <input placeholder="Saisissez le nom de la personne qui passe l'annonce" class="form-control" id="real_author" type="text" ng-model="bid.real_author"
+            <input placeholder="Saisissez le nom de la personne qui passe l'annonce" class="form-control"
+                   id="real_author" type="text" ng-model="bid.real_author"
                    required="required"/>
         </div>
         <div class="col-lg-6">
