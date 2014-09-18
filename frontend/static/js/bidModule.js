@@ -506,6 +506,14 @@ bidsModule.factory('BidService', ['$http', function ($http) {
                 }).error(function () {
                     callback({}, defaultErrorMessage);
                 });
+        },
+        updateBid: function (bid, callback) {
+            $http.put('/api/bids/' + bid.id + '/', bid).
+                success(function (data) {
+                    callback(data);
+                }).error(function () {
+                    callback({}, defaultErrorMessage);
+                });
         }
 
     }
@@ -550,7 +558,18 @@ bidsModule.factory('associationsService', ['$http', function ($http) {
     }
 }]);
 
-bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService, MailService) {
+bidsModule.factory('UserFactory', ['$http', function ($http) {
+    return {
+        getCurrentUser: function (callback) {
+            $http.get('/api/users/?filter_by=current').success(function (data) {
+                callback(data.user);
+            }).error(function () {
+                callback(data, defaultErrorMessage)
+            });
+        }
+    }
+}]);
+bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService, MailService, UserFactory) {
 
     $scope.form_title = 'Créer une annonce';
 
@@ -600,14 +619,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
                 });
             }
         });
+    } else {
+        BidService.getBids('end', 1000, function (bids) {
+            $scope.bids = bids;
+        });
     }
-
+    UserFactory.getCurrentUser(function (user) {
+        $scope.user = user;
+    });
     associationsService(function (associations) {
         $scope.associations = associations
-    });
-
-    BidService.getBids('end', 1000, function (bids) {
-        $scope.bids = bids;
     });
 
     BidService.getStatus(function (status) {
@@ -684,6 +705,16 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
 
     $scope.createBid = function () {
         BidService.createBid($scope.bid, function (bid_id, errorMessage) {
+            if (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            } else {
+                window.location = '/annonces/' + bid_id + '/';
+            }
+        })
+    };
+
+    $scope.updateBid = function () {
+        BidService.updateBid($scope.bid, function (bid_id, errorMessage) {
             if (errorMessage) {
                 $scope.errorMessage = errorMessage;
             } else {
