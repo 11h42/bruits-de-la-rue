@@ -584,6 +584,11 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         $scope.addresses = addresses;
     });
 
+    $scope.detelePhoto = function() {
+      photoService.deletePhoto($scope.bid.photo, function(){
+          $scope.bid_photo_url = ''
+      })
+    };
 
     $scope.createAddress = function () {
         AddressService.createAddress($scope.address, function (address, errorMessage) {
