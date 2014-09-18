@@ -12,7 +12,7 @@ associationsModule.filter('startFrom', function () {
     }
 });
 
-associationsModule.controller('associationsController', function ($scope, $http) {
+associationsModule.controller('associationsController', function ($scope, $http, $location) {
 
     $scope.pageSize = 10;
     $scope.searchText = "";
@@ -31,14 +31,19 @@ associationsModule.controller('associationsController', function ($scope, $http)
     var isInt = /^\d+$/;
 
     if (isInt.test(associationId)) {
+        $http.get('/api/associations/' + associationId + '/').
+            success(function (data) {
+                $scope.association = data.association;
+            }).error(function (data, status, headers, config) {
+                $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+            });
+    } else {
         $http.get('/api/associations/').
             success(function (data) {
                 $scope.associations = data.associations;
             }).error(function (data, status, headers, config) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
-    } else {
-// get association
     }
 
     $scope.showAssociation = function (association_id) {
