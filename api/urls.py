@@ -19,6 +19,7 @@ urlpatterns = patterns(
     url(r'^addresses/$', views.handle_address, name="user-address"),
 
     url(r'^associations/$', views.handle_associations, name="associations"),
+    url(r'^associations/(?P<association_id>\d+)/$', views.handle_association, name="associations"),
 
     url(r'^faq/$', views.handle_faqs, name="faq"),  #todo plurialize
     url(r'^faq/(?P<faq_id>\d+)/$', views.handle_faq, name="faq"),  #todo plurialize

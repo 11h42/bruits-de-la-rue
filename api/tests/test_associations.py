@@ -15,3 +15,9 @@ class TestAssociations(TestCase):
         response = self.client.get('/api/associations/')
         self.assertEquals(200, response.status_code)
         self.assertEquals({'associations': [association.serialize()]}, json.loads(response.content))
+
+    def test_get_association(self):
+        association = factories.AssociationFactory()
+        response = self.client.get('/api/associations/%s/' % association.id)
+        self.assertEquals(200, response.status_code)
+        self.assertEquals({'association': association.serialize()}, json.loads(response.content))

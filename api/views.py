@@ -366,3 +366,16 @@ def handle_faq(request, faq_id):
     if request.method == 'DELETE':
         return delete_faq(request, faq_id)
     return HttpMethodNotAllowed()
+
+
+def get_association(request, association_id):
+    associations = Association.objects.filter(id=association_id)
+    if not associations:
+        return HttpResponse({}, content_type='application/json')
+    association = associations[0].serialize()
+    return HttpResponse(json.dumps({'association': association}), content_type='application/json')
+
+
+def handle_association(request, association_id):
+    if request.method == 'GET':
+        return get_association(request, association_id)
