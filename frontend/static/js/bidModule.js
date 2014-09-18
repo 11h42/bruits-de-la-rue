@@ -28,14 +28,14 @@ bidsModule.filter('capitalize', function () {
     };
 });
 
-bidsModule.controller('bidsController', function ($scope, $http, BidsService) {
+bidsModule.controller('bidsController', function ($scope, $http, BidService) {
 
     $scope.pageSize = 10;
     $scope.searchText = "";
     $scope.bids = [];
     $scope.currentPage = 0;
 
-    BidsService.getBids('end', 1000, function (bids, errorMessage) {
+    BidService.getBids('end', 1000, function (bids, errorMessage) {
         if (errorMessage) {
             $scope.errorMessage = errorMessage;
             return;
@@ -48,13 +48,13 @@ bidsModule.controller('bidsController', function ($scope, $http, BidsService) {
     };
 
     $scope.showBid = function (table_row) {
-        BidsService.showBid(table_row)
+        BidService.showBid(table_row)
     };
 });
 
-bidsModule.controller('indexController', function ($scope, $http, BidsService) {
+bidsModule.controller('indexController', function ($scope, $http, BidService) {
 
-    BidsService.getBids('end', 20, function (bids, errorMessage) {
+    BidService.getBids('end', 20, function (bids, errorMessage) {
         if (errorMessage) {
             $scope.errorMessage = errorMessage;
             return;
@@ -63,32 +63,10 @@ bidsModule.controller('indexController', function ($scope, $http, BidsService) {
     });
 
     $scope.showBid = function (table_row) {
-        BidsService.showBid(table_row)
+        BidService.showBid(table_row)
     };
 });
 
-bidsModule.factory('BidsService', ['$http', function ($http) {
-    return{
-        getBids: function (order_by, limit, callback) {
-            var bids = [];
-            var errorMessage;
-            $http.get('/api/bids/?order_by=' + order_by + '&limit=' + limit).
-                success(function (data) {
-                    bids = data.bids;
-                    callback(bids);
-                }).error(function () {
-                    errorMessage = "Veuillez nous excuser," +
-                        " notre site rencontre des difficultés techniques." +
-                        " Nous vous invitons à réessayer dans quelques minutes.";
-                    callback(bids, errorMessage);
-                });
-        },
-
-        showBid: function (table_row) {
-            window.location = '/annonces/' + table_row.bid.id + '/';
-        }
-    };
-}]);
 
 bidsModule.factory('getAddressesService', ['$http', function ($http) {
     return function (localization, errorMessage, bid) {
@@ -208,6 +186,8 @@ bidsModule.factory('createAddressService', ['$scope', '$http', function ($scope,
 //    }
 //};
 //
+;
+;
 //$scope.getBidId = function (url) {
 //    var url_split = url.split('/');
 //    var indexOfId = url_split.indexOf('annonces') + 1;
@@ -465,8 +445,8 @@ bidsModule.factory('AddressService', ['$http', function ($http) {
         createAddress: function (address, callback) {
             $http.post('/api/addresses/', address).success(function (data) {
                 callback(data.address);
-            }).error(function () {
-                callback(data, 'Le code postal doit être un nombre')
+            }).error(function (data) {
+                callback({}, data.message)
             });
         }
     }
@@ -492,6 +472,14 @@ bidsModule.factory('BidService', ['$http', function ($http) {
             }).error(function () {
                 callback([], defaultErrorMessage);
             });
+        },
+
+        getBid: function (bidId, callback) {
+            $http.get('/api/bids/' + bidId + '/').success(function (data) {
+                callback(data.bid);
+            }).error(function () {
+                callback(data, defaultErrorMessage)
+            })
         }
     }
 }]);
@@ -534,6 +522,7 @@ bidsModule.factory('associationsService', ['$http', function ($http) {
         });
     }
 }]);
+
 bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService) {
 
     $scope.form_title = 'Créer une annonce';
@@ -554,6 +543,32 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         'creator': null
     };
 
+    $scope.address = {
+        'title': null,
+        'recipient_name': null,
+        'address1': null,
+        'address2': null,
+        'zipcode': null,
+        'town': null
+    };
+
+    var url = $location.absUrl();
+    var url_split = url.split('/');
+    var indexOfId = url_split.indexOf('annonces') + 1;
+    var bidId = url_split[indexOfId];
+    var isInt = /^\d+$/;
+
+    if (isInt.test(bidId)) {
+        BidService.getBid(bidId, function (bid) {
+            $scope.bid = bid;
+            if ($scope.bid.photo) {
+                photoService.getPhotoUrl($scope.bid.photo, function (data) {
+                    $scope.bid_photo_url = data.url
+                });
+            }
+        });
+    }
+
     associationsService(function (associations) {
         $scope.associations = associations
     });
@@ -570,24 +585,14 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         $scope.categories = categories
     });
 
-
-    $scope.address = {
-        'title': '',
-        'recipient_name': '',
-        'address1': '',
-        'address2': '',
-        'zipcode': '',
-        'town': ''
-    };
-
     AddressService.getAddresses(function (addresses) {
         $scope.addresses = addresses;
     });
 
-    $scope.detelePhoto = function() {
-      photoService.deletePhoto($scope.bid.photo, function(){
-          $scope.bid_photo_url = ''
-      })
+    $scope.detelePhoto = function () {
+        photoService.deletePhoto($scope.bid.photo, function () {
+            $scope.bid_photo_url = ''
+        })
     };
 
     $scope.createAddress = function () {
@@ -603,6 +608,9 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
 
     };
 
+    $scope.showBid = function (table_row) {
+        BidService.showBid(table_row)
+    };
 
     $(function fileupload() {
 
@@ -635,6 +643,5 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
             }).error(function () {
                 $scope.errorMessage = 'Une erreur est survenue lors de la création d\'une annonce';
             });
-    }
-
+    };
 });

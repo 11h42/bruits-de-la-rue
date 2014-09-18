@@ -26,9 +26,13 @@ class TestAddressesApi(TestCase):
 
     def test_post_a_bid_with_all_required_fields(self):
         response = self.client.post('/api/addresses/',
-                                    json.dumps({'zipcode': 12345}),
+                                    json.dumps({'zipcode': 33610,
+                                                'title': 'Akema',
+                                                'address1': '3 Chemins de marticot',
+                                                'recipient_name': 'Antoine BRIAND',
+                                                'town': 'CESTAS'}),
                                     content_type="application/json; charset=utf-8")
-        self.assertEquals(400, response.status_code)
+        self.assertEquals(201, response.status_code)
 
 
 class TestBidApi(TestCase):
@@ -45,11 +49,11 @@ class TestBidApi(TestCase):
         bid = BidFactory(creator=self.user)
         response = self.client.get('/api/bids/' + str(bid.id) + '/')
         returned_bid = json.loads(response.content)
-        self.assertEquals(returned_bid['id'], bid.id)
-        self.assertEquals(returned_bid['title'], 'Annonce de test')
-        self.assertEquals(returned_bid['type'], 'SUPPLY')
-        self.assertEquals(returned_bid['current_user_id'], self.user.id)
-        self.assertEquals(returned_bid['current_user_is_superuser'], self.user.is_superuser)
+        self.assertEquals(returned_bid['bid']['id'], bid.id)
+        self.assertEquals(returned_bid['bid']['title'], 'Annonce de test')
+        self.assertEquals(returned_bid['bid']['type'], 'SUPPLY')
+        self.assertEquals(returned_bid['bid']['current_user_id'], self.user.id)
+        self.assertEquals(returned_bid['bid']['current_user_is_superuser'], self.user.is_superuser)
         self.assertEquals(200, response.status_code)
 
     def test_post_a_bid_with_all_required_fields(self):

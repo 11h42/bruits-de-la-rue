@@ -6,7 +6,7 @@
 
 error_codes = {
     # global
-    "10900": "The json sent is not a valid json",
+    "10900": "Désolé, la requête que vous avez effectuée semble incorrecte.",
     "10666": "Une erreur inconnue est survenue",
     "10215": "La date de debut de votre annonce doit etre anterieure a la date de fin",
     "10216": "Vous n'avez pas le droit de modifier cette annonce",

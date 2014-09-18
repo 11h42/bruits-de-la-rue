@@ -8,7 +8,7 @@ from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
 from api.errors import error_codes
 from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest, HttpNoContent
-from api.validators import BidValidator
+from api.validators import BidValidator, AddressValidator
 from b2rue.settings import DEFAULT_FROM_EMAIL
 from core.models import Bid, BidCategory, Address, User, Association, Faq, StatusBids, Photo
 
@@ -35,10 +35,10 @@ def get_bid(request, bid_id):
     bids = Bid.objects.filter(id=bid_id)
     if not bids:
         return HttpResponse({}, content_type='application/json')
-    serialize = bids[0].serialize()
-    serialize['current_user_id'] = request.user.id
-    serialize['current_user_is_superuser'] = request.user.is_superuser
-    return HttpResponse(json.dumps(serialize), content_type='application/json')
+    bid = bids[0].serialize()
+    bid['current_user_id'] = request.user.id
+    bid['current_user_is_superuser'] = request.user.is_superuser
+    return HttpResponse(json.dumps({'bid': bid}), content_type='application/json')
 
 
 def create_bid(request):
@@ -129,15 +129,15 @@ def get_current_user(request):
     return HttpResponse(json.dumps({'user': user.serialize()}), content_type='application/json')
 
 
-def create_address(request, user_id):
+def create_address(request):
     new_address_infos = json.loads(request.body)
-    user = User.objects.filter(id=user_id).select_related('address')
-    if new_address_infos and user:
+    user = User.objects.filter(id=request.user.id)
+    address_validator = AddressValidator(new_address_infos)
+    if address_validator.is_valid() and user:
         new_address = Address(**new_address_infos)
         new_address.save()
         user[0].address.add(new_address)
         return HttpCreated(json.dumps({'address': new_address.serialize()}), content_type='application/json')
-
     return HttpBadRequest(10900, error_codes['10900'])
 
 
@@ -147,7 +147,7 @@ def handle_address(request):
     if request.method == "GET":
         return get_addresses(request)
     if request.method == "POST":
-        return create_address(request, request.user.id)
+        return create_address(request)
     return HttpMethodNotAllowed()
 
 
