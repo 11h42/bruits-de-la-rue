@@ -510,7 +510,7 @@ bidsModule.factory('BidService', ['$http', function ($http) {
         updateBid: function (bid, callback) {
             $http.put('/api/bids/' + bid.id + '/', bid).
                 success(function (data) {
-                    callback(data);
+                    callback(data.bid_id);
                 }).error(function () {
                     callback({}, defaultErrorMessage);
                 });
@@ -561,7 +561,7 @@ bidsModule.factory('associationsService', ['$http', function ($http) {
 bidsModule.factory('UserFactory', ['$http', function ($http) {
     return {
         getCurrentUser: function (callback) {
-            $http.get('/api/users/?filter_by=current').success(function (data) {
+            $http.get('/api/users/0/?filter_by=current_user').success(function (data) {
                 callback(data.user);
             }).error(function () {
                 callback(data, defaultErrorMessage)
@@ -603,6 +603,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         'subject': null,
         'content': null
     };
+
+    $scope.user = {"username": null, "is_superuser": null, "is_staff": null, "id": null, "email": null};
 
     var url = $location.absUrl();
     var url_split = url.split('/');

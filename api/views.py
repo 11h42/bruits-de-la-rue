@@ -36,8 +36,6 @@ def get_bid(request, bid_id):
     if not bids:
         return HttpResponse({}, content_type='application/json')
     bid = bids[0].serialize()
-    bid['current_user_id'] = request.user.id
-    bid['current_user_is_superuser'] = request.user.is_superuser
     return HttpResponse(json.dumps({'bid': bid}), content_type='application/json')
 
 
@@ -87,7 +85,7 @@ def update_bid(request, bid_id):
             if bid_validator.is_valid():
                 updated_bid = bid_validator.get_bid_object(bid_creator)
                 bids.update(**updated_bid)
-                return HttpResponse()
+                return HttpResponse(json.dumps({'bid_id': bids[0].id}), content_type='application/json')
         return HttpBadRequest(10666, bid_validator.error_message)
 
     return HttpBadRequest(10666, error_codes['10666'])

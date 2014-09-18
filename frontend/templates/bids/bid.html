@@ -93,13 +93,13 @@
                                 </button>
                             </div>
                             <div class="row bid_button">
-                                <a ng-show="user.id == bid.creator || current_user_is_superuser"
+                                <a ng-show="user.id == bid.creator || user.is_superuser"
                                    class="btn btn-info btn-sm" ng-href="/annonces/{$ bid.id $}/modifier">
                                     <span class="glyphicon glyphicon-edit"></span> Modifier cette annonce
                                 </a>
                             </div>
                             <div class="row bid_button">
-                                <a ng-show="current_user_id == bid.creator || current_user_is_superuser"
+                                <a ng-show="user.id == bid.creator || user.is_superuser"
                                    class="btn btn-danger btn-sm" ng-click="deleteBid()">
                                     <span class="glyphicon glyphicon-trash"></span> Supprimer cette annonce
                                 </a>
