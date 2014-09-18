@@ -451,7 +451,18 @@ bidsModule.factory('AddressService', ['$http', function ($http) {
         }
     }
 }]);
-
+bidsModule.factory('MailService', ['$http', function ($http) {
+    return{
+        sendMail: function (mail, callback) {
+            $http.post('/api/mails/', mail).
+                success(function (data) {
+                    callback(data);
+                }).error(function (data) {
+                    callback([], defaultErrorMessage);
+                });
+        }
+    }
+}]);
 bidsModule.factory('BidService', ['$http', function ($http) {
     return{
         getBids: function (order_by, limit, callback) {
@@ -523,7 +534,7 @@ bidsModule.factory('associationsService', ['$http', function ($http) {
     }
 }]);
 
-bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService) {
+bidsModule.controller('bidController', function ($scope, $http, $location, AddressService, BidService, photoService, categoryService, associationsService, MailService) {
 
     $scope.form_title = 'Créer une annonce';
 
@@ -550,6 +561,12 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         'address2': null,
         'zipcode': null,
         'town': null
+    };
+
+    $scope.mail = {
+        'user_to_mail': null,
+        'subject': null,
+        'content': null
     };
 
     var url = $location.absUrl();
@@ -603,6 +620,19 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
                 $('#create_address').modal('hide');
                 $scope.errorMessage = '';
                 $scope.bid.localization = address;
+            }
+        })
+
+    };
+
+    $scope.sendMail = function () {
+        $scope.mail.user_to_mail = $scope.bid.creator;
+        MailService.sendMail($scope.mail, function (mail, errorMessage) {
+            if (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            } else {
+                $('#send_mail').modal('hide');
+                $scope.successMessage = 'Votre message à bien été envoyé';
             }
         })
 
