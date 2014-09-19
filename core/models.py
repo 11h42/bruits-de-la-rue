@@ -81,6 +81,7 @@ class Association(models.Model):
 
     def serialize(self):
         address = self.address.serialize() if self.address else None
+        administrator = self.administrator.serialize() if self.administrator else None
         return {
             'id': self.id,
             'name': self.name,
@@ -88,7 +89,8 @@ class Association(models.Model):
             'phone': self.phone,
             'fax': self.fax,
             'url_site': self.url_site,
-            'email': self.email
+            'email': self.email,
+            'administrator': administrator
         }
 
     def __unicode__(self):

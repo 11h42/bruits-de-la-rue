@@ -10,5 +10,5 @@ class AssociationTestCase(TestCase):
         association = factories.AssociationFactory(name="toto")
         expected_association = {'id': association.id, 'name': association.name, 'address': association.address,
                                 'phone': association.phone, 'fax': association.fax, 'url_site': association.url_site,
-                                'email': association.email}
+                                'email': association.email, 'administrator': None}
         self.assertEquals(association.serialize(), expected_association)

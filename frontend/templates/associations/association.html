@@ -14,20 +14,81 @@
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     {$ successMessage $}
                 </div>
-                <div>
-                    <div class="row">
-                        <a href="/associations/">
-                            <span class="glyphicon glyphicon-arrow-left"></span>
-                            Revenir à la liste des associations
-                        </a>
-                    </div>
-                    <hr/>
-                    <br/>
-                    {$ association $}
+                <div class="row">
+                    <a href="/associations/">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        Revenir à la liste des associations
+                    </a>
                 </div>
+                <div class="row">
+                    <h1>
+                        {$ association.name $}
+                    </h1>
+                </div>
+                <hr/>
+                <br/>
 
+                <div class="row">
+                    <h2>Informations</h2>
+                    <div class="col-lg-4">
+                        <h3 class="text-underlined">Addresse</h3>
+                        <ul class="list-unstyled">
+                            <li>
+                                {$ association.address.recipient_name $}
+                            </li>
+                            <li>
+                                {$ association.address.address1 $}
+                            </li>
+                            <li>
+                                {$ association.address.address2 $}
+                            </li>
+                            <li>
+                                {$ association.address.zipcode $} - {$ association.address.town $}
 
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h3 class="text-underlined">Responsable</h3>
+                        {$ association.administrator.username $}
+                    </div>
+                    <div class="col-lg-4">
+                        <h3 class="text-underlined">Contact</h3>
+                        <ul class="list-unstyled">
+                            <li>
+                                <span class="glyphicon glyphicon-earphone"></span> Téléphone : {$ association.phone $}
+                            </li>
+                            <li>
+                                <span class="glyphicon glyphicon-print"></span> Fax : {$ association.fax $}
+                            </li>
+                            <li>
+                                <span class="glyphicon glyphicon-envelope"></span> Email : <a
+                                    href="mailto:{$ association.email $}">{$ association.email $}</a>
+                            </li>
+                            <li>
+                                <span class="glyphicon glyphicon-globe"></span> Site web <a target="_blank"
+                                                                                            href="http://{$ association.url_site $}">{$
+                                association.url_site $}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <h2>Membres de l'association</h2>
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nom d'utilisateur</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+
         </div>
     </div>
 
@@ -35,5 +96,6 @@
 {% endblock %}
 {% block javascript %}
     <script type="text/javascript" src="/static/js/associationModule.js"></script>
+    <script type="text/javascript" src="/static/js/bidModule.js"></script>
 {% endblock %}
 

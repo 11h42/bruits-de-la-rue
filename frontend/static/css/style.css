@@ -73,3 +73,7 @@ body {
 .cursor-pointer{
     cursor: pointer;
 }
+
+.text-underlined{
+    text-decoration: underline;
+}

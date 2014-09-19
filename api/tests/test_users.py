@@ -34,10 +34,7 @@ class UsersTest(TestCase):
         response = self.client.get('/api/associations/?filter_by=current_user')
         self.assertEquals(200, response.status_code)
         self.assertTrue(response.content)
-        self.assertEquals({u'associations': [{u'fax': u'0987654321', u'name': u'Association de jdupont',
-                                              u'url_site': u'association-lambda.com',
-                                              u'email': u'contact@association-lambda.com', u'phone': u'0123456789',
-                                              u'address': None, u'id': self.association.id}]},
+        self.assertEquals({u'associations': [self.association.serialize()]},
                           json.loads(response.content))
 
     def test_get_user(self):
