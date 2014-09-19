@@ -386,6 +386,8 @@ def update_association(request, association_id):
     associations_infos = json.loads(request.body)
     if not associations_infos:
         return HttpBadRequest(10900, error_codes['10900'])
+    if association[0].administrator != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpBadRequest(10223, error_codes['10223'])
     if 'administrator' in associations_infos:
         associations_infos['administrator'] = User.objects.get(id=associations_infos['administrator']['id'])
     for member in associations_infos['members']:
@@ -395,6 +397,17 @@ def update_association(request, association_id):
     return HttpResponse()
 
 
+def delete_association(request, association_id):
+    association = Association.objects.filter(id=association_id)
+    if association[0].administrator != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpBadRequest(10223, error_codes['10223'])
+    if association:
+        association[0].delete()
+        return HttpResponse()
+
+    return HttpBadRequest(10666, error_codes['10666'])
+
+
 @is_authenticated
 @catch_any_unexpected_exception
 def handle_association(request, association_id):
@@ -402,6 +415,8 @@ def handle_association(request, association_id):
         return get_association(request, association_id)
     if request.method == 'PUT':
         return update_association(request, association_id)
+    if request.method == 'DELETE':
+        return delete_association(request, association_id)
     return HttpMethodNotAllowed()
 
 

@@ -1,8 +1,8 @@
 import json
 
 from django.test.testcases import TestCase
-from core.models import Association
 
+from core.models import Association
 from core.tests import factories
 
 
@@ -48,8 +48,14 @@ class TestAssociations(TestCase):
             'members': [factories.UserFactory(username='UserX').id]
         }
         response = self.client.put('/api/associations/%s/' % association.id,
-                        json.dumps(update_asso))
+                                   json.dumps(update_asso))
         self.assertEqual(200, response.status_code)
         asso_updated = Association.objects.get(id=association.id)
         self.assertEqual(asso_updated.name, 'Yeap')
         self.assertEqual(len(asso_updated.members.all()), 2)
+
+    def test_delete_association(self):
+        association = factories.AssociationFactory(members=[self.user], administrator=self.user)
+        response = self.client.delete('/api/associations/%s/' % association.id)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(len(Association.objects.all()), 0)

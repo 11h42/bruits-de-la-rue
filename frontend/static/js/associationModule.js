@@ -36,6 +36,14 @@ associationsModule.factory('AssociationService', ['$http', function ($http) {
             }).error(function (data) {
                 callback("Une erreur est survenue lors de la mise à jour de l'association");
             })
+        },
+        deleteAssociation: function (association_id, callback) {
+            $http.delete('/api/associations/' + association_id + '/').success(function (data)
+            {
+
+            }).error(function(data){
+                callback('Une erreur est survenue, suppression impossible pour le moment.')
+            })
         }
     }
 }]);
@@ -93,4 +101,13 @@ associationsModule.controller('associationsController', function ($scope, $http,
         });
         window.location.reload(true);
     }
+
+    $scope.deleteAssociation = function (association_id) {
+        if (confirm('Cette action est irréversible. Continuer ?')) {
+            AssociationService.deleteAssociation(association_id, function (errorMessage) {
+
+            });
+            window.location = '/associations/'
+        }
+    };
 });
