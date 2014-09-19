@@ -16,7 +16,10 @@
             </div>
             <div class="row">
                 <form ng-submit="createBid()" role="form" enctype="multipart/form-data">
-                    {% include "forms/bid_form.html" %}
+                    <fieldset>
+                        <legend>Création d'une annonce</legend>
+                        {% include "forms/bid_form.html" %}
+                    </fieldset>
                 </form>
             </div>
 

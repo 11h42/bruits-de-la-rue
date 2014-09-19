@@ -265,7 +265,6 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
         return Math.ceil($scope.bids.length / $scope.pageSize);
     };
 
-    $scope.form_title = 'Créer une annonce'; // TODO GOOD TITLE IF ITS AN UPDATE OR A CREATE
 
     $scope.bid = {
         'title': null,
