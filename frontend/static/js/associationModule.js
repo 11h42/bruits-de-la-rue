@@ -34,6 +34,7 @@ associationsModule.controller('associationsController', function ($scope, $http,
         $http.get('/api/associations/' + associationId + '/').
             success(function (data) {
                 $scope.association = data.association;
+                $scope.members = data.members;
             }).error(function (data, status, headers, config) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });

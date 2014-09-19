@@ -369,11 +369,14 @@ def handle_faq(request, faq_id):
 
 
 def get_association(request, association_id):
-    associations = Association.objects.filter(id=association_id)
+    associations = Association.objects.filter(id=association_id).select_related('members')
     if not associations:
         return HttpResponse({}, content_type='application/json')
-    association = associations[0].serialize()
-    return HttpResponse(json.dumps({'association': association}), content_type='application/json')
+    members = []
+    for member in associations[0].members.all():
+        members.append(member.serialize())
+    return HttpResponse(json.dumps({'association': associations[0].serialize(), 'members': members}),
+                        content_type='application/json')
 
 
 def handle_association(request, association_id):
