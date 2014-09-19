@@ -381,6 +381,42 @@ def get_association(request, association_id):
                         content_type='application/json')
 
 
+def update_association(request, association_id):
+    association = Association.objects.filter(id=association_id)
+    associations_infos = json.loads(request.body)
+    if not associations_infos:
+        return HttpBadRequest(10900, error_codes['10900'])
+    if 'administrator' in associations_infos:
+        associations_infos['administrator'] = User.objects.get(id=associations_infos['administrator']['id'])
+    for member in associations_infos['members']:
+        association[0].members.add(User.objects.get(id=member))
+        associations_infos.pop('members')
+    association.update(**associations_infos)
+    return HttpResponse()
+
+
+@is_authenticated
+# @catch_any_unexpected_exception
 def handle_association(request, association_id):
     if request.method == 'GET':
         return get_association(request, association_id)
+    if request.method == 'PUT':
+        return update_association(request, association_id)
+    return HttpMethodNotAllowed()
+
+
+def get_users(request):
+    users = User.objects.all()
+    return_users = []
+    for user in users:
+        return_users.append(user.serialize())
+    return HttpResponse(json.dumps({'users': return_users}),
+                        content_type='application/json')
+
+
+@is_authenticated
+@catch_any_unexpected_exception
+def handle_users(request):
+    if request.method == 'GET':
+        return get_users(request)
+    return HttpMethodNotAllowed()

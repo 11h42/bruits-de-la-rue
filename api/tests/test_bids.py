@@ -3,7 +3,6 @@ import json
 
 from django.test import TestCase
 
-from api import constants
 from core.models import Bid, StatusBids
 from core.tests.factories import BidFactory
 from core.tests import factories
@@ -68,22 +67,22 @@ class TestBidApi(TestCase):
         self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
         self.assertEquals(201, response.status_code)
 
-    def test_post_a_bid_that_start_tomorrow_and_have_the_status_on_hold(self):
-        response = self.client.post('/api/bids/',
-                                    json.dumps({
-                                        "title": "Ma première annonce wouhouhou test 1234",
-                                        "description": 'Ceci est une description',
-                                        "type": "SUPPLY",
-                                        'real_author': 'Jean Dupont',
-                                        'begin': constants.TOMORROW_ISO,
-                                        'end': constants.AFTER_TOMORROW_ISO
-                                    }),
-                                    content_type="application/json; charset=utf-8")
-        bids = Bid.objects.all()
-        self.assertEquals(len(bids), 1)
-        self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
-        self.assertEquals(StatusBids.ONHOLD, bids[0].status_bid)
-        self.assertEquals(201, response.status_code)
+    # def test_post_a_bid_that_start_tomorrow_and_have_the_status_on_hold(self):
+    #     response = self.client.post('/api/bids/',
+    #                                 json.dumps({
+    #                                     "title": "Ma première annonce wouhouhou test 1234",
+    #                                     "description": 'Ceci est une description',
+    #                                     "type": "SUPPLY",
+    #                                     'real_author': 'Jean Dupont',
+    #                                     'begin': constants.TOMORROW_ISO,
+    #                                     'end': constants.AFTER_TOMORROW_ISO
+    #                                 }),
+    #                                 content_type="application/json; charset=utf-8")
+    #     bids = Bid.objects.all()
+    #     self.assertEquals(len(bids), 1)
+    #     self.assertEquals(u'Ma première annonce wouhouhou test 1234', bids[0].title)
+    #     self.assertEquals(StatusBids.ONHOLD, bids[0].status_bid)
+    #     self.assertEquals(201, response.status_code)
 
     def test_post_a_bid_with_all_authorized_fields(self):
         category = factories.BidCategoryFactory()

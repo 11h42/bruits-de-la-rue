@@ -84,30 +84,43 @@
                 <br/>
 
                 <div class="row">
-                    <div class="col-lg-10">
+                    <div class="col-lg-6">
                         <h2>Membres de l'association</h2>
+
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th>Nom d'utilisateur</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="member in members">
+                                <td>{$ member.username $}</td>
+                                <td>{$ member.email $}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-lg-2">
-                        <a class="btn btn-success btn-sm" href=""><span class="glyphicon glyphicon-plus"></span> Ajouter
-                            un
-                            membre</a>
+                    <div class="col-lg-6">
+                        <h2>Ajouter un membre</h2>
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th>Nom d'utilisateur</th>
+                                <th>Email</th>
+                                <th><span class="glyphicon glyphicon-check"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="user in users">
+                                <td>{$ user.username $}</td>
+                                <td>{$ user.email $}</td>
+                                <td><a href="/associations/"><span class="glyphicon glyphicon-check"></span></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="row">
-                    <table class="table table-bordered table-responsive table-hover">
-                        <thead>
-                        <tr>
-                            <th>Nom d'utilisateur</th>
-                            <th>Email</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr data-ng-repeat="member in members">
-                            <td>{$ member.username $}</td>
-                            <td>{$ member.email $}</td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
 

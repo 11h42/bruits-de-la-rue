@@ -12,8 +12,8 @@ class BidValidator(object):
 
     def get_bid_object(self, user):
         self.bid['creator'] = user
-        if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO and not 'status_bid' in self.bid:
-            self.bid['status_bid'] = StatusBids.ONHOLD
+        # if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO and not 'status_bid' in self.bid:
+        #     self.bid['status_bid'] = StatusBids.ONHOLD
         if not 'status_bid' in self.bid or self.bid['status_bid'] is None:
             self.bid['status_bid'] = StatusBids.RUNNING
         if 'category' in self.bid and self.bid['category']:

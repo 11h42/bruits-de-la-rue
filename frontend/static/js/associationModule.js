@@ -11,7 +11,6 @@ associationsModule.filter('startFrom', function () {
         return input.slice(start);
     }
 });
-
 associationsModule.controller('associationsController', function ($scope, $http, $location) {
 
     $scope.pageSize = 10;
@@ -38,6 +37,16 @@ associationsModule.controller('associationsController', function ($scope, $http,
             }).error(function (data, status, headers, config) {
                 $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
             });
+        $http.get('/api/users').success(function (data) {
+            $scope.users = data.users;
+            for (user in $scope.users) {
+                if (user in $scope.members) {
+                    delete(user)
+                }
+            }
+        }).error(function (data) {
+            $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
+        })
     } else {
         $http.get('/api/associations/').
             success(function (data) {

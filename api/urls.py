@@ -15,6 +15,7 @@ urlpatterns = patterns(
     url(r'^categories/$', views.handle_categories, name="handle-categories"),
 
 
+    url(r'^users/$', views.handle_users, name="user"),
     url(r'^users/(?P<user_id>\d+)/$', views.handle_user, name="user"),
     url(r'^addresses/$', views.handle_address, name="user-address"),
 
