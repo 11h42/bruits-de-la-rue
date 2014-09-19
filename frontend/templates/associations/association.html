@@ -74,9 +74,11 @@
                                     href="mailto:{$ association.email $}">{$ association.email $}</a>
                             </li>
                             <li>
-                                <span class="glyphicon glyphicon-globe"></span> Site web <a target="_blank"
-                                                                                            href="http://{$ association.url_site $}">{$
-                                association.url_site $}</a>
+                                <span class="glyphicon glyphicon-globe"></span>
+                                Site web :
+                                <a target="_blank" href="http://{$ association.url_site $}">
+                                    {$ association.url_site $}
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -134,4 +136,3 @@
     <script type="text/javascript" src="/static/js/associationModule.js"></script>
     <script type="text/javascript" src="/static/js/bidModule.js"></script>
 {% endblock %}
-

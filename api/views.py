@@ -396,7 +396,7 @@ def update_association(request, association_id):
 
 
 @is_authenticated
-# @catch_any_unexpected_exception
+@catch_any_unexpected_exception
 def handle_association(request, association_id):
     if request.method == 'GET':
         return get_association(request, association_id)
