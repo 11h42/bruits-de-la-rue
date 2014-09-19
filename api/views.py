@@ -372,6 +372,8 @@ def get_association(request, association_id):
     associations = Association.objects.filter(id=association_id).select_related('members')
     if not associations:
         return HttpResponse({}, content_type='application/json')
+    if associations[0].administrator != request.user and not request.user.is_staff and not request.user.is_superuser:
+        return HttpBadRequest(10223, error_codes['10223'])
     members = []
     for member in associations[0].members.all():
         members.append(member.serialize())

@@ -52,13 +52,14 @@ class PhotoFactory(DjangoModelFactory):
 class AssociationFactory(DjangoModelFactory):
     class Meta:
         model = 'core.Association'
-        django_get_or_create = ('name', 'phone', 'fax', 'url_site', 'email')
+        django_get_or_create = ('name', 'phone', 'fax', 'url_site', 'email', 'administrator')
 
     name = "Association Lambda"
     phone = '0123456789'
     fax = '0987654321'
     url_site = 'association-lambda.com'
     email = 'contact@association-lambda.com'
+    administrator = factory.SubFactory(UserFactory)
 
     @factory.post_generation
     def address(self, create, extracted, **kwargs):

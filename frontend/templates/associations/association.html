@@ -30,8 +30,17 @@
 
                 <div class="row">
                     <h2>Informations</h2>
+
                     <div class="col-lg-4">
-                        <h3 class="text-underlined">Addresse</h3>
+
+
+                        <h3 class="text-underlined">
+                            Addresse
+                            <a target="_blank"
+                               href="https://www.google.fr/maps/place/{$ association.address.address1 $} {$ association.address.address2 $}{$ association.address.zipcode $} - {$ association.address.town $}">
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                            </a>
+                        </h3>
                         <ul class="list-unstyled">
                             <li>
                                 {$ association.address.recipient_name $}
@@ -44,7 +53,6 @@
                             </li>
                             <li>
                                 {$ association.address.zipcode $} - {$ association.address.town $}
-
                             </li>
                         </ul>
                     </div>
@@ -73,8 +81,19 @@
                         </ul>
                     </div>
                 </div>
+                <br/>
+
                 <div class="row">
-                    <h2>Membres de l'association</h2>
+                    <div class="col-lg-10">
+                        <h2>Membres de l'association</h2>
+                    </div>
+                    <div class="col-lg-2">
+                        <a class="btn btn-success btn-sm" href=""><span class="glyphicon glyphicon-plus"></span> Ajouter
+                            un
+                            membre</a>
+                    </div>
+                </div>
+                <div class="row">
                     <table class="table table-bordered table-responsive table-hover">
                         <thead>
                         <tr>

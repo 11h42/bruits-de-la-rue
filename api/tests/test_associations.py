@@ -7,8 +7,8 @@ from core.tests import factories
 
 class TestAssociations(TestCase):
     def setUp(self):
-        user = factories.UserFactory()
-        self.client.login(username=user.username, password="password")
+        self.user = factories.UserFactory()
+        self.client.login(username=self.user.username, password="password")
 
     def test_get_all_associations(self):
         association = factories.AssociationFactory()
@@ -16,8 +16,25 @@ class TestAssociations(TestCase):
         self.assertEquals(200, response.status_code)
         self.assertEquals({'associations': [association.serialize()]}, json.loads(response.content))
 
-    def test_get_association(self):
-        self.maxDiff = None
+    def test_get_association_with_user_administrator(self):
+        association = factories.AssociationFactory(administrator=self.user)
+        response = self.client.get('/api/associations/%s/' % association.id)
+        self.assertEquals(200, response.status_code)
+        self.assertEquals({'association': association.serialize(), 'members': []}, json.loads(response.content))
+
+    def test_get_association_with_user_is_staff(self):
+        self.client.logout()
+        staff_user = factories.UserFactory(username='staff', is_staff=True)
+        self.client.login(username=staff_user.username, password="password")
+        association = factories.AssociationFactory()
+        response = self.client.get('/api/associations/%s/' % association.id)
+        self.assertEquals(200, response.status_code)
+        self.assertEquals({'association': association.serialize(), 'members': []}, json.loads(response.content))
+
+    def test_get_association_with_user_is_superuser(self):
+        self.client.logout()
+        superuser = factories.UserFactory(username='big boss', is_staff=True)
+        self.client.login(username=superuser.username, password="password")
         association = factories.AssociationFactory()
         response = self.client.get('/api/associations/%s/' % association.id)
         self.assertEquals(200, response.status_code)
