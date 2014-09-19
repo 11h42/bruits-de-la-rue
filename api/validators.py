@@ -1,6 +1,5 @@
 # coding=utf-8
 
-from api import constants
 from core.models import BidCategory, Address, Association, StatusBids, Photo
 
 

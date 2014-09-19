@@ -60,7 +60,7 @@ associationsModule.controller('associationsController', function ($scope, $http,
             $scope.members = data.members;
 
         });
-        $http.get('/api/users').success(function (data) {
+        $http.get('/api/users/').success(function (data) {
             $scope.users = data.users;
         }).error(function (data) {
             $scope.errorMessage = "Veuillez nous excuser, notre site rencontre des difficultés techniques. Nous vous invitions à réessayer dans quelques minutes.";
