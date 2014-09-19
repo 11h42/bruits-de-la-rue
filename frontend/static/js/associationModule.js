@@ -29,6 +29,13 @@ associationsModule.factory('AssociationService', ['$http', function ($http) {
                 }).error(function (data, status, headers, config) {
                     callback({}, 'Une erreur est survenue lors de la récupération des annonces')
                 });
+        },
+        updateAssociation: function(association, callback){
+            $http.put('/api/associations/' + association['id'] + '/', association).success(function(data){
+
+            }).error(function(data){
+                callback("Une erreur est survenue lors de la mise à jour de l'association");
+            })
         }
     }
 }]);
@@ -77,4 +84,15 @@ associationsModule.controller('associationsController', function ($scope, $http,
     $scope.showAssociation = function (association_id) {
         window.location = '/associations/' + association_id + '/';
     };
+
+    $scope.addMember = function(member_id){
+        var association = {'id': $scope.association.id, 'members': [member_id]};
+        AssociationService.updateAssociation(association, function(errorMessage){
+            if (errorMessage){
+                $scope.errorMessage = errorMessage;
+            }else{
+                windows.reload = True;
+            }
+        })
+    }
 });
