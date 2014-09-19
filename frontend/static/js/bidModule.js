@@ -319,6 +319,8 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
             $scope.bids = bids;
         });
     }
+
+
     UserFactory.getCurrentUser(function (user) {
         $scope.user = user;
     });
@@ -447,4 +449,35 @@ bidsModule.controller('bidController', function ($scope, $http, $location, Addre
                 }
             });
     };
+
+    //todo refactor
+
+    if ($scope.categories) {
+        for (var i = 0; i < $scope.categories.length; i++) {
+            if ($scope.categories[i]['name'] == $scope.bid.category['name']) {
+                $scope.bid.category = $scope.categories[i];
+            }
+        }
+    }
+    if ($scope.addresses) {
+        for (var j = 0; j < $scope.addresses.length; j++) {
+            if ($scope.addresses[j]['title'] == $scope.bid.localization['title']) {
+                $scope.bid.localization = $scope.addresses[j];
+            }
+        }
+    }
+    if ($scope.associations) {
+        for (var k = 0; k < $scope.associations.length; k++) {
+            if ($scope.associations[k]['name'] == $scope.bid.association['name']) {
+                $scope.bid.association = $scope.associations[k];
+            }
+        }
+    }
+    if ($scope.status) {
+        for (var l = 0; l < $scope.status.length; l++) {
+            if ($scope.status[l]['name'] == $scope.bid.status_bid) {
+                $scope.bid.status_bid = $scope.status[l];
+            }
+        }
+    }
 });
