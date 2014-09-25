@@ -1,97 +1,49 @@
 {% extends "base.html" %}
-{% block body %}
-    <body data-ng-app="faqsModule" class="ng-cloak" data-ng-controller="faqsController">
-{% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container" data-ng-app="faqsModule" data-ng-controller="faqsController">
+
         <div class="row">
+            <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">
+                {$ errorMessage $}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">
+                {$ successMessage $}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>FAQ</h1>
+            </div>
+
+            <div class="col-lg-6 text-right fixh1">
+                {% if user.is_staff %}
+                    <a class="btn btn-primary" href="/faq/creer/">
+                        <span class="glyphicon glyphicon-plus"></span> Ajouter une question
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <br/>
+
+        <div class="row" data-ng-repeat="faq in faqs">
             <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-danger" role="alert" ng-show="errorMessage">
-                            {$ errorMessage $}
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="alert alert-success" role="alert" ng-show="successMessage">
-                            {$ successMessage $}
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <a href="/"><span class="glyphicon glyphicon-arrow-left"></span> Revenir à la page d'accueil</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-2 col-lg-offset-10">
-                        <div class="pull-right">
-                            {% if user.is_staff %}
-                                <a class="btn btn-success btn-sm" href="/faq/creer/">Ajouter une FAQ</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <h1>FAQ</h1>
-                    </div>
-                    <div class="col-lg-5"></div>
-                    <div ng-show="faqs" class="col-lg-4">
-                        <form class="form-horizontal search-bar" role="form">
-                            <div class="form-group">
-                                <label class="control-label col-sm-4" for="table_search">
-                                    <b><span class="glyphicon glyphicon-search"></span> Rechercher</b>
-                                </label>
+                <h3>
+                    {$ faq.question $}
+                </h3>
 
-                                <div class="col-sm-8">
-                                    <input placeholder="Entrez une question" class="form-control" id="table_search"
-                                           ng-model="searchText.question" type="text"/>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div data-ng-repeat="faq in filterFaqs = (faqs | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize ">
-                            <div class="col-lg-10">
-                                <h4 class="question text-center">{$ faq.question $} </h4>
-                            </div>
-                            <div class="col-lg-2 pull-right">
-                                {% if user.is_staff %}
-                                    <a class="cursor-pointer" ng-click="deleteFaq(faq.id)"><span
-                                            class="glyphicon glyphicon-trash"></span></a>
-                                {% endif %}
-                            </div>
-                            <div class="col-lg-12">
-                                <p class="text-justify answer"> {$ faq.answer $}</p>
-                            </div>
-
-                            <p class="text-center">-</p>
-                        </div>
-                        <div ng-show="faqs">
-                            <p class="answer" ng-hide="filterFaqs.length">Aucune question pour la recherche
-                                "{$ searchText.question $}"
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-lg-12 center-block" ng-show="faqs">
-                        <button class="btn btn-sm" ng-disabled="currentPage == 0"
-                                ng-click="currentPage=currentPage-1">
-                            Précédant
-                        </button>
-                        <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
-                        <button class="btn btn-sm" ng-disabled="currentPage >= faqs.length/pageSize - 1"
-                                ng-click="currentPage=currentPage+1"> Suivant
-                        </button>
-                    </div>
-                    <div class="alert alert-success text-center ng-cloak" ng-hide="faqs">
-                        Il semble qu'il n'y ai aucune FAQ.
-                    </div>
-                </div>
+                <p>{$ faq.answer $}</p>
+                {% if user.is_staff %}
+                    <a class="cursor-pointer" ng-click="deleteFaq(faq.id)">
+                        supprimer
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row" ng-hide="faqs">
+            <div class="col-lg-12">
+                Il n'y a pas de question, <a href="/faq/creer/">ajouter une question</a>
             </div>
         </div>
     </div>
