@@ -20,23 +20,17 @@ def index(request):
 
 
 def display_login(request):
-    if hasattr(request, "user") and request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('frontend:index'))
-    else:
-        has_error = False
-        # todo : Test if the user is already logged on. If true, redirect to index with warning message
-        if request.method == "POST":
-            has_error = True
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect(reverse('frontend:index'))
-        t = get_template('login.html')
-        c = RequestContext(request, {'has_error': has_error})
-        return HttpResponse(t.render(c))
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('frontend:index'))
+    t = get_template('login.html')
+    c = RequestContext(request)
+    return HttpResponse(t.render(c))
 
 
 @login_required()
