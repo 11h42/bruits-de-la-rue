@@ -10,13 +10,6 @@
                     <fieldset>
                         <legend>Ajoutez une association:</legend>
                         {{ association_form.name | bootstrap }}
-
-                        {{ association_form.address | bootstrap }}
-                        <button data-toggle="modal" data-target="#create_address" class="btn btn-default btn-sm"
-                                type="button"><span
-                                class="glyphicon glyphicon-plus-sign"></span> Ajouter une adresse
-                        </button>
-                        <br/><br/>
                         {{ association_form.phone |bootstrap }}
                         {{ association_form.fax |bootstrap }}
                         {{ association_form.url_site |bootstrap }}
