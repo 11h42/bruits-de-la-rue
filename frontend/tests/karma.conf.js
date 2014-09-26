@@ -5,7 +5,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../static',
+        basePath: '../',
 
 
         // frameworks to use
@@ -15,11 +15,10 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'bower_components/angular/angular.js',
-            'bower_components/angular-mocks/angular-mocks.js',
-            'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
-            'js/**/*.js',
-            '../tests/**/*.js'
+            'static/bower_components/angular/angular.js',
+            'static/js/addressModule.js',
+            'static/bower_components/angular-mocks/angular-mocks.js',
+            'tests/addressModule.js'
         ],
 
 
