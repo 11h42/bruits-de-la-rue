@@ -12,8 +12,15 @@ addressModule.factory('addressService', ['$http', function ($http) {
                 success(function (data) {
                     callback(data.addresses);
                 }).error(function (data, status, headers, config) {
-                    callback({}, 'Une erreur est survenue lors de la récupération des addresses')
+                    callback({}, 'Une erreur est survenue lors de la récupération des adresses')
                 });
+        },
+        createAddress: function (address, callback) {
+            $http.post('/api/addresses/', address).success(function (data) {
+                callback(data.address);
+            }).error(function (data) {
+                callback({}, "Une erreur est survenue lors de la création d'une adresse")
+            });
         }
     }
 }]);
