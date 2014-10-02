@@ -43,7 +43,10 @@
         </div>
         <div class="row" ng-hide="faqs">
             <div class="col-lg-12">
-                Il n'y a pas de question, <a href="/faq/creer/">ajouter une question</a>
+                Il n'y a pas de question
+                {% if user.is_staff %}
+                    , <a href="/faq/creer/">ajouter une question</a>
+                {% endif %}
             </div>
         </div>
     </div>
