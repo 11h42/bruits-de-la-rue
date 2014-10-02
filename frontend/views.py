@@ -20,16 +20,18 @@ def index(request):
 
 
 def display_login(request):
+    error_message = None
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('frontend:index'))
+        if user and user.is_active:
+            login(request, user)
+            return HttpResponseRedirect(reverse('frontend:index'))
+        else:
+            error_message = "Votre mot de passe et votre login ne correspondent pas"
     t = get_template('login.html')
-    c = RequestContext(request)
+    c = RequestContext(request, {'error_message': error_message})
     return HttpResponse(t.render(c))
 
 
@@ -132,6 +134,7 @@ def create_faq(request):
     t = get_template('faq/create_faq.html')
     c = RequestContext(request)
     return HttpResponse(t.render(c))
+
 
 @staff_member_required
 def display_association(request, association_id):
