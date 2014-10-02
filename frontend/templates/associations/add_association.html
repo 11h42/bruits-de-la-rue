@@ -2,7 +2,7 @@
 {% load bootstrap %}
 {% block content %}
 
-    <div class="container" data-ng-app="bidsModule">
+    <div ng-cloak class="ng-cloak container" data-ng-app="bidsModule">
         <div class="row" data-ng-controller="bidController">
             <div class="col-lg-12">
                 <form action="/associations/ajouter/" method="post">

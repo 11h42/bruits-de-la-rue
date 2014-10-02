@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div class="container" data-ng-app="bidsModule">
+    <div ng-cloak class="ng-cloak container" data-ng-app="bidsModule">
         <div data-ng-controller="bidController">
             <div class="row">
                 <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">

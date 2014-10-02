@@ -2,7 +2,7 @@
 {% block content %}
 
     <div class="container">
-        <div data-ng-app="bidsModule">
+        <div ng-cloak class="ng-cloak" data-ng-app="bidsModule">
             <div data-ng-controller="bidController">
                 <div class="alert alert-danger" role="alert" ng-show="errorMessage">{$ errorMessage $}</div>
                 <div class="panel panel-default">
