@@ -3,6 +3,7 @@ import json
 
 from django.core.mail import EmailMessage
 from django.http.response import HttpResponse, HttpResponseForbidden
+from django.db.models import Q
 
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.decorators import catch_any_unexpected_exception
@@ -23,7 +24,8 @@ def set_query_parameters(request):
 
 def get_bids(request):
     limit, order_by = set_query_parameters(request)
-    bids = Bid.objects.filter(status_bid=StatusBids.RUNNING).order_by(order_by)[:limit]
+    user = request.user
+    bids = Bid.objects.filter(Q(creator=user) | Q(purchaser=user) | Q(status_bid=StatusBids.RUNNING)).order_by(order_by)[:limit]
     return_bids = []
     if bids:
         for bid in bids:

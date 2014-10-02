@@ -15,7 +15,7 @@
                     {$ successMessage $}
                 </div>
                 <div class="alert alert-warning" role="alert" ng-hide="bid.status_bid == 'EN COURS'">
-                    Cette annonce n'est pas disponible car son état est: {$ bid.status_bid $}
+                    Cette annonce n'est plus disponible
                 </div>
                 <div>
                     <div class="row">
@@ -83,7 +83,7 @@
                         <div class="col-lg-2">
 
                             <div class="row bid_button">
-                                <button data-toggle="modal" data-target="#accept_bid" class="btn btn-default btn-sm"
+                                <button ng-show="bid.status_bid == 'EN COURS'" data-toggle="modal" data-target="#accept_bid" class="btn btn-default btn-sm"
                                         type="button">
                                     <span class="glyphicon glyphicon-ok"></span> Accepter cette annonce
                                 </button>
@@ -107,8 +107,7 @@
                                 </a>
                             </div>
                             <div class="row">
-                                <b>Déposé par :</b> {$ bid.creator $} <span
-                                    ng-show="bid.real_author =! bid.creator"> pour {$ bid.real_author $}</span>
+                                <b>Déposé par :</b> {$ bid.creator $}
                             </div>
                             <div class="row"><b>Association : </b>{$ bid.association.name $} <span
                                     ng-hide="bid.association"> Non précisé </span></div>
