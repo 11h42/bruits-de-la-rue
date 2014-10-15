@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.admin.models import LogEntry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
@@ -83,5 +82,3 @@ admin.site.register(Association)
 admin.site.register(Address)
 admin.site.register(Bid)
 admin.site.register(Faq)
-
-LogEntry.objects.all().delete()
