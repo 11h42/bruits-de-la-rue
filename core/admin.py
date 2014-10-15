@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import Group
 
-from core.models import User, BidCategory, Association, Faq, Address
+from core.models import User, BidCategory, Association, Faq, Address, Bid
 
 
 admin.site.unregister(Group)
@@ -18,7 +18,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'first_name', 'last_name', 'is_staff')
+        fields = ('email', 'username', 'first_name', 'last_name', 'is_staff', 'addresses')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -44,6 +44,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
+        fields = '__all__'
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -60,7 +61,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_filter = ()
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'username', 'is_staff')}),
+        (None, {'fields': ('email', 'password', 'username', 'is_staff', 'addresses')}),
         ('Informations personnelles', {'fields': ('first_name', 'last_name')}),
     )
     add_fieldsets = (
@@ -80,6 +81,7 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.register(BidCategory)
 admin.site.register(Association)
 admin.site.register(Address)
+admin.site.register(Bid)
 admin.site.register(Faq)
 
 LogEntry.objects.all().delete()

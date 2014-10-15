@@ -1,0 +1,81 @@
+<div class="modal fade" id="create_address" role="dialog" aria-labelledby="addressModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addressModal">Ajouter une nouvelle adresse</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" name="createAddressForm">
+                    <div class="row" data-ng-show="errorMessage">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger">
+                                {$ errorMessage$}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                            <label for="address_title">
+                                Nom de votre adresse
+                                <span class="text-danger">*</span> :
+                            </label>
+                            <input type="text" class="form-control" id="address_title" ng-model="address.title"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                            <label for="address_recipient">
+                                Destinataire (Nom Prénom / Raison sociale)
+                                <span class="text-danger">*</span> :
+                            </label>
+                            <input type="text" class="form-control" id="address_recipient"
+                                   ng-model="address.recipient_name"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                            <label for="address_address1">Adresse <span
+                                    class="text-danger">*</span> : </label>
+                            <input type="text" class="form-control" id="address_address1"
+                                   ng-model="address.address1"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 form-group">
+                            <label for="address_address2">Complément d'adresse : </label>
+                            <input type="text" class="form-control" id="address_address2"
+                                   ng-model="address.address2"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 form-group">
+                            <label for="address_zipcode">Code postal <span
+                                    class="text-danger">*</span> : </label>
+                            <input type="text" class="form-control" id="address_zipcode"
+                                   ng-model="address.zipcode"/>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="address_town">Ville <span
+                                    class="text-danger">*</span> : </label>
+                            <input type="text" class="form-control" id="address_town"
+                                   ng-model="address.town"/>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-lg-4 col-lg-offset-2">
+                            <input type="button" ng-click="createAddress()" class="btn btn-primary btn-block"
+                                   value="Enregistrer"/>
+                        </div>
+                        <div class="col-lg-4">
+                            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+
+<table class="table table-responsive table-bordered table-hover">
+    <thead>
+    <tr>
+        <th colspan="2">Nom</th>
+        <th>Quantité</th>
+        <th>Code postal</th>
+        <th>Localité</th>
+        <th>Fin</th>
+    </tr>
+    </thead>
+    <tr class="cursor-pointer" data-ng-repeat="bid in bids | limitTo:20 | filter:searchBidInput" data-ng-click="showBid(bid.id)"
+        data-ng-class="{'info' : bid.type=='SUPPLY', 'success' : bid.type=='DEMAND', 'warning' : bid.status_bid!='EN COURS'}">
+        <td>
+            <span data-ng-show="bid.type=='DEMAND'" class="glyphicon glyphicon-search"></span>
+            <span data-ng-show="bid.type=='SUPPLY'" class="glyphicon glyphicon-gift"></span>
+        </td>
+        <td>{$ bid.title $}</td>
+        <td>{$ bid.quantity $}</td>
+        <td>{$ bid.localization.zipcode $}</td>
+        <td>{$ bid.localization.town $}</td>
+        <td>
+            <span ng-show="bid.end">
+                {$ bid.end  | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})
+            </span>
+        </td>
+    </tr>
+    <tr ng-hide="bids" class="danger">
+        <td colspan="6">
+            Il n'y a aucune annonce enregistrée dans la base de données
+        </td>
+    </tr>
+</table>

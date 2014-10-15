@@ -1,30 +1,13 @@
 {% extends "base.html" %}
-{% load bootstrap %}
-{% block content %}
+{% load crispy_forms_tags %}
 
-    <div ng-cloak class="ng-cloak container" data-ng-app="bidsModule">
-        <div class="row" data-ng-controller="bidController">
-            <div class="col-lg-12">
-                <form action="/associations/ajouter/" method="post">
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend>Ajoutez une association:</legend>
-                        {{ association_form.name | bootstrap }}
-                        {{ association_form.phone |bootstrap }}
-                        {{ association_form.fax |bootstrap }}
-                        {{ association_form.url_site |bootstrap }}
-                        {{ association_form.email |bootstrap }}
-                        {{ association_form.administrator |bootstrap }}
-                    </fieldset>
-                    <br/>
-                    <input class="btn btn-primary" type="submit" value="Ajouter une association"/>
-                </form>
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5 col-sm-offset-3">
+                <h2>Ajouter une association</h2>
+                {% crispy form %}
             </div>
-            {% include 'modales/add_address.html' %}
         </div>
     </div>
-
-{% endblock %}
-{% block javascript %}
-    <script type="text/javascript" src="/static/js/bidModule.js"></script>
 {% endblock %}

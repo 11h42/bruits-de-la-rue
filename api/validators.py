@@ -11,8 +11,6 @@ class BidValidator(object):
 
     def get_bid_object(self, user):
         self.bid['creator'] = user
-        # if 'begin' in self.bid and self.bid['begin'] > constants.TODAY_ISO and not 'status_bid' in self.bid:
-        #     self.bid['status_bid'] = StatusBids.ONHOLD
         if not 'status_bid' in self.bid or self.bid['status_bid'] is None:
             self.bid['status_bid'] = StatusBids.RUNNING
         if 'category' in self.bid and self.bid['category']:
@@ -40,6 +38,7 @@ class BidValidator(object):
             return False
         for key, value in self.bid.items():
             if key not in authorized_fields:
+                print(key, value)
                 self.error_message = u'Le champs %s est invalide' % key
         for fields in required_fields:
             if fields not in self.bid:
@@ -62,8 +61,8 @@ class AddressValidator(object):
         :param self.bid:
         :return: True if all the rules are respected. False instead.
         """
-        required_fields = ['title', 'address1', 'recipient_name', 'zipcode', 'town']
-        authorized_fields = required_fields + ['address2']
+        required_fields = ['title', 'town']
+        authorized_fields = required_fields + ['address1', 'recipient_name', 'zipcode', 'address2']
         if not self.address:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -7,10 +6,10 @@ from django.utils.translation import gettext_lazy as _
 
 class Address(models.Model):
     title = models.CharField(max_length=255)
-    recipient_name = models.CharField(max_length=255)
-    address1 = models.CharField(max_length=255)
+    recipient_name = models.CharField(max_length=255, null=True, blank=True)
+    address1 = models.CharField(max_length=255, null=True, blank=True)
     address2 = models.CharField(max_length=255, null=True, blank=True)
-    zipcode = models.IntegerField(max_length=10)
+    zipcode = models.CharField(max_length=10, null=True, blank=True)
     town = models.CharField(max_length=255)
 
     def serialize(self):
@@ -24,8 +23,8 @@ class Address(models.Model):
             'town': self.town
         }
 
-    def __unicode__(self):
-        return u'%s' % self.title
+    def __str__(self):
+        return '%s' % self.title
 
     class Meta:
         verbose_name = "Adresse"
@@ -54,7 +53,7 @@ class Faq(DatedModel):
 
 
 class User(AbstractUser, DatedModel):
-    address = models.ManyToManyField('Address', blank=True, null=True)
+    addresses = models.ManyToManyField("Address", blank=True, null=True)
 
     class Meta:
         verbose_name = "Utilisateur"
@@ -64,6 +63,8 @@ class User(AbstractUser, DatedModel):
             'id': self.id,
             'username': self.username,
             'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
             'is_superuser': self.is_superuser,
             'is_staff': self.is_staff,
         }
@@ -71,30 +72,38 @@ class User(AbstractUser, DatedModel):
 
 class Association(models.Model):
     name = models.CharField(max_length=255)
-    address = models.ForeignKey(Address, blank=True, null=True)
+    address = models.ForeignKey(Address, blank=True, null=True, on_delete=models.SET_NULL)
     phone = models.CharField(max_length=15, blank=True, null=True)
-    fax = models.CharField(max_length=15, blank=True, null=True)
     url_site = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    administrator = models.ForeignKey(User, blank=True, null=True, related_name='administrator_of')
-    members = models.ManyToManyField(User, blank=True, null=True, related_name='members_of')
+    administrator = models.ForeignKey(User, blank=True, null=True, related_name='associations_administrated',
+                                      on_delete=models.SET_NULL)
+    members = models.ManyToManyField(User, blank=True, null=True, related_name='associations')
 
-    def serialize(self):
+    def serialize(self, with_members=False):
         address = self.address.serialize() if self.address else None
         administrator = self.administrator.serialize() if self.administrator else None
-        return {
+        association = {
             'id': self.id,
             'name': self.name,
             'address': address,
             'phone': self.phone,
-            'fax': self.fax,
             'url_site': self.url_site,
             'email': self.email,
             'administrator': administrator
         }
+        if with_members:
+            members = []
+            for member in self.members.all():
+                members.append(member.serialize())
+            association['members'] = members
+        return association
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
+
+    class Meta:
+        verbose_name = "Association"
 
 
 class BidCategory(models.Model):
@@ -106,12 +115,12 @@ class BidCategory(models.Model):
             'name': self.name,
         }
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     class Meta:
         verbose_name = "Catégorie d'une annonce"
-        verbose_name_plural = "Catégorie d'une annonce"
+        verbose_name_plural = "Catégories des annonces"
 
 
 class TypeBids(object):
@@ -140,24 +149,24 @@ class Photo(models.Model):
     photo = models.FileField(upload_to="photos/")
     owner = models.ForeignKey(User)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.id
 
 
 class Bid(models.Model):
-    creator = models.ForeignKey(User, related_name='creators')
-    purchaser = models.ForeignKey(User, related_name='purchasers', null=True, blank=True)
+    creator = models.ForeignKey(User, related_name='bids_created')
+    purchaser = models.ForeignKey(User, related_name='bids_accepted', null=True, blank=True, on_delete=models.SET_NULL)
 
     begin = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
 
     quantity = models.IntegerField(null=True, blank=True)
-    localization = models.ForeignKey(Address, null=True, blank=True)
+    localization = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
 
     description = models.TextField()
     title = models.CharField(max_length=255)
 
-    category = models.ForeignKey(BidCategory, blank=True, null=True)
+    category = models.ForeignKey(BidCategory, blank=True, null=True, on_delete=models.SET_NULL)
     type = models.CharField(choices=TypeBids.TYPE_CHOICES,
                             default=TypeBids.SUPPLY,
                             max_length=20)
@@ -168,8 +177,8 @@ class Bid(models.Model):
 
     real_author = models.CharField(blank=True, null=True, max_length=255)
 
-    association = models.ForeignKey(Association, blank=True, null=True)
-    photo = models.ForeignKey(Photo, null=True, blank=True)
+    association = models.ForeignKey(Association, blank=True, null=True, on_delete=models.SET_NULL)
+    photo = models.ForeignKey(Photo, null=True, blank=True, on_delete=models.SET_NULL)
 
     def serialize(self):
         # creator = self.creator.username if self.creator else None
@@ -197,8 +206,11 @@ class Bid(models.Model):
             'photo': photo
         }
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.title
 
     def belong_to_user(self, user):
         return self.creator == user
+
+    class Meta:
+        verbose_name = "Annonce"

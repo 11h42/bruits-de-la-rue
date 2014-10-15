@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container" data-ng-app="bidsModule" data-ng-controller="bidController" ng-init="bid.type='DEMAND'">
+        {% include 'error_success_box.html' %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Je recherche :</h2>
+            </div>
+        </div>
+        {% include "bids/bid_form.html" %}
+        {% include 'addresses/address_modale.html' %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript"
+            src="/static/bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/static/bower_components/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript"
+            src="/static/bower_components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="/static/js/bidsModule.js"></script>
+{% endblock %}

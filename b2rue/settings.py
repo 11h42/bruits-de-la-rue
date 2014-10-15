@@ -1,20 +1,12 @@
-"""
-Django settings for b2rue project.
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
-# CONSTANTS
 import os
+from configparser import ConfigParser, NoSectionError
+from django.contrib import messages
 import sys
 
-from tools.config import Config
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 LOGGING_PATH = os.path.join(BASE_DIR, 'log')
 if not os.path.exists(LOGGING_PATH):
@@ -26,28 +18,31 @@ if not os.path.exists(CONFIG_PATH):
 
 CONFIG_FILE = os.path.join(CONFIG_PATH, 'config.ini')
 
-config = Config()
+config = ConfigParser()
 config.read(CONFIG_FILE)
 
 try:
     SECRET_KEY = config.get('DJANGO', 'SECRET_KEY')
 except:
-    print 'SECRET_KEY not found! Generating a new one...'
+    print('SECRET_KEY not found! Generating a new one...')
     import random
 
     SECRET_KEY = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])
     if not config.has_section('DJANGO'):
         config.add_section('DJANGO')
     config.set('DJANGO', 'SECRET_KEY', SECRET_KEY)
-    f = file(CONFIG_FILE, 'wt')
-    config.write(f)
-    f.close()
+    with open(CONFIG_FILE, 'wt') as configfile:
+        config.write(configfile)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.getboolean('DEBUG', 'DEBUG', False)
-TEMPLATE_DEBUG = config.getboolean('DEBUG', 'TEMPLATE_DEBUG', DEBUG)
+try:
+    DEBUG = config.getboolean('DEBUG', 'DEBUG')
+except NoSectionError:
+    DEBUG = False
 
-ALLOWED_HOSTS = config.get('DJANGO', 'ALLOWED_HOSTS', '').split(';')
+TEMPLATE_DEBUG = DEBUG
+
+ALLOWED_HOSTS = []
+
 
 # Application definition
 
@@ -60,9 +55,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'core',
     'frontend',
-    'south',
-    'api',
-    'bootstrapform'
+    'crispy_forms',
+    'api'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -70,11 +64,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-
-AUTH_USER_MODEL = 'core.User'
 
 ROOT_URLCONF = 'b2rue.urls'
 
@@ -82,19 +75,15 @@ WSGI_APPLICATION = 'b2rue.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': config.get('DATABASE', 'ENGINE', 'django.db.backends.postgresql_psycopg2'),
-        'NAME': config.get('DATABASE', 'NAME', 'b2rue'),
-        'USER': config.get('DATABASE', 'USER', 'b2rue'),
-        'PASSWORD': config.get('DATABASE', 'PASSWORD', ''),
-        'HOST': config.get('DATABASE', 'HOST', ''),
-        'PORT': config.get('DATABASE', 'PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = 'UTC'
 
@@ -104,56 +93,45 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
 
-WWW_PATH = os.path.join(BASE_DIR, 'www')
-if not os.path.exists(WWW_PATH):
-    os.makedirs(WWW_PATH)
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
-if not os.path.exists(MEDIA_ROOT):
-    os.makedirs(MEDIA_ROOT)
-
-MEDIA_DIR = '/media/'
-MEDIA_URL = MEDIA_DIR
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
-
-# Additional locations of static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'frontend', 'static'),
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'core/../frontend/templates'),
-)
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
+AUTH_USER_MODEL = 'core.User'
+
+
+DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST')
+
+# Port for sending e-mail.
+EMAIL_PORT = 587
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER')
+EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
+EMAIL_USE_TLS = True
 
 TESTS_IN_PROGRESS = False
 if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
     PASSWORD_HASHERS = (
         'django.contrib.auth.hashers.MD5PasswordHasher',
     )
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-    SOUTH_TESTS_MIGRATE = False
-    SKIP_SOUTH_TESTS = True
     TESTS_IN_PROGRESS = True
-
-DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL', 'project@akema.fr')
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST', 'mail.akema.fr')
-
-# Port for sending e-mail.
-EMAIL_PORT = 587
-
-# Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER', '')
-EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD', '')
-EMAIL_USE_TLS = True

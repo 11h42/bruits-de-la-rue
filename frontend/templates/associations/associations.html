@@ -1,87 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
-    <div ng-cloak class="ng-cloak container" data-ng-app="associationsModule">
-        <div data-ng-controller="associationsController">
-            <div class="row">
-                <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">
-                    {$ errorMessage $}
+    <div ng-cloak class="ng-cloak container" ng-app="associationsModule" ng-controller="associationsController">
+        {% include 'error_success_box.html' %}
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Liste des associations</h1>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group fixh1">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                        <input class="form-control" type="text" placeholder="Rechercher une association"
+                               ng-model="searchText">
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <h1>Liste des associations</h1>
-                </div>
+            <div class="col-lg-3 fixh1">
+                <a class="btn btn-primary btn-block" href="/associations/ajouter/">
+                    <span class="glyphicon glyphicon-plus"></span> Ajoutez une association
+                </a>
+            </div>
+        </div>
+        <br/>
 
-                <div class="col-lg-6 text-right">
-                    <form class="form-inline fixh1" role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-                                <input class="form-control" type="text" placeholder="Rechercher une association"
-                                       ng-model="searchText">
-                            </div>
-                        </div>
-                        <a class="btn btn-primary" href="/associations/ajouter/">
-                            <span class="glyphicon glyphicon-plus"></span> Ajoutez une association
-                        </a>
-                    </form>
-                </div>
-            </div>
-            <br/>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <table class="table table-responsive table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Addresse</th>
-                            <th>Téléphone</th>
-                            <th>Fax</th>
-                            <th>Site web</th>
-                            <th>Email</th>
-                        </tr>
-                        </thead>
-                        <tr ng-click="showAssociation(association.id)" class="cursor-pointer"
-                            data-ng-repeat="association in filterAssociations = (associations | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
-                            <td>{$ association.name $}</td>
-                            <td>
-                                <ul class="list-unstyled">
-                                    <li>{$ association.address.title $}</li>
-                                    <li>{$ association.address.recipient_name $}</li>
-                                    <li>{$ association.address.address1 $}</li>
-                                    <li ng-show="association.address.address2">{$ association.address.address2 $}</li>
-                                    <li>{$ association.address.zipcode $} - {$ association.address.town $}</li>
-                                </ul>
-                            </td>
-                            <td>{$ association.phone $}</td>
-                            <td>{$ association.fax $}</td>
-                            <td>{$ association.url_site $}</td>
-                            <td>{$ association.email $}</td>
-                        </tr>
-                        <tr ng-hide="associations" class="danger text-center">
-                            <td colspan="6">Il n'y a pas d'association enregistrée dans l'application</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row" ng-show="associations">
-                <div class="col-lg-12">
-                    <button class="btn btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                        Précédant
-                    </button>
-                    <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
-                    <button class="btn btn-sm" ng-disabled="currentPage >= associations.length/pageSize - 1"
-                            ng-click="currentPage=currentPage+1">
-                        Suivant
-                    </button>
-                </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-responsive table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Addresse</th>
+                        <th>Téléphone</th>
+                        <th>Site web</th>
+                        <th>Email</th>
+                    </tr>
+                    </thead>
+                    <tr ng-click="showAssociation(association.id)" class="cursor-pointer"
+                        data-ng-repeat="association in associations | filter:searchText">
+                        <td>{$ association.name $}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <li>{$ association.address.recipient_name $}</li>
+                                <li>{$ association.address.address1 $}</li>
+                                <li ng-show="association.address.address2">{$ association.address.address2 $}</li>
+                                <li>{$ association.address.zipcode $} - {$ association.address.town $}</li>
+                            </ul>
+                        </td>
+                        <td>{$ association.phone $}</td>
+                        <td>{$ association.url_site $}</td>
+                        <td>{$ association.email $}</td>
+                    </tr>
+                    <tr ng-hide="associations" class="danger text-center">
+                        <td colspan="6">Il n'y a pas d'association enregistrée dans l'application</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block javascript %}
-    <script type="text/javascript" src="/static/js/associationModule.js"></script>
+    <script type="text/javascript" src="/static/js/associationsModule.js"></script>
     <script type="text/javascript"
             src="/static/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
 {% endblock %}

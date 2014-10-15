@@ -1,17 +1,13 @@
-# coding=utf-8
-import os
-
-from django.core.files import File
 import factory
 from factory.django import DjangoModelFactory
 
-from core.models import StatusBids, Photo
+from core import models
+from core.models import StatusBids
 
 
 class AddressFactory(DjangoModelFactory):
     class Meta:
-        model = 'core.Address'
-        django_get_or_create = ('recipient_name', 'address1', 'zipcode', 'town')
+        model = models.Address
 
     title = 'Akema'
     recipient_name = 'Akema'
@@ -22,89 +18,34 @@ class AddressFactory(DjangoModelFactory):
 
 class UserFactory(DjangoModelFactory):
     class Meta:
-        model = 'core.User'
-        django_get_or_create = ('username', 'email', 'is_staff')
+        model = models.User
+        django_get_or_create = ('username',)
 
     username = 'test'
     email = 'test@akema.fr'
-    password = factory.PostGenerationMethodCall('set_password',
-                                                'password')
-    is_staff = False
-
-    @factory.post_generation
-    def address(self, create, extracted, **kwargs):
-        if not create:
-            return
-        if extracted:
-            for item in extracted:
-                self.address.add(item)
-
-
-# Seems like factory boy doesn't succeed to factory a file with the class Meta: declaration ?
-class PhotoFactory(DjangoModelFactory):
-    FACTORY_FOR = Photo
-
-    photo = File(
-        open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'inputs', '5x5.png')))
-    owner = factory.SubFactory(UserFactory)
-
-
-class AssociationFactory(DjangoModelFactory):
-    class Meta:
-        model = 'core.Association'
-        django_get_or_create = ('name', 'phone', 'fax', 'url_site', 'email', 'administrator')
-
-    name = "Association Lambda"
-    phone = '0123456789'
-    fax = '0987654321'
-    url_site = 'association-lambda.com'
-    email = 'contact@association-lambda.com'
-    administrator = factory.SubFactory(UserFactory)
-
-    @factory.post_generation
-    def address(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            for item in extracted:
-                self.address.add(item)
-
-    @factory.post_generation
-    def members(self, create, extracted, **kwargs):
-        if not create:
-            return
-        if extracted:
-            for item in extracted:
-                self.members.add(item)
+    password = factory.PostGenerationMethodCall('set_password', 'password')
+    address = factory.RelatedFactory(AddressFactory)
 
 
 class BidFactory(DjangoModelFactory):
     class Meta:
-        model = 'core.Bid'
-        django_get_or_create = ('creator', 'description', 'title', 'status_bid', 'type', 'real_author')
+        model = models.Bid
+        django_get_or_create = ('creator',)
 
     creator = factory.SubFactory(UserFactory)
-    description = "Factory d'une annonce"
+    description = "factory d'une annonce"
     title = "Annonce de test"
-    type = "SUPPLY"
     status_bid = StatusBids.RUNNING
     real_author = "Jean Dupont"
-    association = factory.SubFactory(AssociationFactory)
 
 
-class BidCategoryFactory(DjangoModelFactory):
+class AssociationFactory(DjangoModelFactory):
     class Meta:
-        model = 'core.BidCategory'
-        django_get_or_create = ('name', )
+        model = models.Association
+        django_get_or_create = ('name', 'phone', 'url_site', 'email', 'administrator')
 
-    name = "Alimentaire"
-
-
-class FaqFactory(DjangoModelFactory):
-    class Meta:
-        model = 'core.Faq'
-        django_get_or_create = ('question', 'answer')
-
-    question = 'Factored question'
-    answer = 'Factored answer'
+    name = "Association Lambda"
+    phone = '0123456789'
+    url_site = 'example.org'
+    email = 'contact@example.org'
+    administrator = factory.SubFactory(UserFactory)

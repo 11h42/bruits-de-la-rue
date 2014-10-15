@@ -59,3 +59,4 @@ frontend/static/node_modules/
 frontend/static/bower_components/
 
 frontend/static/coverage
+*.sqlite3

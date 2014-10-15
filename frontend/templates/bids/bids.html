@@ -1,88 +1,31 @@
 {% extends "base.html" %}
+
 {% block content %}
-    <div ng-cloak class="ng-cloak container" data-ng-app="bidsModule">
-        <div data-ng-controller="bidController" class="ng-cloak">
+    <div class="container ng-cloak" data-ng-app="bidsModule" data-ng-controller="bidsController">
             <div class="row">
-                <div class="col-lg-12 alert alert-danger" role="alert" ng-show="errorMessage">
-                    {$ errorMessage $}
+            <div class="col-lg-9">
+                <h1>Liste des annonces</h1>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group fixh1">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                        <input class="form-control" type="text" placeholder="Rechercher une annonce"
+                               ng-model="searchBidInput">
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <h1>Liste des annonces</h1>
-                </div>
-
-                <div class="col-lg-6 text-right">
-                    <form class="form-inline fixh1" role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-                                <input class="form-control" type="text" placeholder="Rechercher une annonce"
-                                       ng-model="searchText">
-                            </div>
-                        </div>
-                        <a class="btn btn-primary" href="/annonces/creer/">
-                            <span class="glyphicon glyphicon-plus"></span> Ajouter une annonce
-                        </a>
-                    </form>
-                </div>
-            </div>
-            <br/>
-            <div class="row">
-                <div class="col-lg-12">
-                    <table class="table table-responsive table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Quantité</th>
-                            <th>Début</th>
-                            <th>Fin</th>
-                        </tr>
-                        </thead>
-
-                        <tr ng-click="showBid(bid.id)" class="cursor-pointer" id="{$ bid.id $}"
-                            data-ng-repeat="bid in filterBids = (bids | filter:searchText) | startFrom:currentPage*pageSize | limitTo:pageSize">
-                            <td>{$ bid.title $}</td>
-                            <td>{$ bid.quantity $}</td>
-                            <td>
-                            <span ng-show="bid.begin">
-                                {$ bid.begin  | fromNow $} (Le {$ bid.begin  | date:'dd-MM-yyyy HH:MM:ss' $})
-                            </span>
-                            </td>
-                            <td>
-                            <span ng-show="bid.end">
-                                {$ bid.end  | fromNow $} (Le {$ bid.end | date:'dd-MM-yyyy HH:MM:ss' $})
-                            </span>
-                            </td>
-                        </tr>
-                        <tr ng-show="bids" ng-hide="filterBids.length">
-                            <td colspan="6">Pas de résultat pour la recherche "{$ searchText $}"</td>
-                        </tr>
-                        <tr ng-hide="bids" class="danger">
-                            <td colspan="4">
-                                Il n'y a aucune annonces enregistrées dans la base de données, ajouter en une en <a
-                                    href="/annonces/creer/">cliquant ici</a>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 center-block" ng-show="bids">
-                    <button class="btn btn-sm" ng-disabled="currentPage == 0"
-                            ng-click="currentPage=currentPage-1">
-                        Précédant
-                    </button>
-                    <span class="pagination">Page {$ currentPage+1 $}/{$ numberOfPages() $}</span>
-                    <button class="btn btn-sm" ng-disabled="currentPage >= bids.length/pageSize - 1"
-                            ng-click="currentPage=currentPage+1"> Suivant
-                    </button>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <br/>
+                {% include "bids/bids_table.html" %}
             </div>
         </div>
     </div>
 {% endblock %}
+
+
 {% block javascript %}
-    <script type="text/javascript" src="/static/js/bidModule.js"></script>
+    <script type="text/javascript" src="/static/js/bidsModule.js"></script>
 {% endblock %}

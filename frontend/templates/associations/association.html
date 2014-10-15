@@ -1,148 +1,172 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div class="container">
-        <div data-ng-app="associationsModule" ng-cloak class="ng-cloak">
-            <div data-ng-controller="associationsController">
-                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="errorMessage">
-                    <button type="button" class="close" data-dismiss="alert"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    {$ errorMessage $}
-                </div>
-                <div class="alert alert-success alert-dismissible" role="alert" ng-show="successMessage">
-                    <button type="button" class="close" data-dismiss="alert"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    {$ successMessage $}
-                </div>
-                <div class="row">
-                    <a href="/associations/">
-                        <span class="glyphicon glyphicon-arrow-left"></span>
-                        Revenir à la liste des associations
-                    </a>
-                </div>
-                <div class="row">
-                    <div class="col-lg-10">
-                        <h1>
-                            {$ association.name $}
-                        </h1>
-                    </div>
-                    <div class="col-lg-2">
-                        <button class="btn btn-danger btn-sm" ng-click="deleteAssociation(association.id)">
-                            <span class="glyphicon glyphicon-trash"></span>
-                            Supprimer l'association
-                        </button>
-                    </div>
+    <div ng-cloak class="ng-cloak container" ng-app="associationsModule" ng-controller="associationController">
+        {% include 'error_success_box.html' %}
 
-                </div>
-                <hr/>
-                <br/>
-
-                <div class="row">
-                    <h2>Informations</h2>
-
-                    <div class="col-lg-4">
-
-
-                        <h3 class="text-underlined">
-                            Addresse
-                            <a target="_blank"
-                               href="https://www.google.fr/maps/place/{$ association.address.address1 $} {$ association.address.address2 $}{$ association.address.zipcode $} - {$ association.address.town $}">
-                                <span class="glyphicon glyphicon-map-marker"></span>
-                            </a>
-                        </h3>
-                        <ul class="list-unstyled">
-                            <li>
-                                {$ association.address.recipient_name $}
-                            </li>
-                            <li>
-                                {$ association.address.address1 $}
-                            </li>
-                            <li>
-                                {$ association.address.address2 $}
-                            </li>
-                            <li>
-                                {$ association.address.zipcode $} - {$ association.address.town $}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-4">
-                        <h3 class="text-underlined">Responsable</h3>
-                        {$ association.administrator.username $}
-                    </div>
-                    <div class="col-lg-4">
-                        <h3 class="text-underlined">Contact</h3>
-                        <ul class="list-unstyled">
-                            <li>
-                                <span class="glyphicon glyphicon-earphone"></span> Téléphone : {$ association.phone $}
-                            </li>
-                            <li>
-                                <span class="glyphicon glyphicon-print"></span> Fax : {$ association.fax $}
-                            </li>
-                            <li>
-                                <span class="glyphicon glyphicon-envelope"></span> Email : <a
-                                    href="mailto:{$ association.email $}">{$ association.email $}</a>
-                            </li>
-                            <li>
-                                <span class="glyphicon glyphicon-globe"></span>
-                                Site web :
-                                <a target="_blank" href="http://{$ association.url_site $}">
-                                    {$ association.url_site $}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <br/>
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h2>Membres de l'association</h2>
-
-                        <table class="table table-bordered table-responsive table-hover">
-                            <thead>
-                            <tr>
-                                <th>Nom d'utilisateur</th>
-                                <th>Email</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr data-ng-repeat="member in members">
-                                <td>{$ member.username $}</td>
-                                <td>{$ member.email $}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-lg-6">
-                        <h2>Ajouter un membre</h2>
-                        <table class="table table-bordered table-responsive table-hover">
-                            <thead>
-                            <tr>
-                                <th>Nom d'utilisateur</th>
-                                <th>Email</th>
-                                <th><span class="glyphicon glyphicon-check"></span></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr data-ng-repeat="user in users">
-                                <td>{$ user.username $}</td>
-                                <td>{$ user.email $}</td>
-                                <td><a class="cursor-pointer" ng-click="addMember(user.id)"><span
-                                        class="glyphicon glyphicon-plus"></span></a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="/associations/">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    Revenir à la liste des associations
+                </a>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <h1>
+                    {$ association.name $}
+                </h1>
 
+            </div>
+            <div class="col-lg-2 fixh1">
+                <a href="/associations/{$ association.id $}/editer/ " class="btn btn-primary btn-sm btn-block">
+                    Editer cette association
+                </a>
+            </div>
+            <div class="col-lg-2 fixh1">
+                <button class="btn btn-danger btn-sm btn-block" ng-click="deleteAssociation(association.id)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    Supprimer l'association
+                </button>
+            </div>
+        </div>
+        <br/>
 
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>
+                    Addresse
+                    <a target="_blank"
+                       href="https://www.google.fr/maps/place/{$ association.address.address1 $} {$ association.address.address2 $}{$ association.address.zipcode $} - {$ association.address.town $}">
+                        <span class="glyphicon glyphicon-map-marker"></span>
+                    </a>
+                </h3>
+                <ul class="list-unstyled">
+                    <li>
+                        {$ association.address.recipient_name $}
+                    </li>
+                    <li>
+                        {$ association.address.address1 $}
+                    </li>
+                    <li>
+                        {$ association.address.address2 $}
+                    </li>
+                    <li>
+                        {$ association.address.zipcode $} - {$ association.address.town $}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h3 class="text-underlined">Responsable</h3>
+                {$ association.administrator.username $}
+            </div>
+            <div class="col-lg-4">
+                <h3 class="text-underlined">Contact</h3>
+                <ul class="list-unstyled">
+                    <li>
+                        <span class="glyphicon glyphicon-earphone"></span> Téléphone : {$ association.phone $}
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-envelope"></span> Email : <a
+                            href="mailto:{$ association.email $}">{$ association.email $}</a>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-globe"></span>
+                        Site web :
+                        <a target="_blank" href="http://{$ association.url_site $}">
+                            {$ association.url_site $}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Membres de l'association</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+
+                <table class="table table-bordered table-responsive table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="member in association.members">
+                        <td>{$ member.username $}</td>
+                        <td>{$ member.email $}</td>
+                        <td>{$ member.first_name $}</td>
+                        <td>{$ member.last_name $}</td>
+                        <td>
+                            <a class="cursor-pointer" ng-click="deleteMember(association.id, member.id)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Tous les utilisateurs de l'application</h2>
+            </div>
+            <div class="col-lg-3 fixh1">
+                <input class="form-control" type="text" placeholder="Rechercher un utilisateur" ng-model="searchText">
+            </div>
+            <div class="col-lg-3 fixh1">
+                <a href="/utilisateurs/nouveau/" class="btn btn-block  btn-sm btn-primary">Ajouter un nouvel
+                    utilisateur</a>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <table class="table table-responsive table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Ajouter</th>
+                    </tr>
+                    </thead>
+                    <tr data-ng-repeat="user in users | limitTo:20 | filter:searchText">
+                        <td>{$ user.username $}</td>
+                        <td>{$ user.email $}</td>
+                        <td>
+                            <a href="#" ng-click="addUser(association.id, user.id)">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                            <a href="#" ng-click="deleteUser(user.id)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr ng-hide="users" class="danger">
+                        <td colspan="6">
+                            Il n'y a aucun utilisateur dans l'application
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
 
 {% endblock %}
 {% block javascript %}
-    <script type="text/javascript" src="/static/js/associationModule.js"></script>
-    <script type="text/javascript" src="/static/js/bidModule.js"></script>
+    <script type="text/javascript" src="/static/js/associationsModule.js"></script>
 {% endblock %}
