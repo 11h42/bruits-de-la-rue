@@ -3,8 +3,10 @@
 
 import os
 from configparser import ConfigParser, NoSectionError
-from django.contrib import messages
 import sys
+
+from django.contrib import messages
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -55,8 +57,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'core',
     'frontend',
-    'crispy_forms',
-    'api'
+    'crispy_forms'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -114,7 +115,6 @@ MESSAGE_TAGS = {
 }
 
 AUTH_USER_MODEL = 'core.User'
-
 
 DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
