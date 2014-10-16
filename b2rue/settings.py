@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'b2rue.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config.get('DATABASE', 'ENGINE'),
+        'NAME': config.get('DATABASE', 'NAME'),
+        'USER': config.get('DATABASE', 'USER'),
+        'PASSWORD': config.get('DATABASE', 'PASSWORD'),
+        'HOST': config.get('DATABASE', 'HOST'),
+        'PORT': config.get('DATABASE', 'PORT')
     }
 }
 
