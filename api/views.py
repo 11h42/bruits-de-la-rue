@@ -194,7 +194,7 @@ def delete_bid(request, bid_id):
     bids = models.Bid.objects.filter(id=bid_id)
     if bids:
         bid = bids[0]
-        if bid.creator == request.user or request.user.is_superuser:
+        if bid.creator == request.user or request.user.is_staff:
             bid.delete()
             return HttpNoContent()
     return HttpBadRequest(10666, error_codes['10666'])

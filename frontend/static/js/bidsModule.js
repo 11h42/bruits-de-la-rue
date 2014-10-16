@@ -153,7 +153,7 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
 
     $scope.acceptBid = function () {
         var desiredAmount = $scope.desired_amount;
-        if (desiredAmount > $scope.bid.quantity || desiredAmount <= 0 || desiredAmount == undefined) {
+        if (desiredAmount > $scope.bid.quantity || desiredAmount < 0 || desiredAmount == undefined) {
             $scope.errorMessage = 'Veuillez indiquer une quantité valide'
         } else {
             bidService.acceptBid({desired_amount: desiredAmount, id: $scope.bid.id}, function (data, err) {
