@@ -17,51 +17,29 @@
                 <h1>
                     {$ association.name $}
                 </h1>
-
+            </div>
+            <div class="col-lg-2 fixh1">
+                {% if user.is_superuser %}
+                <button class="btn btn-danger btn-sm btn-block" ng-click="deleteAssociation(association.id)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    Supprimer l'association
+                </button>
+                {% endif %}
             </div>
             <div class="col-lg-2 fixh1">
                 <a href="/associations/{$ association.id $}/editer/ " class="btn btn-primary btn-sm btn-block">
                     Editer cette association
                 </a>
             </div>
-            <div class="col-lg-2 fixh1">
-                <button class="btn btn-danger btn-sm btn-block" ng-click="deleteAssociation(association.id)">
-                    <span class="glyphicon glyphicon-trash"></span>
-                    Supprimer l'association
-                </button>
-            </div>
         </div>
         <br/>
 
         <div class="row">
-            <div class="col-lg-4">
-                <h3>
-                    Addresse
-                    <a target="_blank"
-                       href="https://www.google.fr/maps/place/{$ association.address.address1 $} {$ association.address.address2 $}{$ association.address.zipcode $} - {$ association.address.town $}">
-                        <span class="glyphicon glyphicon-map-marker"></span>
-                    </a>
-                </h3>
-                <ul class="list-unstyled">
-                    <li>
-                        {$ association.address.recipient_name $}
-                    </li>
-                    <li>
-                        {$ association.address.address1 $}
-                    </li>
-                    <li>
-                        {$ association.address.address2 $}
-                    </li>
-                    <li>
-                        {$ association.address.zipcode $} - {$ association.address.town $}
-                    </li>
-                </ul>
-            </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <h3 class="text-underlined">Responsable</h3>
                 {$ association.administrator.username $}
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <h3 class="text-underlined">Contact</h3>
                 <ul class="list-unstyled">
                     <li>
@@ -109,7 +87,7 @@
                         <td>{$ member.last_name $}</td>
                         <td>
                             <a class="cursor-pointer" ng-click="deleteMember(association.id, member.id)">
-                                <span class="glyphicon glyphicon-trash"></span>
+                                <span class="glyphicon glyphicon-minus"></span>
                             </a>
                         </td>
                     </tr>
@@ -119,15 +97,11 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-9">
                 <h2>Tous les utilisateurs de l'application</h2>
             </div>
             <div class="col-lg-3 fixh1">
                 <input class="form-control" type="text" placeholder="Rechercher un utilisateur" ng-model="searchText">
-            </div>
-            <div class="col-lg-3 fixh1">
-                <a href="/utilisateurs/nouveau/" class="btn btn-block  btn-sm btn-primary">Ajouter un nouvel
-                    utilisateur</a>
             </div>
         </div>
         <br/>

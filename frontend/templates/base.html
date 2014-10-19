@@ -33,11 +33,12 @@
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
-                                <li id="annonce_navbar_button"><a href="/annonces/">Annonces</a></li>
+                                <li><a href="/annonces/">Annonces</a></li>
                                 {% if user.is_staff %}
-                                    <li id="associations_navbar_button"><a href="/associations/">Associations</a></li>
+                                    <li><a href="/associations/">Associations</a></li>
+                                    <li><a href="/utilisateurs/nouveau/">Créer un utilisateur</a></li>
                                 {% endif %}
-                                <li id="faq_navbar_button"><a href="/faqs/">FAQ</a></li>
+                                <li><a href="/faqs/">FAQ</a></li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="/parametres/">Bienvenu(e), {{ user.username }}</a></li>

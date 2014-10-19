@@ -100,13 +100,11 @@ class PasswordChangeFormFR(PasswordChangeForm):
 class AssociationForm(ModelForm):
     class Meta:
         model = models.Association
-        fields = ('name', 'address', 'phone', 'url_site', 'email', 'administrator')
+        fields = ('name', 'phone', 'url_site', 'email')
         labels = {
             'name': "Nom de l'association",
-            'address': "Adresse",
             'phone': "Téléphone",
             'url_site': "Site internet",
-            'administrator': 'Gestionnaire'
         }
         widgets = {
             'administrator': forms.widgets.Select(choices=models.User.objects.all())
