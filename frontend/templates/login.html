@@ -5,12 +5,13 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-                <h1>Bienvenu(e) sur Action Assos</h1>
+            <div class="col-lg-5 col-lg-offset-3 text-center">
+                <img src="/static/img/logo.png" class="img-responsive" alt="LOGO portail mutualisation"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
+            <div class="col-lg-5 col-lg-offset-3">
+                <br/>
                 <form id="form-signin" method="POST" action="/login/">
                     {% csrf_token %}
                     <legend>Pour accéder aux annonces, merci de vous identifier</legend>
