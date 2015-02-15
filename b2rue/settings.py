@@ -1,9 +1,10 @@
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
 import os
-from configparser import ConfigParser, NoSectionError
 import sys
+import logging
+import logging.config
+from configparser import ConfigParser, NoSectionError
 
 from django.contrib import messages
 
@@ -139,3 +140,56 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
         'django.contrib.auth.hashers.MD5PasswordHasher',
     )
     TESTS_IN_PROGRESS = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(name)-14s: %(levelname)-8s %(asctime)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOGGING_PATH, 'b2rue.log'),
+            'maxBytes': 1024 * 1024 * 10,
+            'formatter': 'simple',
+            'backupCount': 5
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['file'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        'django.db.backends': {
+            'handlers': ['file'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'akipak': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'INFO',
+    }
+}
+
+try:
+    logging.config.dictConfig(LOGGING)
+except Exception as e:
+    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
+    print('could not setup logging properly, use basic logging system...')
