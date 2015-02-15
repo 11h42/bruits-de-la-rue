@@ -163,7 +163,7 @@ class Bid(models.Model):
     quantity = models.IntegerField(null=True, blank=True)
     localization = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
 
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255)
 
     category = models.ForeignKey(BidCategory, blank=True, null=True, on_delete=models.SET_NULL)

@@ -30,15 +30,14 @@ class BidValidator(object):
         :param self.bid:
         :return: True if all the rules are respected. False instead.
         """
-        required_fields = ['title', 'description', 'type', 'real_author']
-        authorized_fields = required_fields + ['begin', 'end', 'category', 'quantity', 'id', 'localization',
+        required_fields = ['title', 'type', 'real_author']
+        authorized_fields = required_fields + ['begin', 'description', 'end', 'category', 'quantity', 'id', 'localization',
                                                'status_bid', 'association', 'photo', 'creator']
         if not self.bid:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False
         for key, value in self.bid.items():
             if key not in authorized_fields:
-                print(key, value)
                 self.error_message = u'Le champs %s est invalide' % key
         for fields in required_fields:
             if fields not in self.bid:
