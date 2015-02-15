@@ -32,3 +32,7 @@ ng\:form {
 .ng-hide-add-active, .ng-hide-remove {
     display: block !important;
 }
+
+.footer{
+    font-size: 10px;
+}

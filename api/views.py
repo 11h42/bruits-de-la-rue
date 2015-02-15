@@ -1,10 +1,10 @@
 import json
+import logging
 
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound
-
 from api.decorators import catch_any_unexpected_exception
 from api.decorators import b2rue_authenticated as is_authenticated
 from api.errors import error_codes
@@ -12,6 +12,9 @@ from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest,
 from api.validators import BidValidator, AddressValidator
 from b2rue.settings import DEFAULT_FROM_EMAIL
 from core import models
+
+
+logger = logging.getLogger(__name__)
 
 
 def set_query_parameters(request):
@@ -37,8 +40,10 @@ def get_bids(request):
 
 def create_bid(request):
     json_bid = json.loads(request.body.decode('utf-8'))
+    print(json_bid)
     bid_validator = BidValidator(json_bid)
     if not bid_validator.is_valid():
+        logger.debug('bid is not valid : %s' % bid_validator.error_message)
         return HttpBadRequest(bid_validator.error_code, bid_validator.error_message)
 
     bid = bid_validator.get_bid_object(request.user)

@@ -217,8 +217,8 @@ bidsModule.factory('bidService', ['$http', function ($http) {
             $http.post('/api/bids/', bid).
                 success(function (data) {
                     callback(data.bid_id);
-                }).error(function () {
-                    callback({}, 'Il nous est impossible de créer cette annonce pour le moment, retentez plus tard');
+                }).error(function (error) {
+                    callback({}, error.message);
                 });
         },
         updateBid: function (bid, callback) {

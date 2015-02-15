@@ -176,7 +176,7 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
-        'akipak': {
+        'b2rue': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,
