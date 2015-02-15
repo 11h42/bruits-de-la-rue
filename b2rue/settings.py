@@ -126,12 +126,12 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST')
 
 # Port for sending e-mail.
-EMAIL_PORT = 587
+EMAIL_PORT = 25
 
 # Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER')
 EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = False
 
 TESTS_IN_PROGRESS = False
 if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
