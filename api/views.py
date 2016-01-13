@@ -40,7 +40,6 @@ def get_bids(request):
 
 def create_bid(request):
     json_bid = json.loads(request.body.decode('utf-8'))
-    print(json_bid)
     bid_validator = BidValidator(json_bid)
     if not bid_validator.is_valid():
         logger.debug('bid is not valid : %s' % bid_validator.error_message)
