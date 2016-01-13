@@ -1,27 +1,19 @@
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 import os
-import sys
 import logging
-import logging.config
-from configparser import ConfigParser, NoSectionError
+
+import sys
 
 from django.contrib import messages
+from smartconfigparser import Config
 
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-LOGGING_PATH = os.path.join(BASE_DIR, 'log')
-if not os.path.exists(LOGGING_PATH):
-    os.makedirs(LOGGING_PATH)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CONFIG_PATH = os.path.join(BASE_DIR, 'config')
 if not os.path.exists(CONFIG_PATH):
     os.makedirs(CONFIG_PATH)
 
 CONFIG_FILE = os.path.join(CONFIG_PATH, 'config.ini')
-
-config = ConfigParser()
+config = Config()
 config.read(CONFIG_FILE)
 
 try:
@@ -30,36 +22,44 @@ except:
     print('SECRET_KEY not found! Generating a new one...')
     import random
 
-    SECRET_KEY = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])
+    SECRET_KEY = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$^&*(-_=+)") for i in range(50)])
     if not config.has_section('DJANGO'):
         config.add_section('DJANGO')
     config.set('DJANGO', 'SECRET_KEY', SECRET_KEY)
-    with open(CONFIG_FILE, 'wt') as configfile:
-        config.write(configfile)
+    with open(CONFIG_FILE, 'wt') as f:
+        config.write(f)
 
-try:
-    DEBUG = config.getboolean('DEBUG', 'DEBUG')
-except NoSectionError:
-    DEBUG = False
+DEBUG = config.getboolean('DJANGO', 'DEBUG', False)
 
-TEMPLATE_DEBUG = DEBUG
+ALLOWED_HOSTS = config.getlist('DJANGO', 'ALLOWED_HOSTS', ['localhost', '127.0.0.1'])
 
-ALLOWED_HOSTS = []
+DATABASES = {
+    'default': {
+        'ENGINE': config.get('DATABASE', 'engine', 'django.db.backends.sqlite3'),
+        'NAME': config.get('DATABASE', 'name', 'db.sqlite3'),
+        'USER': config.get('DATABASE', 'user', ''),
+        'PASSWORD': config.get('DATABASE', 'password', ''),
+        'HOST': config.get('DATABASE', 'host', ''),
+        'PORT': config.get('DATABASE', 'port', ''),
+    }
+}
 
+LOGGING_PATH = os.path.join(BASE_DIR, 'log')
+if not os.path.exists(LOGGING_PATH):
+    os.makedirs(LOGGING_PATH)
 
-# Application definition
-
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'core',
     'frontend',
     'crispy_forms'
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,23 +71,26 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 ROOT_URLCONF = 'b2rue.urls'
 
 WSGI_APPLICATION = 'b2rue.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': config.get('DATABASE', 'ENGINE'),
-        'NAME': config.get('DATABASE', 'NAME'),
-        'USER': config.get('DATABASE', 'USER'),
-        'PASSWORD': config.get('DATABASE', 'PASSWORD'),
-        'HOST': config.get('DATABASE', 'HOST'),
-        'PORT': config.get('DATABASE', 'PORT')
-    }
-}
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'fr'
 
@@ -98,10 +101,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
@@ -121,17 +120,17 @@ MESSAGE_TAGS = {
 
 AUTH_USER_MODEL = 'core.User'
 
-DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL', 'contact@action-assos.fr')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST')
+EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST', 'localhost')
 
 # Port for sending e-mail.
 EMAIL_PORT = 25
 
 # Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER')
-EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD')
+EMAIL_HOST_USER = config.get('EMAIL', 'SMTP_USER', 'contact@action-assos.fr')
+EMAIL_HOST_PASSWORD = config.get('EMAIL', 'SMTP_PASSWORD', 'password')
 EMAIL_USE_TLS = False
 
 TESTS_IN_PROGRESS = False

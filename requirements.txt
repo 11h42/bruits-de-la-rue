@@ -1,4 +1,4 @@
-Django==1.7.4
+Django==1.8.8
 factory-boy==2.4.1
-psycopg2==2.6.0
-django-crispy-forms==1.4.0
+django-crispy-forms==1.5.2
+smartconfigparser==0.1.1
