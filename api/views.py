@@ -266,9 +266,8 @@ def accept_bid(request, bid_id):
 
 
 def get_association(request, association_id):
-    associations = models.Association.objects.filter(id=association_id).select_related('members')[:1]
-    if associations:
-        association = associations[0]
+    association = models.Association.objects.filter(id=association_id).first()
+    if association:
         return HttpResponse(json.dumps({'association': association.serialize(True)}), content_type='application/json')
     return HttpBadRequest(10666, error_codes['10666'])
 
