@@ -13,7 +13,6 @@ from api.validators import BidValidator, AddressValidator
 from b2rue.settings import DEFAULT_FROM_EMAIL
 from core import models
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -206,7 +205,7 @@ def delete_bid(request, bid_id):
 
 def update_bid(request, bid_id):
     bids = models.Bid.objects.filter(id=bid_id)
-    new_bid = json.loads(request.body)
+    new_bid = json.loads(request.body.decode('utf-8'))
     if bids and new_bid:
         bid_creator = bids[0].creator
         bid_validator = BidValidator(new_bid)
@@ -216,7 +215,6 @@ def update_bid(request, bid_id):
                 bids.update(**updated_bid)
                 return HttpResponse(json.dumps({'bid_id': bids[0].id}), content_type='application/json')
         return HttpBadRequest(10666, bid_validator.error_message)
-
     return HttpBadRequest(10666, error_codes['10666'])
 
 
@@ -352,4 +350,3 @@ def handle_user(request, user_id):
     if request.method == 'DELETE':
         return delete_user(request, user_id)
     return HttpMethodNotAllowed()
-

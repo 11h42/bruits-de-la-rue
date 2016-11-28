@@ -139,6 +139,27 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
         })
     };
 
+    $scope.createOrUpdateBid = function () {
+        if ($scope.bid.id) {
+            bidService.updateBid($scope.bid, function (bid_id, errorMessage) {
+                if (errorMessage) {
+                    $scope.errorMessage = errorMessage;
+                } else {
+                    window.location = '/annonces/' + bid_id + '/';
+                }
+            })
+        } else {
+
+            bidService.createBid($scope.bid, function (bid_id, errorMessage) {
+                if (errorMessage) {
+                    $scope.errorMessage = errorMessage;
+                } else {
+                    window.location = '/annonces/' + bid_id + '/';
+                }
+            })
+        }
+    };
+
     $scope.deleteBid = function () {
         if (confirm('Vous allez supprimer cette annonce. Cette action est irréversible. Continuer ?')) {
             bidService.deleteBid($scope.bid.id, function (bid, errorMessage) {
@@ -214,31 +235,28 @@ bidsModule.factory('bidService', ['$http', function ($http) {
             })
         },
         createBid: function (bid, callback) {
-            $http.post('/api/bids/', bid).
-                success(function (data) {
-                    callback(data.bid_id);
-                }).error(function (error) {
-                    callback({}, error.message);
-                });
+            $http.post('/api/bids/', bid).success(function (data) {
+                callback(data.bid_id);
+            }).error(function (error) {
+                callback({}, error.message);
+            });
         },
         updateBid: function (bid, callback) {
-            $http.put('/api/bids/' + bid.id + '/', bid).
-                success(function (data) {
-                    callback(data.bid_id);
-                }).error(function () {
-                    callback({}, 'Il nous est impossible de mettre à jour cette annonce pour le moment, retentez plus tard');
-                });
+            $http.put('/api/bids/' + bid.id + '/', bid).success(function (data) {
+                callback(data.bid_id);
+            }).error(function () {
+                callback({}, 'Il nous est impossible de mettre à jour cette annonce pour le moment, retentez plus tard');
+            });
         },
         showBid: function (bidId) {
             window.location = '/annonces/' + bidId + '/';
         },
         acceptBid: function (bid, callback) {
-            $http.put('/api/bids/' + bid.id + '/accept/', bid).
-                success(function (data) {
-                    callback(data);
-                }).error(function () {
-                    callback({}, "Il nous est impossible d'accepter cette annonce pour le moment, retentez plus tard");
-                });
+            $http.put('/api/bids/' + bid.id + '/accept/', bid).success(function (data) {
+                callback(data);
+            }).error(function () {
+                callback({}, "Il nous est impossible d'accepter cette annonce pour le moment, retentez plus tard");
+            });
         }
     }
 }]);
@@ -257,12 +275,11 @@ bidsModule.factory('categoryService', ['$http', function ($http) {
 bidsModule.factory('mailService', ['$http', function ($http) {
     return {
         sendMail: function (mail, callback) {
-            $http.post('/api/mails/', mail).
-                success(function (data) {
-                    callback(data);
-                }).error(function (data) {
-                    callback([], "Il nous est impossible d'envoyer un email pour le moment, veuillez retentez dans quelques minutes");
-                });
+            $http.post('/api/mails/', mail).success(function (data) {
+                callback(data);
+            }).error(function (data) {
+                callback([], "Il nous est impossible d'envoyer un email pour le moment, veuillez retentez dans quelques minutes");
+            });
         }
     }
 }]);

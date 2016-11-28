@@ -74,3 +74,4 @@ pip-selfcheck.json
 frontend/static/node_modules/
 node_modules
 .idea/
+www/
