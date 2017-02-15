@@ -2,12 +2,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-5 col-sm-offset-3">
-                <h2>Ajouter un nouvel utilisateur</h2>
-                {% crispy form %}
-            </div>
+    <div class="row">
+        <div class="col-sm-5 col-sm-offset-3">
+            <h2>Ajouter un nouvel utilisateur</h2>
+            {% crispy form %}
         </div>
     </div>
 {% endblock %}

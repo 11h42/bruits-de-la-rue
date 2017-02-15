@@ -9,6 +9,6 @@ class AssociationTestCase(TestCase):
         self.client.login(username=user.username, password="password")
         association = factories.AssociationFactory(name="toto")
         expected_association = {'id': association.id, 'name': association.name, 'address': association.address,
-                                'phone': association.phone, 'fax': association.fax, 'url_site': association.url_site,
+                                'phone': association.phone, 'url_site': association.url_site,
                                 'email': association.email, 'administrator': association.administrator.serialize()}
-        self.assertEquals(association.serialize(), expected_association)
+        self.assertDictEqual(association.serialize(), expected_association)

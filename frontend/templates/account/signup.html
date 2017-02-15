@@ -1,0 +1,41 @@
+{% extends "account/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block inner_content %}
+    <div class="col-lg-4 col-lg-offset-4">
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            <fieldset>
+                <legend>{{ title }}</legend>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <div class="form-group has-error">
+                            <label class="control-label">{{ field.label }}</label>
+                            <div class="controls">{{ field }}
+                                <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label class="control-label">{{ field.label }}</label>
+                            <div class="controls">{{ field }}
+                                {% if field.help_text %}
+                                    <p class="help-inline">
+                                        <small>{{ field.help_text }}</small>
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </fieldset>
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
+        </form>
+    </div>
+{% endblock %}

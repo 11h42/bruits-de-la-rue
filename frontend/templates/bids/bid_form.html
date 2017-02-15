@@ -1,17 +1,23 @@
 <form name="bidForm">
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-md-8">
         <div class="form-group">
             <label for="bid_title">Titre : <span class="text-danger">*</span></label>
             <input ng-value="element.title" ng-model="bid.title" type="text" class="form-control" id="bid_title"
                    required="true">
         </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-md-2">
         <div class="form-group">
             <label for="quantity">Quantité</label>
             <input ng-model="bid.quantity" class="form-control" id="quantity" name="quantity" type="number" />
             <span class="text-danger" ng-show="bidForm.quantity.$error.number">Entrez une quantité valide</span>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="quantity">Unité</label>
+            <input ng-model="bid.unit" class="form-control" id="unit" name="unit" type="text" />
         </div>
     </div>
 </div>

@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
-    <div ng-cloak class="ng-cloak container" ng-app="associationsModule" ng-controller="associationController">
+    <div ng-cloak class="ng-cloak" ng-app="associationsModule" ng-controller="associationController">
         {% include 'error_success_box.html' %}
 
         <div class="row">
@@ -20,10 +19,10 @@
             </div>
             <div class="col-lg-2 fixh1">
                 {% if user.is_superuser %}
-                <button class="btn btn-danger btn-sm btn-block" ng-click="deleteAssociation(association.id)">
-                    <span class="glyphicon glyphicon-trash"></span>
-                    Supprimer l'association
-                </button>
+                    <button class="btn btn-danger btn-sm btn-block" ng-click="deleteAssociation(association.id)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Supprimer l'association
+                    </button>
                 {% endif %}
             </div>
             <div class="col-lg-2 fixh1">
@@ -108,7 +107,6 @@
 
         <div class="row">
             <div class="col-lg-12">
-
                 <table class="table table-responsive table-bordered table-hover">
                     <thead>
                     <tr>
@@ -117,7 +115,7 @@
                         <th>Ajouter</th>
                     </tr>
                     </thead>
-                    <tr data-ng-repeat="user in users | limitTo:20 | filter:searchText">
+                    <tr data-ng-repeat="user in users | filter:searchText">
                         <td>{$ user.username $}</td>
                         <td>{$ user.email $}</td>
                         <td>
@@ -138,8 +136,6 @@
             </div>
         </div>
     </div>
-
-
 {% endblock %}
 {% block javascript %}
     <script type="text/javascript" src="/static/js/associationsModule.js"></script>

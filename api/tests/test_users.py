@@ -9,13 +9,10 @@ class UsersTest(TestCase):
     def setUp(self):
         self.address = factories.AddressFactory()
         self.address2 = factories.AddressFactory.create(title='Maison')
-        self.user = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
-        self.user2 = factories.UserFactory.create(username='jdupont', address=[self.address, self.address2])
-        self.association = factories.AssociationFactory(name="Association de jdupont", members=[self.user],
-                                                        administrator=self.user)
-        self.association_without_members = factories.AssociationFactory(name="Association sans membres")
+        self.user = factories.UserFactory.create(address=[self.address, self.address2])
+        self.user2 = factories.UserFactory.create(address=[self.address, self.address2])
+        self.association = factories.AssociationFactory(name="Association de jdupont", administrator=self.user)
         self.client.login(username=self.user.username, password="password")
-
 
     def test_create_new_address(self):
         address = {
@@ -35,12 +32,8 @@ class UsersTest(TestCase):
         self.assertEquals(200, response.status_code)
         self.assertTrue(response.content)
         self.assertEquals({u'associations': [self.association.serialize()]},
-                          json.loads(response.content))
+                          json.loads(response.content.decode('utf-8')))
 
     def test_get_user(self):
         response = self.client.get('/api/users/' + str(self.user2.id) + '/')
-        self.assertEquals(json.dumps({'user': self.user2.serialize()}), response.content)
-
-    def test_get_current_user(self):
-        response = self.client.get('/api/users/0/?filter_by=current_user')
-        self.assertEquals(json.dumps({'user': self.user.serialize()}), response.content)
+        self.assertEquals(405, response.status_code)

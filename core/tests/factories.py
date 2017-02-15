@@ -19,18 +19,29 @@ class AddressFactory(DjangoModelFactory):
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = models.User
-        django_get_or_create = ('username',)
 
-    username = 'test'
+    username = factory.Sequence(lambda n: 'user {0}'.format(n))
     email = 'test@akema.fr'
     password = factory.PostGenerationMethodCall('set_password', 'password')
     address = factory.RelatedFactory(AddressFactory)
+    is_public_member = False
+
+
+class AdminFactory(DjangoModelFactory):
+    class Meta:
+        model = models.User
+
+    username = factory.Sequence(lambda n: 'admin {0}'.format(n))
+    email = 'admin@akema.fr'
+    password = factory.PostGenerationMethodCall('set_password', 'password')
+    address = factory.RelatedFactory(AddressFactory)
+    is_public_member = False
+    is_staff = True
 
 
 class BidFactory(DjangoModelFactory):
     class Meta:
         model = models.Bid
-        django_get_or_create = ('creator',)
 
     creator = factory.SubFactory(UserFactory)
     description = "factory d'une annonce"
@@ -42,10 +53,24 @@ class BidFactory(DjangoModelFactory):
 class AssociationFactory(DjangoModelFactory):
     class Meta:
         model = models.Association
-        django_get_or_create = ('name', 'phone', 'url_site', 'email', 'administrator')
 
     name = "Association Lambda"
     phone = '0123456789'
     url_site = 'example.org'
     email = 'contact@example.org'
     administrator = factory.SubFactory(UserFactory)
+
+
+class BidCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = models.BidCategory
+
+    name = 'category 1'
+
+
+class FaqFactory(DjangoModelFactory):
+    class Meta:
+        model = models.Faq
+
+    question = 'Q?'
+    answer = 'a'

@@ -31,8 +31,9 @@ class BidValidator(object):
         :return: True if all the rules are respected. False instead.
         """
         required_fields = ['title', 'type']
-        authorized_fields = required_fields + ['begin', 'description', 'end', 'category', 'quantity', 'id', 'localization',
-                                               'status_bid', 'association', 'photo', 'creator', 'real_author']
+        authorized_fields = required_fields + ['begin', 'description', 'end', 'category', 'quantity', 'id',
+                                               'localization', 'status_bid', 'association', 'photo', 'creator',
+                                               'real_author', 'unit']
         if not self.bid:
             self.error_message = u'Erreur: Veillez à bien remplir tous les champs'
             return False
@@ -42,7 +43,7 @@ class BidValidator(object):
         for fields in required_fields:
             if fields not in self.bid:
                 self.error_message = u'le champ %s est obligatoire' % fields
-            if self.bid['title'] is None:
+            if 'title' not in self.bid or self.bid['title'] is None:
                 self.error_message = u'Vous devez renseigner un titre pour votre annonce'
         if 'begin' in self.bid and self.bid['begin'] and 'end' in self.bid and self.bid['end']:
             if self.bid['begin'] > self.bid['end']:

@@ -11,6 +11,7 @@ urlpatterns = patterns(
     '',
     url(r'^bids/$', views.handle_bids, name="handle_bids"),
     url(r'^bids/(?P<bid_id>\d+)/$', views.handle_bid, name="handle-bid"),
+    url(r'^bids/(?P<bid_id>\d+)/valid/$', views.valid_bid, name="valid_bid"),
     url(r'^bids/(?P<bid_id>\d+)/accept/$', views.accept_bid, name="accept_bid"),
     url(r'^categories/$', views.handle_categories, name="categories"),
     #

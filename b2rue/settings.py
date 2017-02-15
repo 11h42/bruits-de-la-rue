@@ -55,11 +55,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'core',
     'frontend',
-    'crispy_forms'
+    'crispy_forms',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -69,6 +74,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 TEMPLATES = [
@@ -109,8 +119,11 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
+LOGIN_URL = '/accounts/login/'
+
+# ALLAUTH configuration
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
@@ -122,6 +135,10 @@ AUTH_USER_MODEL = 'core.User'
 
 DEFAULT_FROM_EMAIL = config.get('EMAIL', 'DEFAULT_FROM_EMAIL', 'contact@action-assos.fr')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+DEBUG_EMAIL = config.getboolean('DJANGO', 'DEBUG_EMAIL', False)
+if DEBUG_EMAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_HOST = config.get('EMAIL', 'SMTP_HOST', 'localhost')
 

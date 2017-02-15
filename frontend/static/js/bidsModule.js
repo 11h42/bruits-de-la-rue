@@ -139,6 +139,16 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
         })
     };
 
+    $scope.validBid = function (){
+        bidService.validBid($scope.bid.id, function (bid_id, errorMessage) {
+            if (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            } else {
+                window.location = '/annonces/';
+            }
+        })
+    };
+
     $scope.createOrUpdateBid = function () {
         if ($scope.bid.id) {
             bidService.updateBid($scope.bid, function (bid_id, errorMessage) {
@@ -225,6 +235,13 @@ bidsModule.factory('bidService', ['$http', function ($http) {
                 callback(data.bid);
             }).error(function () {
                 callback({}, 'Il nous est impossible de récupérer cette annonce pour le moment, retentez plus tard');
+            })
+        },
+        validBid: function (bidId, callback) {
+            $http.post('/api/bids/' + bidId + '/valid/').success(function () {
+                callback(bidId);
+            }).error(function () {
+                callback({}, 'Vous ne pouvez pas valider une annonce, avez-vous les droits?');
             })
         },
         deleteBid: function (bidId, callback) {

@@ -54,6 +54,7 @@ class Faq(DatedModel):
 
 class User(AbstractUser, DatedModel):
     addresses = models.ManyToManyField("Address")
+    is_public_member = models.BooleanField(default=True, verbose_name='Membre public')
 
     class Meta:
         verbose_name = "Utilisateur"
@@ -161,6 +162,7 @@ class Bid(models.Model):
     end = models.DateTimeField(null=True, blank=True)
 
     quantity = models.IntegerField(null=True, blank=True)
+    unit = models.CharField(max_length=255, null=True, blank=True)
     localization = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
 
     description = models.TextField(null=True, blank=True)
@@ -195,6 +197,7 @@ class Bid(models.Model):
             'begin': begin,
             'end': end,
             'quantity': self.quantity,
+            'unit': self.unit,
             'description': self.description,
             'creator': self.creator.username,
             'category': category,

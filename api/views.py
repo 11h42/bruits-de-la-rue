@@ -12,6 +12,7 @@ from api.http_response import HttpMethodNotAllowed, HttpCreated, HttpBadRequest,
 from api.validators import BidValidator, AddressValidator
 from b2rue.settings import DEFAULT_FROM_EMAIL
 from core import models
+from core.models import StatusBids
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,11 @@ def set_query_parameters(request):
 def get_bids(request):
     limit, order_by = set_query_parameters(request)
     user = request.user
-    bids = models.Bid.objects.filter(Q(creator=user) | Q(purchaser=user) | Q(status_bid=models.StatusBids.RUNNING))
+    if request.user.is_staff:
+        bids = models.Bid.objects.filter(
+            Q(status_bid=models.StatusBids.ONHOLD) | Q(status_bid=models.StatusBids.RUNNING))
+    else:
+        bids = models.Bid.objects.filter(Q(creator=user) | Q(purchaser=user) | Q(status_bid=models.StatusBids.RUNNING))
     bids = bids.order_by(order_by)[:limit]
     return_bids = []
     if bids:
@@ -46,6 +51,8 @@ def create_bid(request):
 
     bid = bid_validator.get_bid_object(request.user)
     new_bid = models.Bid(**bid)
+    if request.user.is_public_member:
+        new_bid.status_bid = StatusBids.ONHOLD
     new_bid.save()
     new_bid_id = new_bid.id
     return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
@@ -152,6 +159,8 @@ def get_faqs(request):
 
 def create_faq(request):
     faq = json.loads(request.body.decode('utf-8'))
+    if not request.user.is_staff:
+        return HttpResponseUnauthorized()
     if not faq:
         return HttpBadRequest(10666, error_codes['10666'])
     new_faq = models.Faq(**faq)
@@ -171,7 +180,9 @@ def handle_faqs(request):
 
 def delete_faq(request, faq_id):
     faqs = models.Faq.objects.filter(id=faq_id)[:1]
-    if faqs and request.user.is_staff:
+    if not request.user.is_staff:
+        return HttpResponseUnauthorized()
+    if faqs:
         faqs[0].delete()
         return HttpNoContent()
     return HttpBadRequest(10666, error_codes['10666'])
@@ -263,6 +274,19 @@ def accept_bid(request, bid_id):
     return HttpBadRequest(10666, error_codes['10666'])
 
 
+@is_authenticated
+@catch_any_unexpected_exception
+def valid_bid(request, bid_id):
+    bids = models.Bid.objects.filter(id=bid_id)[:1]
+
+    if request.user.is_staff:
+        bid = bids[0]
+        bid.status_bid = StatusBids.RUNNING
+        bid.save()
+        return HttpCreated()
+    return HttpBadRequest(10666, error_codes['10666'])
+
+
 def get_association(request, association_id):
     association = models.Association.objects.filter(id=association_id).first()
     if association:
@@ -272,7 +296,7 @@ def get_association(request, association_id):
 
 def delete_association(request, association_id):
     associations = models.Association.objects.filter(id=association_id)[:1]
-    if associations and request.user.is_superuser:
+    if associations and request.user.is_staff:
         associations[0].delete()
         return HttpNoContent()
     return HttpBadRequest(10666, error_codes['10666'])
@@ -318,7 +342,7 @@ def handle_member(request, association_id, member_id):
 
 def get_users(request):
     if request.user.is_staff:
-        users = models.User.objects.all().exclude(is_superuser=True)
+        users = models.User.objects.all().exclude(is_staff=True)
         return_users = []
         for user in users:
             return_users.append(user.serialize())

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container" data-ng-app="bidsModule" data-ng-controller="bidController">
+    <div data-ng-app="bidsModule" data-ng-controller="bidController">
         {% include 'error_success_box.html' %}
         <div class="row">
             <div class="col-lg-12">
@@ -21,7 +21,7 @@
                 <span ng-hide="bid.category">Non précisé</span> {$ bid.category.name $}
                 <br/>
                 <b>Quantité :</b>
-                <span ng-hide=" bid.quantity  || bid.quantity == 0">Non précisé</span> {$ bid.quantity $}
+                <span ng-hide=" bid.quantity  || bid.quantity == 0">Non précisé</span> {$ bid.quantity $} {$ bid.unit $}
                 <br/>
                 <b>Adresse :</b> {$ bid.localization.address1 $}
                 <br/>
@@ -41,6 +41,11 @@
                 <a class="btn btn-info btn-sm btn-block" ng-href="/annonces/{$ bid.id $}/modifier">
                     <span class="glyphicon glyphicon-edit"></span> Modifier cette annonce
                 </a>
+                {% if user.is_superuser %}
+                <a class="btn btn-warning btn-sm btn-block" ng-click="validBid()" ng-if="bid.status_bid === 'EN ATTENTE'">
+                    <span class="glyphicon glyphicon-thumbs-up"></span> Valider cette annonce
+                </a>
+                {% endif %}
                 <a class="btn btn-danger btn-sm btn-block" ng-click="deleteBid()">
                     <span class="glyphicon glyphicon-trash"></span> Supprimer cette annonce
                 </a>
@@ -71,13 +76,11 @@
         {% include 'bids/accept_bid.html' %}
     </div>
 
-    <div class="container">
-        <div class="row">
-            <br/><br/><br/><br/>
+    <div class="row">
+        <br/><br/><br/><br/>
 
-            <div class="col-lg-12">
-                {% include 'disqus.html' %}
-            </div>
+        <div class="col-lg-12">
+            {% include 'disqus.html' %}
         </div>
     </div>
 

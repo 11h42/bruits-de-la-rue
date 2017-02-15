@@ -14,7 +14,7 @@ class CategoriesTest(TestCase):
         category = factories.BidCategoryFactory()
 
         response = self.client.get('/api/categories/')
-        categories_returned = json.loads(response.content)['categories']
+        categories_returned = json.loads(response.content.decode('utf-8'))['categories']
 
         self.assertEquals(categories_returned[0]['id'], category.id)
         self.assertEquals(categories_returned[0]['name'], category.name)

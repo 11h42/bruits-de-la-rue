@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4 text-center">
+            <img src="/static/img/logo2.png" class="img-responsive" alt="LOGO portail mutualisation"/>
+        </div>
+    </div>
+    <div class="row">
+        {% block inner_content %}{% endblock %}
+    </div>
+{% endblock %}

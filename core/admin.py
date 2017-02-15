@@ -7,7 +7,6 @@ from django.contrib.auth.models import Group
 
 from core.models import User, BidCategory, Association, Faq, Address, Bid
 
-
 admin.site.unregister(Group)
 
 
@@ -60,7 +59,8 @@ class CustomUserAdmin(UserAdmin):
 
     list_filter = ()
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'username', 'is_staff', 'is_superuser', 'addresses')}),
+        (None,
+         {'fields': ('email', 'password', 'username', 'is_staff', 'is_superuser', 'is_public_member', 'addresses')}),
         ('Informations personnelles', {'fields': ('first_name', 'last_name')}),
     )
     add_fieldsets = (
@@ -68,7 +68,7 @@ class CustomUserAdmin(UserAdmin):
             None, {
                 'classes': ('wide',),
                 'fields': (
-                'email', 'first_name', 'username', 'last_name', 'password1', 'password2')}
+                    'email', 'first_name', 'username', 'last_name', 'password1', 'password2')}
         ),
     )
     search_fields = ('username',)

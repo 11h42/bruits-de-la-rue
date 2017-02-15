@@ -46,6 +46,7 @@ class NewUserForm(forms.ModelForm):
     password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
+    is_public_member = forms.BooleanField(required=False, initial=True)
 
     def __init__(self, *args, **kwargs):
         super(NewUserForm, self).__init__(*args, **kwargs)
@@ -61,7 +62,8 @@ class NewUserForm(forms.ModelForm):
             'email': "Email",
             'first_name': "Prénom",
             'last_name': "Nom",
-            'password': 'Mot de passe'
+            'password': 'Mot de passe',
+            'is_public_member': "Membre validé",
         }
 
     def clean_username(self):
@@ -78,6 +80,7 @@ class NewUserForm(forms.ModelForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.is_public_member = self.cleaned_data['is_public_member']
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
@@ -115,4 +118,3 @@ class AssociationForm(ModelForm):
 
         self.helper = FormHelper(self)
         self.helper.layout.append(Submit('Sauvegarder', 'Sauvegarder'))
-

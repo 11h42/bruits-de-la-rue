@@ -2,14 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-5 col-sm-offset-3">
-                <h2>Mes informations</h2>
-                {% crispy form %}
-                <br/>
-                <a href="/parametres/mot-de-passe/" class="btn btn-warning">Changer mon mot de passe</a>
-            </div>
+    <div class="row">
+        <div class="col-sm-5 col-sm-offset-3">
+            <h2>Mes informations</h2>
+            {% crispy form %}
+            <br/>
+            <a href="/parametres/mot-de-passe/" class="btn btn-warning">Changer mon mot de passe</a>
         </div>
     </div>
 {% endblock %}

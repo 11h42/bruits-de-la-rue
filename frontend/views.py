@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -15,22 +14,6 @@ from frontend import forms
 def index(request):
     t = get_template('index.html')
     c = RequestContext(request)
-    return HttpResponse(t.render(c))
-
-
-def display_login(request):
-    error_message = None
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user and user.is_active:
-            login(request, user)
-            return HttpResponseRedirect(reverse('frontend:index'))
-        else:
-            error_message = "Votre nom d'utilisateur et votre mot de passe ne correspondent pas"
-    t = get_template('login.html')
-    c = RequestContext(request, {'error_message': error_message})
     return HttpResponse(t.render(c))
 
 

@@ -6,7 +6,6 @@ from frontend import views
 urlpatterns = patterns(
     '',
     url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.display_login, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}, name='logout'),
     url(r'^utilisateurs/nouveau/$', views.create_user, name='create_user'),
     url(r'^parametres/$', views.display_parameters, name='display_parameters'),
