@@ -245,10 +245,14 @@ def handle_bid(request, bid_id):
 @catch_any_unexpected_exception
 def send_email(request):
     mail_infos = json.loads(request.body.decode('utf-8'))
-    if 'user_to_mail' not in mail_infos or 'content' not in mail_infos or 'subject' not in mail_infos:
+    if 'bid' not in mail_infos or 'content' not in mail_infos or 'subject' not in mail_infos:
         return HttpBadRequest(10666, error_codes['10666'])
-    user_to = models.User.objects.get(username=mail_infos['user_to_mail'])
-    email = EmailMessage(mail_infos['subject'], mail_infos['content'], DEFAULT_FROM_EMAIL, [user_to.email],
+    user_to = models.User.objects.get(username=mail_infos['bid']['creator'])
+    subject = '[Action Assos] - %s' % mail_infos['subject']
+    email_header = 'Annonce:%s\n\n' % mail_infos['bid']['title']
+    email_footer = '\n\n--\nCet email vous a été envoyé par %s depuis le site action-assos.fr.\n' % request.user.email
+    content = email_header + mail_infos['content'] + email_footer
+    email = EmailMessage(subject, content, DEFAULT_FROM_EMAIL, [user_to.email],
                          headers={'Reply-To': request.user.email})
     email.send()
     return HttpCreated()

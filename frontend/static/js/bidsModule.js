@@ -139,7 +139,7 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
         })
     };
 
-    $scope.validBid = function (){
+    $scope.validBid = function () {
         bidService.validBid($scope.bid.id, function (bid_id, errorMessage) {
             if (errorMessage) {
                 $scope.errorMessage = errorMessage;
@@ -200,24 +200,26 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
     };
 
     $scope.mail = {
-        'user_to_mail': null,
         'subject': null,
         'content': null
     };
 
     $scope.sendMail = function () {
-        $scope.mail.user_to_mail = $scope.bid.creator;
-        $('#send_mail').modal('hide');
-        mailService.sendMail($scope.mail, function (mail, errorMessage) {
-            if (errorMessage) {
-                $scope.errorMessage = errorMessage;
-            } else {
-                $scope.errorMessage = '';
-                $scope.successMessage = 'Votre message a bien été envoyé';
-            }
-        })
+        $scope.mail.bid = $scope.bid;
+        if ($scope.mail.subject && $scope.mail.content) {
+            $('#send_mail').modal('hide');
+            mailService.sendMail($scope.mail, function (mail, errorMessage) {
+                if (errorMessage) {
+                    $scope.errorMessage = errorMessage;
+                } else {
+                    $scope.errorMessage = '';
+                    $scope.successMessage = 'Votre message a bien été envoyé';
+                }
+            })
+        } else {
+            $scope.errorMessage = 'Le sujet et le contenu de votre message sont obligatoires';
+        }
     };
-
 });
 
 
@@ -295,6 +297,7 @@ bidsModule.factory('mailService', ['$http', function ($http) {
             $http.post('/api/mails/', mail).success(function (data) {
                 callback(data);
             }).error(function (data) {
+                console.log(data)
                 callback([], "Il nous est impossible d'envoyer un email pour le moment, veuillez retentez dans quelques minutes");
             });
         }
