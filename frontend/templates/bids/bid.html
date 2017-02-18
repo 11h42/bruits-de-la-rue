@@ -65,11 +65,11 @@
             </div>
             <div class="col-lg-4">
                 <b>Début :</b> <span ng-hide="bid.begin">Non précisé</span>
-                <span ng-show="bid.begin">{$ bid.begin | fromNow $}</span>
+                <span ng-show="bid.begin">{$ bid.begin | fromNow $} ({$ bid.begin | date:'dd/MM/yyyy' $})</span>
             </div>
             <div class="col-lg-4">
                 <b>Fin :</b> <span ng-hide="bid.end">Non précisé</span>
-                <span ng-show="bid.end">{$ bid.end | fromNow $}</span>
+                <span ng-show="bid.end">{$ bid.end | fromNow $} ({$ bid.end | date:'dd/MM/yyyy' $})</span>
             </div>
         </div>
         {% include 'send_mail.html' %}
