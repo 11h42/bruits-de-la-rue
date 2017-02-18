@@ -1,4 +1,3 @@
-
 <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
@@ -6,11 +5,15 @@
         <th>Quantité</th>
         <th>Code postal</th>
         <th>Localité</th>
+        {% if user.is_superuser %}
+            <th>Status</th>
+        {% endif %}
         <th>Fin</th>
     </tr>
     </thead>
-    <tr class="cursor-pointer" data-ng-repeat="bid in bids | limitTo:20 | filter:searchBidInput" data-ng-click="showBid(bid.id)"
-        data-ng-class="{'info' : bid.type=='SUPPLY', 'success' : bid.type=='DEMAND', 'warning' : bid.status_bid!='EN COURS'}">
+    <tr class="cursor-pointer" data-ng-repeat="bid in bids | limitTo:20 | filter:searchBidInput"
+        data-ng-click="showBid(bid.id)"
+        data-ng-class="{'info' : bid.type=='SUPPLY', 'success' : bid.type=='DEMAND', 'warning' : bid.status_bid=='EN ATTENTE'}">
         <td>
             <span data-ng-show="bid.type=='DEMAND'" class="glyphicon glyphicon-search"></span>
             <span data-ng-show="bid.type=='SUPPLY'" class="glyphicon glyphicon-gift"></span>
@@ -19,6 +22,9 @@
         <td>{$ bid.quantity $}</td>
         <td>{$ bid.localization.zipcode $}</td>
         <td>{$ bid.localization.town $}</td>
+        {% if user.is_superuser %}
+            <td>{$ bid.status_bid $}</td>
+        {% endif %}
         <td>
             <span ng-show="bid.end">
                 {$ bid.end  | fromNow $}
