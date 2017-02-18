@@ -30,8 +30,7 @@ def get_bids(request):
     limit, order_by = set_query_parameters(request)
     user = request.user
     if request.user.is_staff:
-        bids = models.Bid.objects.filter(
-            Q(status_bid=models.StatusBids.ONHOLD) | Q(status_bid=models.StatusBids.RUNNING))
+        bids = models.Bid.objects.all()
     else:
         bids = models.Bid.objects.filter(Q(creator=user) | Q(purchaser=user) | Q(status_bid=models.StatusBids.RUNNING))
     bids = bids.order_by(order_by)[:limit]
