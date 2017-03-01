@@ -16,18 +16,21 @@
     </div>
     <div class="col-md-2">
         <div class="form-group">
-            <label for="quantity">Unité</label>
-            <input ng-model="bid.unit" class="form-control" id="unit" name="unit" type="text" />
+            <label for="unit">Unité</label>
+            <select id="unit" class="form-control" data-ng-model="bid.unit"
+                    ng-options="unit for unit in units">
+                <option value="">--</option>
+            </select>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
         <div class="form-group">
-            <label for="bid_descritpion">
+            <label for="bid_description">
                 Description :
             </label>
-            <textarea ng-model="bid.description" id="bid_descritpion" class="form-control" rows="3" required="true">
+            <textarea ng-model="bid.description" id="bid_description" class="form-control" rows="3" required>
             </textarea>
         </div>
     </div>

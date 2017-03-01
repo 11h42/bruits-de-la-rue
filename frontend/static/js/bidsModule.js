@@ -39,6 +39,8 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
         'creator': null
     };
 
+    $scope.units = ['Kilogrammes', 'Pièces', 'Mètres', 'Heures'];
+
     $scope.desired_amount = null;
 
     $scope.address = {
@@ -193,7 +195,8 @@ bidsModule.controller('bidController', function ($scope, $location, bidService, 
                 } else {
                     $('#accept_bid').modal('hide');
                     $scope.errorMessage = '';
-                    $scope.successMessage = "Vous avez accepté cette annonce, prenez contact avec l'auteur pour continuer l'échange"
+                    $scope.successMessage = "Vous avez accepté cette annonce, prenez contact avec l'auteur pour continuer l'échange";
+                    $('#send_mail').modal('show');
                 }
             })
         }
