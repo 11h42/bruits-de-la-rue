@@ -8,6 +8,8 @@ from smartconfigparser import Config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ADMINS = (('Michel Simon', 'michel.simon_@orange.fr'), )
+
 CONFIG_PATH = os.path.join(BASE_DIR, 'config')
 if not os.path.exists(CONFIG_PATH):
     os.makedirs(CONFIG_PATH)

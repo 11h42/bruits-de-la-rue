@@ -1,7 +1,7 @@
 import json
 import logging
 
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, mail_admins
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound
@@ -41,6 +41,14 @@ def get_bids(request):
     return HttpResponse(json.dumps({'bids': return_bids}), content_type='application/json')
 
 
+def send_bid_need_approbation_email(bid_id):
+    subject = '[Action Assos] - Annonce à valider'
+    body = '\nBonjour administrateur, \n\nUne nouvelle annonce est à valider sur action-assos.fr:\nhttp://action-assos.fr/annonces/%s/'%bid_id
+    email_footer = '\n\nBonne journée\n\n--\nCet email vous a été envoyé par le site action-assos.fr.\n'
+    message = body + email_footer
+    mail_admins(subject=subject, message=message)
+
+
 def create_bid(request):
     json_bid = json.loads(request.body.decode('utf-8'))
     bid_validator = BidValidator(json_bid)
@@ -54,6 +62,8 @@ def create_bid(request):
         new_bid.status_bid = StatusBids.ONHOLD
     new_bid.save()
     new_bid_id = new_bid.id
+    if request.user.is_public_member:
+        send_bid_need_approbation_email(new_bid_id)
     return HttpCreated(json.dumps({'bid_id': new_bid_id}), location='/api/bids/%d/' % new_bid_id)
 
 
