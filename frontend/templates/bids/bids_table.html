@@ -3,6 +3,7 @@
     <tr>
         <th colspan="2">Nom</th>
         <th>Quantité</th>
+        <th>Unité</th>
         <th>Code postal</th>
         <th>Localité</th>
         {% if user.is_superuser %}
@@ -20,6 +21,7 @@
         </td>
         <td>{$ bid.title $}</td>
         <td>{$ bid.quantity $}</td>
+        <td>{$ bid.unit $}</td>
         <td>{$ bid.localization.zipcode $}</td>
         <td>{$ bid.localization.town $}</td>
         {% if user.is_superuser %}
